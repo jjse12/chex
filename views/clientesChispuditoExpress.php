@@ -69,8 +69,7 @@
 <br><br>
 
 <?php
-
-require_once("../db/db_vars.php")
+require_once("db/db_vars.php");
 $newdb_connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 $newsql = "SELECT user_number_id, user_id, user_fname, user_lname, user_tarifa, user_email, user_mobile, user_phone, user_address, user_gender, user_bday, user_note, user_created FROM users ORDER BY users.user_lname ASC";
 $newsqlquery = $newdb_connection->query($newsql);
