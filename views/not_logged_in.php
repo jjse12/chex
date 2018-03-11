@@ -27,7 +27,7 @@
                             success: function(res){
                                 bootbox.alert('Ingreso correcto, redireccionando...');
                                 setTimeout(function() {
-                                    window.location.replace("http://192.168.0.11/chex/fonts.php");
+                                    window.location.replace("http://localhost/chex/fonts.php");
                                 }, 1000);
                             }
                         });
