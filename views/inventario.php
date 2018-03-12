@@ -836,6 +836,8 @@
         });
     }
 
+    var whatsWebWindow = null;
+
     function notificarViaWhatsApp(uidCliente){
         bootbox.hideAll();
         var data = $("#inventario").DataTable().rows(".selected").data().toArray();
@@ -942,10 +944,59 @@
                                                     }
                                                     urlmensaje += strPaquetes + " Quedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0A Que tengas un buen día.";
                                                     urlmensaje = urlmensaje.replace(" ", "%20");
-                                                    window.open("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
-                                                    var t = $("#inventario").DataTable();
-                                                    t.rows(".selected").nodes().to$().removeClass("selected");
-                                                    t.draw(false);
+                                                    
+                                                    if (whatsWebWindow != null && !whatsWebWindow.closed){
+                                                        whatsWebWindow.location.replace("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
+                                                        whatsWebWindow.focus();
+                                                    }
+                                                    else 
+                                                        whatsWebWindow = window.open("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
+
+                                                    bootbox.confirm({
+                                                        size: "small",
+                                                        title: "La página de Whatsapp Web ha sido cargada",
+                                                        message: "¿Ha concluido la notificación del cliente?",
+                                                        buttons: {
+                                                          cancel: {
+                                                            label: "No",
+                                                            className: "btn btn-md btn-warning alinear-izquierda"
+                                                          },
+                                                          confirm: {
+                                                              label: "Si",
+                                                              className: "btn btn-md btn-success alinear-derecha"
+                                                          }
+                                                        },
+                                                        callback: function(res){
+                                                            if (res){
+                                                                var t = $("#inventario").DataTable();
+                                                                t.rows(".selected").nodes().to$().removeClass("selected");
+                                                                t.draw(false);
+                                                            }
+                                                            else{
+                                                                bootbox.confirm({
+                                                                    message: "En caso de que whatsapp no haya reconocido el número del cliente, recuerda que puedes notificarle por correo electrónico",
+                                                                    buttons: {
+                                                                      cancel: {
+                                                                        label: "OK, regresar",
+                                                                        className: "btn btn-md btn-default alinear-izquierda"
+                                                                      },
+                                                                      confirm: {
+                                                                          label: "Si, enviar por correo electrónico",
+                                                                          className: "btn btn-md btn-success alinear-derecha"
+                                                                      }
+                                                                    },
+                                                                    callback: function(res){
+                                                                        if (res){
+                                                                            notificarViaEmail(uidCliente);
+                                                                        }
+                                                                        else{
+                                                                            document.getElementById("divBotones").style.visibility = "visible";
+                                                                        }
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+                                                    });
                                                 }
                                             }
                                         }
@@ -977,10 +1028,59 @@
                                     }
                                     urlmensaje += strPaquetes + " Quedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0A Que tengas un buen día.";
                                     urlmensaje = urlmensaje.replace(" ", "%20").replace("Ã¡", "á").replace("Ã©", "é").replace("Ã³", "ó").replace("Ãº", "ú").replace("Ã¼", "ü").replace("Ã±", "ñ").replace("Ã", "í");
-                                    window.open("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
-                                    var t = $("#inventario").DataTable();
-                                    t.rows(".selected").nodes().to$().removeClass("selected");
-                                    t.draw(false);
+
+                                    if (whatsWebWindow != null && !whatsWebWindow.closed){
+                                        whatsWebWindow.location.replace("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
+                                        whatsWebWindow.focus();
+                                    }
+                                    else 
+                                        whatsWebWindow = window.open("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
+
+                                    bootbox.confirm({
+                                        size: "small",
+                                        title: "La página de Whatsapp Web ha sido cargada",
+                                        message: "¿Ha concluido la notificación del cliente?",
+                                        buttons: {
+                                          cancel: {
+                                            label: "No",
+                                            className: "btn btn-md btn-warning alinear-izquierda"
+                                          },
+                                          confirm: {
+                                              label: "Si",
+                                              className: "btn btn-md btn-success alinear-derecha"
+                                          }
+                                        },
+                                        callback: function(res){
+                                            if (res){
+                                                var t = $("#inventario").DataTable();
+                                                t.rows(".selected").nodes().to$().removeClass("selected");
+                                                t.draw(false);
+                                            }
+                                            else{
+                                                bootbox.confirm({
+                                                    message: "En caso de que whatsapp no haya reconocido el número del cliente, recuerda que puedes notificarle por correo electrónico",
+                                                    buttons: {
+                                                      cancel: {
+                                                        label: "OK, regresar",
+                                                        className: "btn btn-md btn-default alinear-izquierda"
+                                                      },
+                                                      confirm: {
+                                                          label: "Si, enviar por correo electrónico",
+                                                          className: "btn btn-md btn-success alinear-derecha"
+                                                      }
+                                                    },
+                                                    callback: function(res){
+                                                        if (res){
+                                                            notificarViaEmail(uidCliente);
+                                                        }
+                                                        else{
+                                                            document.getElementById("divBotones").style.visibility = "visible";
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    });
                                 }
                             }
                         }
@@ -1014,10 +1114,59 @@
 
                     urlmensaje += strPaquetes + " Quedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0A Que tengas un buen día.";
                     urlmensaje = urlmensaje.replace(" ", "%20").replace("Ã¡", "á").replace("Ã©", "é").replace("Ã³", "ó").replace("Ãº", "ú").replace("Ã¼", "ü").replace("Ã±", "ñ").replace("Ã", "í");
-                    window.open("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
-                    var t = $("#inventario").DataTable();
-                    t.rows(".selected").nodes().to$().removeClass("selected");
-                    t.draw(false);
+                    
+                    if (whatsWebWindow != null && !whatsWebWindow.closed){
+                        whatsWebWindow.location.replace("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
+                        whatsWebWindow.focus();
+                    }
+                    else 
+                        whatsWebWindow = window.open("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
+
+                    bootbox.confirm({
+                        size: "small",
+                        title: "La página de Whatsapp Web ha sido cargada",
+                        message: "¿Ha concluido la notificación del cliente?",
+                        buttons: {
+                          cancel: {
+                            label: "No",
+                            className: "btn btn-md btn-warning alinear-izquierda"
+                          },
+                          confirm: {
+                              label: "Si",
+                              className: "btn btn-md btn-success alinear-derecha"
+                          }
+                        },
+                        callback: function(res){
+                            if (res){
+                                var t = $("#inventario").DataTable();
+                                t.rows(".selected").nodes().to$().removeClass("selected");
+                                t.draw(false);
+                            }
+                            else{
+                                bootbox.confirm({
+                                    message: "En caso de que whatsapp no haya reconocido el número del cliente, recuerda que puedes notificarle por correo electrónico",
+                                    buttons: {
+                                      cancel: {
+                                        label: "OK, regresar",
+                                        className: "btn btn-md btn-default alinear-izquierda"
+                                      },
+                                      confirm: {
+                                          label: "Si, enviar por correo electrónico",
+                                          className: "btn btn-md btn-success alinear-derecha"
+                                      }
+                                    },
+                                    callback: function(res){
+                                        if (res){
+                                            notificarViaEmail(uidCliente);
+                                        }
+                                        else{
+                                            document.getElementById("divBotones").style.visibility = "visible";
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
                 },
                 error: function() {
                     bootbox.alert("Ocurrió un problema al intentar conectarse al servidor y no se pudo obtener el número de celular del cliente. Intentalo nuevamente luego.");
