@@ -201,7 +201,7 @@
             <a id="btnIngresar" style="width:100%; background: #eaeaea; color: #337ab7;" class="btn btn-md" onclick="switchContent(2)">Ingresar Carga</a>
         </div>
         <div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'>
-            <a id="btnInventario" style="width:100%; background: #5cb85c; color: white;" class="btn btn-md" onclick="switchContent(1)">Inventario</a>
+            <a id="btnInventario" style="width:100%; background: red; color: white;" class="btn btn-md" onclick="switchContent(1)">Inventario</a>
         </div>
         <div id="divBtnHist" class='col-lg-3 col-md-3 co3-sm-3 col-xs-4' style="text-align: center;">
             <a  id="btnHistorico" style="width:100%; background: #eaeaea; color: #337ab7;" class="btn btn-md dropdown-toggle" data-toggle="dropdown">Histórico<span style="margin-left: 10px" class="caret"></span></a>
