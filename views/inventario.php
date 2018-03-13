@@ -301,7 +301,7 @@
                                                         plan == "Oficina" ? "<h5 class='plan btn-sm btn-success'>En Oficina</h5>" :
                                                         plan.includes("Guatex") ? "<h5 class='popup plan btn-sm' style='background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h5>" :
                                                         plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
-                                                        "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>"+plan+"</span></h5>"; 
+                                                        "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h5>"; 
                                                         table.row(rowIdx).data(dataRow).draw(false);
                                                     }
                                                 });
@@ -313,7 +313,7 @@
                                                         plan == "Oficina" ? "<h5 class='plan btn-sm btn-success'>En Oficina</h5>" :
                                                         plan.includes("Guatex") ? "<h5 class='popup plan btn-sm' style='background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h5>" :
                                                         plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
-                                                        "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>"+plan+"</span></h5>"; 
+                                                        "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h5>"; 
                                             table.row(index).data(arr[0]).draw(false);
                                             bootbox.alert("Se actualizó la información del paquete exitosamente.");
                                         }
@@ -515,7 +515,7 @@
                                                                     plan == "Oficina" ? "<h5 class='plan btn-sm btn-success'>En Oficina</h5>" :
                                                                     plan.includes("Guatex") ? "<h5 class='popup plan btn-sm' style='background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h5>" :
                                                                     plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
-                                                                    "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>"+plan+"</span></h5>"; 
+                                                                    "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h5>"; 
                                                         table.row(index).data(arr[0]);
                                                         table.order([2, "asc"]);
                                                         table.draw(false);
@@ -537,7 +537,7 @@
                                                         plan == "Oficina" ? "<h5 class='plan btn-sm btn-success'>En Oficina</h5>" :
                                                         plan.includes("Guatex") ? "<h5 class='popup plan btn-sm' style='background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h5>" :
                                                         plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
-                                                        "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>"+plan+"</span></h5>"; 
+                                                        "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h5>"; 
                                             table.row(index).data(arr[0]);
                                             table.order([2, "asc"]);
                                             table.draw(false);
@@ -748,7 +748,7 @@
                                     if (rows[i][6].includes("Guatex"))
                                         plansito = "<h5 class='popup plan btn-sm' style='text-align:center; background-color: #f4cb38'>Guatex<span class='popuptext'>"+rows[i][6].split(":")[1]+"</span></h5>";
                                     else 
-                                        plansito = "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>"+rows[i][6]+"</span></h5>";
+                                        plansito = "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+rows[i][6]+"-</span></h5>";
                                 }
                                 else if (rows[i][6] < 1){
                                     plansito = "<h5 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>";
@@ -1550,7 +1550,7 @@
                                                     plan == "Oficina" ? "<h5 class='plan btn-sm btn-success'>En Oficina</h5>" :
                                                     plan.includes("Guatex") ? "<h5 class='popup plan btn-sm' style='text-align:center; background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h5>" :
                                                     plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
-                                                    "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>"+plan+"</span></h5>";
+                                                    "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h5>";
                                                     t.row(rowIdx).data(dataRow).draw(false);
                                                 }
                                             });
@@ -1568,7 +1568,7 @@
                                                         plan == "Oficina" ? "<h5 class='plan btn-sm btn-success'>En Oficina</h5>" :
                                                         plan.includes("Guatex") ? "<h5 class='popup plan btn-sm' style='text-align:center; background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h5>" :
                                                         plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
-                                                        "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>"+plan+"</span></h5>"; 
+                                                        "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h5>"; 
                                                 t.row(rowIdx).data(dataRow);
                                         });
                                         t.rows(".selected").nodes().to$() .removeClass("selected");
