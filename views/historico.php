@@ -400,10 +400,10 @@
             "responsive": true,
             "scrollY": "500px",
             "scrollCollapse": true,
-            "paging": false,
+            "paging": true,
             "fixedColumns": true,
             "language": {
-                "lengthMenu": "Display _MENU_ records per page",
+                "lengthMenu": "Mostrando _MENU_ registros de carga por página",
                 "search": "Buscar:",
                 "zeroRecords": "No hay registros de carga que coincidan con la búsqueda",
                 "info": "Mostrando registros de carga del _START_ al _END_ de _TOTAL_ registros.",
@@ -579,7 +579,7 @@
                             "scrollCollapse": true,
                             "paging": false,
                             "language": {
-                                "lengthMenu": "Display _MENU_ records per page",
+                                "lengthMenu": "Mostrando _MENU_ paquetes por página",
                                 "search": "Buscar:",
                                 "zeroRecords": "No hay paquetes que coincidan con la búsqueda",
                                 "info": "Mostrando paquetes del _START_ al _END_ de _TOTAL_ paquetes totales.",
@@ -987,9 +987,9 @@
             "responsive": true,
             "scrollY": "500px",
             "scrollCollapse": true,
-            "paging": false,
+            "paging": true,
             "language": {
-                "lengthMenu": "Display _MENU_ records per page",
+                "lengthMenu": "Mostrando _MENU_ boletas por página",
                 "search": "Buscar:",
                 "zeroRecords": "No hay boletas que coincidan con la búsqueda",
                 "info": "Mostrando boletas del _START_ al _END_ de _TOTAL_ boletas.",
