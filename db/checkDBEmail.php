@@ -1,7 +1,7 @@
 <?php
     $db_connection = new mysqli("198.71.225.64", "chispuditoex", "Chispudito2015", "usercreator");
-    $user_email = $db_connection->real_escape_string(strip_tags($_POST['email'], ENT_QUOTES));
-    $sql = "SELECT * FROM users WHERE user_email = '" . $user_email . "';";
+    $email = $db_connection->real_escape_string(strip_tags($_POST['email'], ENT_QUOTES));
+    $sql = "SELECT * FROM cliente WHERE email = '" . $email . "';";
     $query_check_user_name = $db_connection->query($sql);
     if ($query_check_user_name->num_rows == 1) {
         $row = mysqli_fetch_row($query_check_user_name);
@@ -26,7 +26,7 @@
 
         $mail->SetFrom('info@chispuditoexpress.com', 'Chispudito Express');
         $mail->AddReplyTo('info@chispuditoexpress.com', 'Chispudito Express');
-        $mail->AddAddress($user_email, $user_fname);
+        $mail->AddAddress($email, $nombre);
         $mail->AddBCC('usuarioschex@gmail.com', 'Recuperacion Usuarios CHEX');
         $mail->Subject = 'Recuperacion de Usuario Chispudito Express';
         $mail->AltBody = $textbody;

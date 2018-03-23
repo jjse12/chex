@@ -5,7 +5,7 @@
       <nav class="course-tabs">
         <ul class="nav nav-pills">
           <li style="width: 49%" onclick="scroll0()" class="active alpha"><a href="#tab1" style="text-align: center;" align="center" data-toggle="tab">Registros Internos</a></li>
-          <li style="width: 50%" onclick="scroll0()"><a href="#tab2" data-toggle="tab" style="text-align: center;" align="center">Clientes ChispuditoExpress</a></li>
+          <li style="width: 50%" onclick="scroll0(); insertarNuevosClientes();"><a href="#tab2" data-toggle="tab" style="text-align: center;" align="center">Clientes ChispuditoExpress</a></li>
         </ul>
       </nav>
     </section>
@@ -16,21 +16,46 @@
 <div class="tab-content box">
   <div class="tab-pane fade active in" id="tab1">
     <?php 
-      include("cargas.php");
+      include("mercaderia.php");
     ?>
   </div>
   <div class="tab-pane fade" id="tab2">
       <div class="container">
         <?php 
-          include("clientesChispuditoExpress.php");
+          include("clientes.php");
         ?>
       </div>
   </div>
 </div>
 
 <a style="position: fixed; z-index: 1030; bottom: 0; right:0; margin-right: 10px; margin-bottom: 5px" onclick="logout()" class="btn-lg btn-danger header-title">Cerrar Sesión</a>
-
+  
 <script type="text/javascript">
+
+  function insertarNuevosClientes(){
+    $.ajax({
+            url: "db/DBgetAndInsertNewUsers.php",
+            cache: false,
+            success: function(res){
+                if (res.includes("EXITO")){
+                    var cant = Number(res.split(": ")[1]);
+                    bootbox.alert("La tabla de clientes ha sido actualizada, se agregaron " + cant + " clientes nuevos.");
+                }
+                else if (res.includes("INCOMPLETO")){
+                    var cantInsertados = Number(res.split(": ")[1].split("@")[1]);
+                    var cantFaltantes = Number(res.split(": ")[1].split("@")[0])-cantInsertados;
+                    bootbox.alert("Se intentó actualizar la tabla de clientes, pero solo " + cantInsertados + " clientes nuevos pudieron ser agregados. Hacen falta " + cantFaltantes + " aún por agregar.");
+                }
+                else if (res.includes("ERROR"))
+                    bootbox.alert("Ocurrió un error al consultar la base de datos. Se recibió el siguiente mensaje: <i><br>" + res + "</i>");
+                initClientesChex();
+            }, 
+            error: function(){
+                bootbox.alert("No se pudo verificar actualización de la tabla de clientes debido a un problema de conexión con el servidor.");
+                initClientesChex();
+            }
+        });
+  }
 
   function logout(){
       bootbox.confirm({
@@ -56,7 +81,7 @@
                     },
                     cache: false,
                     success: function(res){
-                        window.location.replace("fonts.php?logout");
+                        window.location.replace("?logout");
                     },
                     error: function(){
                         bootbox.alert("Ocurrió un problema al intentar conectarse al servidor. Intente cerrar sesión nuevamente");

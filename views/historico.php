@@ -33,9 +33,9 @@
             "responsive": true,
             "scrollY": "500px",
             "scrollCollapse": true,
-            "paging": false,
+            "paging": true,
             "language": {
-                "lengthMenu": "Display _MENU_ records per page",
+                "lengthMenu": "Mostrando _MENU_ paquetes por página",
                 "search": "Buscar:",
                 "zeroRecords": "No hay paquetes que coincidan con la búsqueda",
                 "info": "Mostrando paquetes del _START_ al _END_ de _TOTAL_ paquetes totales.",
@@ -107,7 +107,7 @@
                     url: "db/DBexecQuery.php",
                     type: "POST",
                     data: {
-                        query: "SELECT fecha, R.rcid, plan FROM carga C, registro_carga R WHERE C.rcid = R.rcid AND tracking = '"+tracking+"'"
+                        query: "SELECT fecha, R.rcid, plan FROM paquete P, carga R WHERE P.rcid = R.rcid AND tracking = '"+tracking+"'"
                     },
                     cache: false,
                     success: function(res){
@@ -189,8 +189,8 @@
                                                         url: "db/DBexecMultiQuery.php",
                                                         type: "POST",
                                                         data:{
-                                                            query: "DELETE FROM carga WHERE tracking = '"+tracking+"' ; " +
-                                                            "UPDATE registro_carga SET total_pqts = total_pqts - 1, total_lbs = total_lbs - " + peso + " WHERE rcid = " + rcid + "; "
+                                                            query: "DELETE FROM paquete WHERE tracking = '"+tracking+"' ; " +
+                                                            "UPDATE carga SET total_pqts = total_pqts - 1, total_lbs = total_lbs - " + peso + " WHERE rcid = " + rcid + "; "
                                                         },
                                                         cache: false,
                                                         success: function(resito){
@@ -226,7 +226,7 @@
                     url: "db/DBexecQuery.php",
                     type: "POST",
                     data: {
-                        query: "SELECT R.fecha, E.fecha AS fechaEntrega, C.rcid, C.plan, ruta, paquetes, liquidado, tarifa FROM carga C JOIN entrega E ON C.estado = E.fecha JOIN registro_carga R ON C.rcid = R.rcid WHERE tracking = '"+tracking+"'"
+                        query: "SELECT R.fecha, E.fecha AS fechaEntrega, C.rcid, C.plan, ruta, paquetes, liquidado, tarifa FROM paquete C JOIN entrega E ON C.estado = E.fecha JOIN carga R ON C.rcid = R.rcid WHERE tracking = '"+tracking+"'"
                     },
                     cache: false,
                     success: function(res){
@@ -354,8 +354,8 @@
                                                                 url: "db/DBexecMultiQuery.php",
                                                                 type: "POST",
                                                                 data:{
-                                                                    query: "DELETE FROM carga WHERE tracking = '"+tracking+"' ; " +
-                                                                    "UPDATE registro_carga SET total_pqts = total_pqts - 1, total_lbs = total_lbs - " + peso + " WHERE rcid = " + rcid + "; " +
+                                                                    query: "DELETE FROM paquete WHERE tracking = '"+tracking+"' ; " +
+                                                                    "UPDATE carga SET total_pqts = total_pqts - 1, total_lbs = total_lbs - " + peso + " WHERE rcid = " + rcid + "; " +
                                                                     "UPDATE entrega SET paquetes = paquetes - 1, libras = libras - " + peso + ", subtotal = '" + subt + "', total = '" + tot + "' WHERE fecha = '" + fechaBoleta + "';"
                                                                 },
                                                                 cache: false,
@@ -464,7 +464,7 @@
                 url: "db/DBexecQuery.php",
                 type: "POST",
                 data: {
-                    query: "SELECT C.tracking AS tracking, C.uid AS uid, C.uname AS uname, C.libras AS libras, C.estado AS estado, E.liquidado AS liquidado FROM carga C LEFT JOIN entrega E ON C.estado = E.fecha WHERE C.rcid = " + rcid
+                    query: "SELECT C.tracking AS tracking, C.uid AS uid, C.uname AS uname, C.libras AS libras, C.estado AS estado, E.liquidado AS liquidado FROM paquete C LEFT JOIN entrega E ON C.estado = E.fecha WHERE C.rcid = " + rcid
                 },
                 cache: false,
                 success: function(res){
@@ -524,7 +524,7 @@
                                                 bootbox.confirm({
                                                     closeButton: false,
                                                     title: "¡¡¡ÚLTIMA ADVERTENCIA!!!",
-                                                    message: "Esta acción eliminará información tan valiosa que ni siquiera debería de ser posible llevarse a cabo, aún así... <br><br> <b>¿Está seguro que desea continuar?</b>",
+                                                    message: "Esta acción eliminará información tan valiosa que ni siquiera debería de ser posible llevarse a cabo, aún así... <br><br> <b>¿Desea continuar?</b>",
                                                     buttons:{
                                                         cancel:{
                                                             label: "¡¡¡CANCELAR!!!",
@@ -542,8 +542,8 @@
                                                                 url: "db/DBexecMultiQuery.php",
                                                                 type: "POST",
                                                                 data: {
-                                                                    query: "DELETE FROM registro_carga WHERE rcid = " + rcid + "; " +
-                                                                        "DELETE FROM carga WHERE rcid = " + rcid + ";"
+                                                                    query: "DELETE FROM carga WHERE rcid = " + rcid + "; " +
+                                                                        "DELETE FROM paquete WHERE rcid = " + rcid + ";"
                                                                 },
                                                                 cache: false,
                                                                 success: function(res){
@@ -680,7 +680,7 @@
                                     url: "db/DBexecQuery.php",
                                     type: "POST",
                                     data: {
-                                        query: "SELECT fecha, R.rcid, plan FROM carga C, registro_carga R WHERE C.rcid = R.rcid AND tracking = '"+tracking+"'"
+                                        query: "SELECT fecha, R.rcid, plan FROM paquete C, carga R WHERE C.rcid = R.rcid AND tracking = '"+tracking+"'"
                                     },
                                     cache: false,
                                     success: function(res){
@@ -762,8 +762,8 @@
                                                                         url: "db/DBexecMultiQuery.php",
                                                                         type: "POST",
                                                                         data:{
-                                                                            query: "DELETE FROM carga WHERE tracking = '"+tracking+"' ; " +
-                                                                            "UPDATE registro_carga SET total_pqts = total_pqts - 1, total_lbs = total_lbs - " + peso + " WHERE rcid = " + rcid + "; "
+                                                                            query: "DELETE FROM paquete WHERE tracking = '"+tracking+"' ; " +
+                                                                            "UPDATE carga SET total_pqts = total_pqts - 1, total_lbs = total_lbs - " + peso + " WHERE rcid = " + rcid + "; "
                                                                         },
                                                                         cache: false,
                                                                         success: function(resito){
@@ -800,7 +800,7 @@
                                     url: "db/DBexecQuery.php",
                                     type: "POST",
                                     data: {
-                                        query: "SELECT R.fecha, E.fecha AS fechaEntrega, C.rcid, C.plan, ruta, paquetes, liquidado, tarifa FROM carga C JOIN entrega E ON C.estado = E.fecha JOIN registro_carga R ON C.rcid = R.rcid WHERE tracking = '"+tracking+"'"
+                                        query: "SELECT R.fecha, E.fecha AS fechaEntrega, P.rcid, P.plan, ruta, paquetes, liquidado, tarifa FROM paquete P JOIN entrega E ON C.estado = E.fecha JOIN carga R ON P.rcid = R.rcid WHERE tracking = '"+tracking+"'"
                                     },
                                     cache: false,
                                     success: function(res){
@@ -928,8 +928,8 @@
                                                                                 url: "db/DBexecMultiQuery.php",
                                                                                 type: "POST",
                                                                                 data:{
-                                                                                    query: "DELETE FROM carga WHERE tracking = '"+tracking+"' ; " +
-                                                                                    "UPDATE registro_carga SET total_pqts = total_pqts - 1, total_lbs = total_lbs - " + peso + " WHERE rcid = " + rcid + "; " +
+                                                                                    query: "DELETE FROM paquete WHERE tracking = '"+tracking+"' ; " +
+                                                                                    "UPDATE carga SET total_pqts = total_pqts - 1, total_lbs = total_lbs - " + peso + " WHERE rcid = " + rcid + "; " +
                                                                                     "UPDATE entrega SET paquetes = paquetes - 1, libras = libras - " + peso + ", subtotal = '" + subt + "', total = '" + tot + "' WHERE fecha = '" + fechaBoleta + "';"
                                                                                 },
                                                                                 cache: false,
@@ -1338,7 +1338,7 @@
                                                     url: "db/DBexecQuery.php",
                                                     type: "POST",
                                                     data: {
-                                                        query: "UPDATE carga SET estado = NULL WHERE estado = '" + fecha + "'"
+                                                        query: "UPDATE paquete SET estado = NULL WHERE estado = '" + fecha + "'"
                                                     },
                                                     cache: false,
                                                     success: function(res){
@@ -1888,7 +1888,7 @@
             url: "db/DBexecQuery.php",
             type: "POST",
             data:{
-                query: "SELECT C.tracking AS tracking, C.uid AS uid, C.uname AS uname, C.libras AS libras, C.estado AS estado, E.liquidado AS liquidado, R.fecha AS fecha FROM carga C LEFT JOIN entrega E ON C.estado = E.fecha JOIN registro_carga R ON R.rcid = C.rcid ORDER BY fecha DESC, uname ASC, libras DESC"
+                query: "SELECT C.tracking AS tracking, C.uid AS uid, C.uname AS uname, C.libras AS libras, C.estado AS estado, E.liquidado AS liquidado, R.fecha AS fecha FROM paquete C LEFT JOIN entrega E ON C.estado = E.fecha JOIN carga R ON R.rcid = C.rcid ORDER BY fecha DESC, uname ASC, libras DESC"
             },
             cache: false,
             success: function(arr){
@@ -1945,7 +1945,7 @@
             url: "db/DBexecQuery.php",
             type: "POST",
             data:{
-                query: "SELECT * FROM registro_carga ORDER BY fecha DESC"
+                query: "SELECT * FROM carga ORDER BY fecha DESC"
             },
             cache: false,
             success: function(arr){

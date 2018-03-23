@@ -1,7 +1,7 @@
 <?php
     require_once("db_vars.php");
     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-    $query = "SELECT MAX(rcid) FROM registro_carga";
+    $query = "SELECT MAX(rcid) FROM carga";
     $res = $conn->query($query);
     if ($res == 1 && $res->num_rows == 1){   
         $rcid = mysqli_fetch_row($res)[0] + 1;
@@ -11,9 +11,9 @@
         $date = $_POST["date"];
         $data = $_POST["data"];
 
-        $query = "INSERT INTO registro_carga VALUES (".$rcid.", '".$date."', ".sizeof($data).",".$peso.")";
+        $query = "INSERT INTO carga VALUES (".$rcid.", '".$date."', ".sizeof($data).",".$peso.")";
         if ($conn->query($query)) {
-            $query = "INSERT INTO carga VALUES(";
+            $query = "INSERT INTO paquete VALUES(";
             foreach ($data as $carga){
                 $query .= "'".$carga[0].
                         "', '".$carga[1].
@@ -25,14 +25,14 @@
                 echo "$rcid@$date";
             else {
                 $error = $conn->error;
-                $query = "SELECT COUNT(*) FROM carga WHERE rcid = $rcid";
+                $query = "SELECT COUNT(*) FROM paquete WHERE rcid = $rcid";
                 $res = $conn->query($query);
                 $agregados = mysqli_fetch_row($res)[0];
                 $res->close();
                 if ($agregados == 0)
-                    $query = "DELETE FROM registro_carga WHERE rcid = $rcid";
+                    $query = "DELETE FROM carga WHERE rcid = $rcid";
                 else
-                    $query = "UPDATE registro_carga SET total_pqts = $agregados, total_lbs = (SELECT SUM(libras) FROM carga WHERE rcid = $rcid) WHERE rcid = $rcid";
+                    $query = "UPDATE carga SET total_pqts = $agregados, total_lbs = (SELECT SUM(libras) FROM paquete WHERE rcid = $rcid) WHERE rcid = $rcid";
                 $res = $conn->query($query);
                 echo "$agregados@$error|$rcid@$date";
             }

@@ -25,20 +25,20 @@
         <?php
         require_once("../db/db_vars.php");
         $nuevodb_connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-        $user_id = $_POST['user_id'];
-        $sql = "SELECT * FROM users WHERE user_id = '" . $user_id . "'";
+        $cid = $_POST['cid'];
+        $sql = "SELECT * FROM cliente WHERE cid = '" . $cid . "'";
         $result = $nuevodb_connection->query($sql);
         $row = mysqli_fetch_row($result);
 
         $formdata  = "<div class='row modalbox'><div class='col-lg-12 col-md-12 col-sm-12'><form name='modifyUser' id='userModifyForm' novalidate>";
 
-        $formdata .= "<div class='control-group form-group col-lg-2 col-md-2 col-sm-2'><div class='controls'><label>Código</label><input value='CHEX " . $row[1] . "' type='text' class='form-control' id='form_user_id' disabled /></div></div>";
+        $formdata .= "<div class='control-group form-group col-lg-2 col-md-2 col-sm-2'><div class='controls'><label>Código</label><input value='CHEX " . $row[1] . "' type='text' class='form-control' id='form_cid' disabled /></div></div>";
 
-        $formdata .= "<div class='control-group form-group col-lg-3 col-md-3 col-sm-3'><div class='controls'><label>Nombre</label><input value='" . $row[2] . "' type='text' class='form-control' id='form_user_fname' disabled/></div></div>";
+        $formdata .= "<div class='control-group form-group col-lg-3 col-md-3 col-sm-3'><div class='controls'><label>Nombre</label><input value='" . $row[2] . "' type='text' class='form-control' id='form_nombre' disabled/></div></div>";
 
-        $formdata .= "<div class='control-group form-group col-lg-3 col-md-3 col-sm-3'><div class='controls'><label>Apellido</label><input value='" . $row[3] . "' type='text' class='form-control' id='form_user_lname' disabled/></div></div>";
+        $formdata .= "<div class='control-group form-group col-lg-3 col-md-3 col-sm-3'><div class='controls'><label>Apellido</label><input value='" . $row[3] . "' type='text' class='form-control' id='form_apellido' disabled/></div></div>";
 
-        $formdata .= "<div class='control-group form-group col-lg-4 col-md-4 col-sm-4'><div class='controls'><label>Correo del Cliente</label><input value='" . $row[4] . "' type='text' class='form-control' id='form_user_email' disabled/></div></div>";
+        $formdata .= "<div class='control-group form-group col-lg-4 col-md-4 col-sm-4'><div class='controls'><label>Correo del Cliente</label><input value='" . $row[4] . "' type='text' class='form-control' id='form_email' disabled/></div></div>";
 
         $formdata .= "<div class='control-group form-group col-lg-6 col-md-6 col-sm-6'><div class='controls'><label>Dirección del cliente<br></label><textarea rows='3' id='form_address' class='textarea-form' disabled>" . $row[7] . "</textarea></div></div>";
 
@@ -57,7 +57,7 @@
         
         $formdata .= "<div class='control-group form-group col-lg-4 col-md-4 col-sm-4'><div class='controls'><label>Total(Q)</label><input type='text' class='form-control' id='form_user_packages_total' value='0' disabled /></div></div>";
 
-        $formdata .= "<div class='control-group form-group col-lg-12 col-md-12 col-sm-12'><div class='controls'><label>Comentarios Adicionales<br></label><textarea rows='3' id='form_user_note' class='textarea-form'></textarea></div></div>";
+        $formdata .= "<div class='control-group form-group col-lg-12 col-md-12 col-sm-12'><div class='controls'><label>Comentarios Adicionales<br></label><textarea rows='3' id='form_comentario' class='textarea-form'></textarea></div></div>";
 
         $formdata .= "<div class='control-group form-group col-lg-6 col-md-6 col-sm-6'><input id='messagesubmitbutton' type='submit' class='btn btn-primary' value='Enviar Correo' /></div>";
         $formdata .= "</form></div></div>";
@@ -125,10 +125,10 @@
             
             $("#messagesubmitbutton").click(function() {
                 event.preventDefault();
-                var firstName = $("input#form_user_fname").val();
-                var lastName = $("input#form_user_lname").val();
-                var userID = $("input#form_user_id").val();
-                var email = $("input#form_user_email").val();
+                var firstName = $("input#form_nombre").val();
+                var lastName = $("input#form_apellido").val();
+                var userID = $("input#form_cid").val();
+                var email = $("input#form_email").val();
                 var package_desc = [];
                 var package_weight = [];
                 var package_cost = [];
@@ -151,7 +151,7 @@
                 }
                 
                 var totalcost = $("input#form_user_packages_total").val();
-                var notes = $("textarea#form_user_note").val();
+                var notes = $("textarea#form_comentario").val();
                 
                 if (firstName.indexOf(' ') >= 1) {
                     firstName = firstName.split(' ').slice(0, -1).join(' ');

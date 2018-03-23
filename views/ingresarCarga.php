@@ -37,7 +37,7 @@
                     <div class="row">
                         <div class="col-md-12 col-xs-6">
                             <br>
-                            <button class="btn btn-lg btn-success" onclick="agregarCarga()" style="text-align: center; width:100%; ">Agregar Paquete</button>
+                            <button class="btn btn-lg btn-success" onclick="agregarCarga(this)" style="text-align: center; width:100%; ">Agregar Paquete</button>
                             <div id="spanAgregarCarga" style="display:none">
                                 <span class="dialog-text"> Por favor asegúrate de llenar todos los campos.</span>
                             </div>
@@ -346,9 +346,30 @@
 
     function initTablaIngresoCarga(){
         $("#tablaNuevaCarga").DataTable().columns.adjust().responsive.recalc();
+        $.ajax({
+            url: "db/DBgetAndInsertNewUsers.php",
+            cache: false,
+            success: function(res){
+                if (res.includes("EXITO")){
+                    var cant = Number(res.split(": ")[1]);
+                    bootbox.alert("La tabla de clientes ha sido actualizada, se agregaron " + cant + " clientes nuevos.");
+                }
+                else if (res.includes("INCOMPLETO")){
+                    var cantInsertados = Number(res.split(": ")[1].split("@")[1]);
+                    var cantFaltantes = Number(res.split(": ")[1].split("@")[0])-cantInsertados;
+                    bootbox.alert("Se intentó actualizar la tabla de clientes, pero solo " + cantInsertados + " clientes nuevos pudieron ser agregados. Hacen falta " + cantFaltantes + " aún por agregar.");
+                }
+                else if (res.includes("ERROR"))
+                    bootbox.alert("Ocurrió un error al consultar la base de datos. Se recibió el siguiente mensaje: <i><br>" + res + "</i>");
+            }, 
+            error: function(){
+                bootbox.alert("No se pudo verificar actualización de la tabla de clientes debido a un problema de conexión con el servidor.");
+            }
+        });
     }
 
-    function agregarCarga() {
+    function agregarCarga(but) {
+        but.disabled = true;
         var tracking = document.getElementById("tracking").value.toUpperCase();
         var uid = document.getElementById("uid").value.toUpperCase();
         var uname = document.getElementById("uname").value;
@@ -359,11 +380,18 @@
             setTimeout(function() {
                 $('#spanAgregarCarga').fadeOut('slow');
             }, 3000);
+            but.disabled = false;
             return;
         }
 
         var nt = ["NT", "NOTRACKING", "NO", "nt", "notracking", "no", "NoTracking"];
         if (nt.indexOf(tracking) != -1){
+            document.getElementById("uid").value = "";
+            document.getElementById("uname").value = "";
+            document.getElementById("peso").value = "";
+            document.getElementById("tracking").value = "";
+            document.getElementById("tracking").focus();
+
             $.ajax({
                 url: "db/DBgetPaquete.php",
                 type: "POST",
@@ -395,15 +423,15 @@
 
                     document.getElementById("paquetes").innerHTML = "Paquetes: " + t.rows().data().length;
                     document.getElementById("libras").innerHTML = "Libras: " + calcularLibras();
-
-                    document.getElementById("uid").value = "";
-                    document.getElementById("uname").value = "";
-                    document.getElementById("peso").value = "";
-                    document.getElementById("tracking").value = "";
-                    document.getElementById("tracking").focus();
+                    but.disabled = false;
                 },
                 error: function() {
+                    document.getElementById("uid").value = uid;
+                    document.getElementById("uname").value = uname;
+                    document.getElementById("peso").value = peso;
+                    document.getElementById("tracking").value = tracking;
                     bootbox.alert("Ocurrió un problema al intentar conectarse al servidor. Intente agregar nuevamente el paquete.");
+                    but.disabled = false;
                 }
             });
 
@@ -418,9 +446,16 @@
                     size: 'small',
                     backdrop: true
                 });
+                but.disabled = false;
                 return;
             }
         }
+
+        document.getElementById("uid").value = "";
+        document.getElementById("uname").value = "";
+        document.getElementById("peso").value = "";
+        document.getElementById("tracking").value = "";
+        document.getElementById("tracking").focus();
 
         $.ajax({
             url: "db/DBgetPaquete.php",
@@ -433,6 +468,11 @@
             success: function(arr) {
                 var row = JSON.parse(arr.replace("[","").replace("]",""));
                 if (row.cant != 0){
+                    document.getElementById("uid").value = uid;
+                    document.getElementById("uname").value = uname;
+                    document.getElementById("peso").value = peso;
+                    document.getElementById("tracking").focus();
+                    
                     bootbox.alert({
                         message: "Ya existe un paquete registrado con este número de tracking, por favor ingrese el dato correctamente.",
                         size: 'small',
@@ -451,16 +491,16 @@
 
                     document.getElementById("paquetes").innerHTML = "Paquetes: " + t.rows().data().length;
                     document.getElementById("libras").innerHTML = "Libras: " + calcularLibras();
-
-                    document.getElementById("uid").value = "";
-                    document.getElementById("uname").value = "";
-                    document.getElementById("peso").value = "";
-                    document.getElementById("tracking").value = "";
-                    document.getElementById("tracking").focus();
                 }
+                but.disabled = false;
             },
             error: function() {
+                document.getElementById("uid").value = uid;
+                document.getElementById("uname").value = uname;
+                document.getElementById("peso").value = peso;
+                document.getElementById("tracking").value = tracking;
                 bootbox.alert("Ocurrió un problema al intentar conectarse al servidor.");
+                button.disabled = false;
             }
         });
     }
@@ -632,7 +672,7 @@
                                                         url: "db/DBexecMultiQuery.php",
                                                         type: "POST",
                                                         data:{
-                                                            query: "DELETE FROM carga WHERE rcid = "+rcid+"; DELETE FROM registro_carga WHERE rcid = " + rcid
+                                                            query: "DELETE FROM paquete WHERE rcid = "+rcid+"; DELETE FROM carga WHERE rcid = " + rcid
                                                         }
                                                     });
                                                     var trackingsin = tdata[cant][0];
@@ -680,7 +720,7 @@
                                                         bootbox.alert("Ocurrió un error al consultar la base de datos. Se recibió el siguiente mensaje: " + res);
                                                     }
                                                     else if (Number(res) > 0){
-                                                        var quer = "UPDATE carga C, (SELECT plan FROM carga WHERE uid = '" + uids[j] + "' AND estado IS NULL AND LENGTH(plan) < 3 AND LENGTH(plan) > 0 ORDER BY plan LIMIT 1) i SET C.plan = i.plan WHERE estado IS NULL AND uid = '" + uids[j] + "' AND rcid = '" + rcid + "'";
+                                                        var quer = "UPDATE paquete P, (SELECT plan FROM paquete WHERE uid = '" + uids[j] + "' AND estado IS NULL AND LENGTH(plan) < 3 AND LENGTH(plan) > 0 ORDER BY plan LIMIT 1) i SET P.plan = i.plan WHERE estado IS NULL AND uid = '" + uids[j] + "' AND rcid = '" + rcid + "'";
                                                         $.ajax({
                                                             url: "db/DBexecQuery.php",
                                                             type: "POST",

@@ -850,9 +850,9 @@
                 }
             }
 
-            var querysita = "SELECT user_mobile AS celular, CONCAT(user_fname, ' ', user_lname) AS usuario FROM users WHERE ";
+            var querysita = "SELECT celular, CONCAT(nombre, ' ', apellido) AS usuario FROM cliente WHERE ";
             for (var i = 0; i < nombres.length; i++)
-                querysita = querysita + "CONCAT(user_fname, ' ', user_lname) = '" + nombres[i] + "' OR ";
+                querysita = querysita + "CONCAT(nombre, ' ', apellido) = '" + nombres[i] + "' OR ";
             querysita = querysita.substring(0, querysita.length-3);
 
             $.ajax({
@@ -1189,9 +1189,9 @@
                 }
             }
 
-            var querysita = "SELECT user_email AS email, CONCAT(user_fname, ' ', user_lname) AS usuario FROM users WHERE ";
+            var querysita = "SELECT email, CONCAT(nombre, ' ', apellido) AS usuario FROM cliente WHERE ";
             for (var i = 0; i < nombres.length; i++)
-                querysita = querysita + "CONCAT(user_fname, ' ', user_lname) = '" + nombres[i] + "' OR ";
+                querysita = querysita + "CONCAT(nombre, ' ', apellido) = '" + nombres[i] + "' OR ";
             querysita = querysita.substring(0, querysita.length-3);
 
             $.ajax({
@@ -1355,7 +1355,7 @@
                         url: "PHPMailer/notificarViaEmail.php",
                         type: "POST",
                         data: {
-                            email: "jjsanchez@galileo.edu", //res
+                            email: "", //res
                             cliente: "Jenner Sánchez",
                             paquetes: strPaquetes
                         },
