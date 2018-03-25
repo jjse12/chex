@@ -11,3 +11,6 @@ ALTER TABLE `users` CHANGE `user_bday` `cumple` DATE NOT NULL;
 ALTER TABLE `users` CHANGE `user_note` `comentario` VARCHAR(500) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;
 ALTER TABLE `users` CHANGE `user_created` `fecha_registro` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 ALTER TABLE `users` CHANGE `user_tarifa` `tarifa` INT(11) NOT NULL DEFAULT '60';
+RENAME TABLE `chex`.`carga` TO `chex`.`paquete`;
+RENAME TABLE `chex`.`users` TO `chex`.`cliente`;
+RENAME TABLE `chex`.`registro_carga` TO `chex`.`carga`;
