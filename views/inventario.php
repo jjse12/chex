@@ -197,7 +197,7 @@
             if (arr[0][5].includes("Esperando"))
                 plan = arr[0][5].split(">")[2].split(" Paquetes")[0];
             if (arr[0][5].includes("En Ruta"))
-                plan = arr[0][5].split(">")[2].split("<")[0];
+                plan = arr[0][5].split(">")[2].split("<")[0].replace("-", "").replace("-","");
             
             var arreglo = ["Cliente", "CLIENTE", "cliente", "Anónimo", "ANÓNIMO", "anónimo", "Anonimo", "ANONIMO", "anonimo"];
             var anonimo = arreglo.indexOf(uid) != -1;
@@ -388,7 +388,7 @@
             if (arr[0][5].includes("Esperando"))
                 plan = arr[0][5].split(">")[2].split(" Paquetes")[0];
             if (arr[0][5].includes("En Ruta"))
-                plan = arr[0][5].split(">")[2].split("<")[0];
+                plan = arr[0][5].split(">")[2].split("<")[0].replace("-", "").replace("-","");
             
             var tom = new Date();
             tom.setTime(tom.getTime() + 86400000);
@@ -940,7 +940,7 @@
 
                                                     var strPaquetes = "";
                                                     for (var i = 0; i < data.length; i++){
-                                                        strPaquetes += " * Tracking: " + data[i][1].split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " libras%0A";
+                                                        strPaquetes += " * Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " libras%0A";
                                                     }
                                                     urlmensaje += strPaquetes + " Quedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0A Que tengas un buen día.";
                                                     urlmensaje = urlmensaje.replace(" ", "%20");
@@ -1024,7 +1024,7 @@
                                     }
                                     var strPaquetes = "";
                                     for (var i = 0; i < data.length; i++){
-                                        strPaquetes += " * Tracking: " + data[i][1].split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " libras%0A";
+                                        strPaquetes += " * Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " libras%0A";
                                     }
                                     urlmensaje += strPaquetes + " Quedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0A Que tengas un buen día.";
                                     urlmensaje = urlmensaje.replace(" ", "%20").replace("Ã¡", "á").replace("Ã©", "é").replace("Ã³", "ó").replace("Ãº", "ú").replace("Ã¼", "ü").replace("Ã±", "ñ").replace("Ã", "í");
@@ -1109,7 +1109,7 @@
                 
                     var strPaquetes = "";
                     for (var i = 0; i < data.length; i++){
-                        strPaquetes += " * Tracking: " + data[i][1].split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " libras%0A";
+                        strPaquetes += " * Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " libras%0A";
                     }
 
                     urlmensaje += strPaquetes + " Quedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0A Que tengas un buen día.";
@@ -1280,7 +1280,7 @@
 
                                                     var strPaquetes = "";
                                                     for (var i = 0; i < data.length; i++){
-                                                        strPaquetes += " * Tracking: " + data[i][1].split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " libras%0A";
+                                                        strPaquetes += " * Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " libras%0A";
                                                     }
                                                     urlmensaje += strPaquetes + " Quedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0A Que tengas un buen día.";
                                                     urlmensaje = urlmensaje.replace(" ", "%20");
@@ -1315,7 +1315,7 @@
                                     }
                                     var strPaquetes = "";
                                     for (var i = 0; i < data.length; i++){
-                                        strPaquetes += " * Tracking: " + data[i][1].split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " libras%0A";
+                                        strPaquetes += " * Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " libras%0A";
                                     }
                                     urlmensaje += strPaquetes + " Quedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0A Que tengas un buen día.";
                                     urlmensaje = urlmensaje.replace(" ", "%20").replace("Ã¡", "á").replace("Ã©", "é").replace("Ã³", "ó").replace("Ãº", "ú").replace("Ã¼", "ü").replace("Ã±", "ñ").replace("Ã", "í");
@@ -1348,7 +1348,7 @@
                 success: function(res){
                     var strPaquetes = "";
                     for (var i = 0; i < data.length; i++){
-                        strPaquetes += " * Tracking: " + data[i][1].split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " libras\n";
+                        strPaquetes += " * Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " libras\n";
                     }
 
                     $.ajax({
@@ -1671,7 +1671,7 @@
         if (data[0][5].includes("Esperando"))
             plan = data[0][5].split(">")[2].split(" Paquetes")[0];
         if (data[0][5].includes("En Ruta"))
-            plan = "Por Ruta: " + data[0][5].split(">")[2].split("<")[0];
+            plan = "Por Ruta: " + data[0][5].split(">")[2].split("<")[0].replace("-", "").replace("-","");
 
         for (var i = 0; i < data.length; i++)
             libras += Number(data[i][4].split(">")[1].split("<")[0]);
@@ -1850,8 +1850,6 @@
                                     bootbox.alert("Uno de los paquetes de la entrega no pudo ser marcado como entregado (verifique los trackings), por favor realize la entrega nuevamente.");
                                 }
                                 else{
-                                    $("#inventario").DataTable().rows('.selected').remove().draw(false);
-                                    document.getElementById("divBotones").style.visibility = "hidden";
                                     $.ajax({
                                         url: "db/DBinsertEntrega.php",
                                         type: "POST",
@@ -1913,6 +1911,8 @@
                                                         h = 12;
                                                     apm = "AM";
                                                 }
+                                                $("#inventario").DataTable().rows('.selected').remove().draw(false);
+                                                document.getElementById("divBotones").style.visibility = "hidden";
                                                 bootbox.alert("La mercadería ha sido entregada con éxito. Se registró una nueva boleta virtual, con fecha " + fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + ":" + s + " " + apm + ".");
                                             }
                                         },
