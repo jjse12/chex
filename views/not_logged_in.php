@@ -27,7 +27,7 @@
                             success: function(res){
                                 bootbox.alert('Ingreso correcto, redireccionando...');
                                 setTimeout(function() {
-                                    window.location.replace("http://<?php require_once('db/db_vars.php'); echo URL_REDIRECT; ?>/chex");
+                                    window.location.replace("http://<?php require_once('db/db_vars.php'); echo URL_REDIRECT; ?>");
                                 }, 1000);
                             }
                         });
