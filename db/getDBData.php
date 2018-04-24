@@ -21,12 +21,12 @@
         <link href="css/custom.css" rel="stylesheet">
     </head>
     <body>
-        
+
         <?php
         require_once("db_vars.php");
         $nuevodb_connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
         $cid = $_POST['cid'];
-        $sql = "SELECT * FROM users WHERE cid = '" . $cid . "'";
+        $sql = "SELECT * FROM cliente WHERE cid = '" . $cid . "'";
         $result = $nuevodb_connection->query($sql);
         $row = mysqli_fetch_row($result);
 
@@ -70,7 +70,7 @@
 
         echo $formdata;
         ?>
-    
+
         <script>
             $("#submitbutton").click(function() {
                 event.preventDefault();
@@ -80,12 +80,12 @@
                 var email = $("input#form_email").val();
                 var mobile = $("input#form_celular").val();
                 var phone = $("input#form_telefono").val();
-                
+
                 if(document.getElementById('form_genero_male').checked)
                     var gender = $("input#form_genero_male").val();
                 else if(document.getElementById('form_genero_female').checked)
                     var gender = $("input#form_genero_female").val();
-                
+
                 var bday = $("input#form_cumple").val();
                 var address = $("textarea#form_direccion").val();
                 var note = $("textarea#form_comentario").val();

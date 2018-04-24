@@ -139,6 +139,7 @@
             success: function(res){
                 var table = $('#clientes').DataTable();
                 table.clear();
+                //console.log(res);
                 var rows = JSON.parse(res);
 
                 for (var i = 0; i < rows.length; i++){
@@ -155,8 +156,8 @@
                         rows[i]["cumple"],
                         rows[i]["comentario"],
                         rows[i]["fecha_registro"],
-                        "<img src='images/edit.png' onclick='modifyUserData(" + rows[i]["cid"]+ ")' />",
-                        "<img src='images/mail.png' onclick='messageUser(" + rows[i]["cid"]+ ")' />"
+                        "<img src='images/edit.png' onclick=\"modifyUserData('" + rows[i]["cid"]+ "')\" />",
+                        "<img src='images/mail.png' onclick=\"messageUser('" + rows[i]["cid"]+ "')\" />"
                     ]);
                 }
                 table.draw(false);
