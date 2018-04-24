@@ -180,7 +180,7 @@
                     bootbox.alert("Ocurrió un problema al intentar conectarse al servidor.");
                 }
             });
-        }); 
+        });
 
         $("#inventario tbody").on("click", "h5.plan", function () {
             var index = table.row($(this).closest('tr')).index();
@@ -188,7 +188,7 @@
             var nombre = arr[0][3].split(">")[1].split("<")[0];
             var uid = arr[0][2].split(">")[1].split("<")[0];
             var tracking = arr[0][1].replace("<br>", "").split(">")[1].split("<")[0];
-            
+
             var plan = "";
             if (arr[0][5].includes("Oficina"))
                 plan = "Oficina";
@@ -198,7 +198,7 @@
                 plan = arr[0][5].split(">")[2].split(" Paquetes")[0];
             if (arr[0][5].includes("En Ruta"))
                 plan = arr[0][5].split(">")[2].split("<")[0].replace("-", "").replace("-","");
-            
+
             var arreglo = ["Cliente", "CLIENTE", "cliente", "Anónimo", "ANÓNIMO", "anónimo", "Anonimo", "ANONIMO", "anonimo"];
             var anonimo = arreglo.indexOf(uid) != -1;
 
@@ -255,7 +255,7 @@
                                 if (esp.replace(/\s/g,'').length === 0 || esp < 1){
                                     document.getElementById("spanLlenarCamposCarga").style.display="inline";
                                     setTimeout(function() {$('#spanLlenarCamposCarga').fadeOut('slow');}, 3000);
-                                    return false;       
+                                    return false;
                                 }
 
                                 plan = document.getElementById("form_carga_esperando").value;
@@ -301,7 +301,7 @@
                                                         plan == "Oficina" ? "<h5 class='plan btn-sm btn-success'>En Oficina</h5>" :
                                                         plan.includes("Guatex") ? "<h5 class='popup plan btn-sm' style='background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h5>" :
                                                         plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
-                                                        "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h5>"; 
+                                                        "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h5>";
                                                         table.row(rowIdx).data(dataRow).draw(false);
                                                     }
                                                 });
@@ -313,7 +313,7 @@
                                                         plan == "Oficina" ? "<h5 class='plan btn-sm btn-success'>En Oficina</h5>" :
                                                         plan.includes("Guatex") ? "<h5 class='popup plan btn-sm' style='background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h5>" :
                                                         plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
-                                                        "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h5>"; 
+                                                        "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h5>";
                                             table.row(index).data(arr[0]).draw(false);
                                             bootbox.alert("Se actualizó la información del paquete exitosamente.");
                                         }
@@ -332,7 +332,7 @@
                 showOtherMonths: true,
                 selectOtherMonths: true,
                 showAnim: "slideDown",
-                minDate: 0, 
+                minDate: 0,
                 maxDate: "+1M"
             });
             var tom = new Date();
@@ -389,10 +389,10 @@
                 plan = arr[0][5].split(">")[2].split(" Paquetes")[0];
             if (arr[0][5].includes("En Ruta"))
                 plan = arr[0][5].split(">")[2].split("<")[0].replace("-", "").replace("-","");
-            
+
             var tom = new Date();
             tom.setTime(tom.getTime() + 86400000);
-            //tomor = tom.getDate() + "/" + tom.getMonth() + "/" + tom.getFullYear() 
+            //tomor = tom.getDate() + "/" + tom.getMonth() + "/" + tom.getFullYear()
             //console.log("mañana: " + tomor);
             bootbox.dialog({
                 closeButton: false,
@@ -452,7 +452,7 @@
                                 return false;
                             }
 
-                            
+
                             if (document.getElementById("btnOficina").style.color == "white")
                                 plan = "Oficina";
                             else if (document.getElementById("btnGuatex").style.color == "white"){
@@ -465,7 +465,7 @@
                                 setTimeout(function() {
                                     $('#spanLlenarCamposCarga').fadeOut('slow');
                                 }, 3000);
-                                return false;       
+                                return false;
                                 }
                                 plan = document.getElementById("form_carga_esperando").value;
                             }
@@ -515,15 +515,15 @@
                                                                     plan == "Oficina" ? "<h5 class='plan btn-sm btn-success'>En Oficina</h5>" :
                                                                     plan.includes("Guatex") ? "<h5 class='popup plan btn-sm' style='background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h5>" :
                                                                     plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
-                                                                    "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h5>"; 
+                                                                    "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h5>";
                                                         table.row(index).data(arr[0]);
                                                         table.order([2, "asc"]);
                                                         table.draw(false);
                                                     }
-                                                    
+
                                                 },
                                                 error: function(){
-                                                    bootbox.alert("No se pudo actualizar el peso del registro de carga asociado al paquete. Contacte con el administrador de base de datos para poder ajustar el registro de carga");       
+                                                    bootbox.alert("No se pudo actualizar el peso del registro de carga asociado al paquete. Contacte con el administrador de base de datos para poder ajustar el registro de carga");
                                                 }
                                             });
                                         }
@@ -537,7 +537,7 @@
                                                         plan == "Oficina" ? "<h5 class='plan btn-sm btn-success'>En Oficina</h5>" :
                                                         plan.includes("Guatex") ? "<h5 class='popup plan btn-sm' style='background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h5>" :
                                                         plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
-                                                        "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h5>"; 
+                                                        "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h5>";
                                             table.row(index).data(arr[0]);
                                             table.order([2, "asc"]);
                                             table.draw(false);
@@ -552,17 +552,17 @@
                     }
                 }
             });
-            
+
             $("#divFechaRuta").datepicker({
                 showOtherMonths: true,
                 selectOtherMonths: true,
                 showAnim: "slideDown",
-                minDate: 0, 
+                minDate: 0,
                 maxDate: "+1M"
             });
-            
+
             $('#divFechaRuta').datepicker("setDate", tom);
-            
+
             if (plan == "Oficina"){
                 document.getElementById("btnOficina").style.backgroundColor = "#337ab7";
                 document.getElementById("btnOficina").style.color = "white";
@@ -605,7 +605,7 @@
                 document.getElementById("divFechaRuta").style.display = "none";
             else if (boton.innerHTML == "Esperando")
                 document.getElementById("divEsperandoCantidad").style.display = "none";
-            
+
             boton.style.backgroundColor = "#fff";
             boton.style.color = "#337ab7";
         }
@@ -703,8 +703,8 @@
 
 <script type="text/javascript">
     var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-    
-    function loadInventario(){    
+
+    function loadInventario(){
         var table = $('#inventario').DataTable();
         table.clear();
         document.getElementById("divBotones").style.visibility = "hidden";
@@ -714,7 +714,7 @@
             success: function(arr) {
                 if (arr != "]"){
                     var rows = JSON.parse(arr);
-                    for (var i = 0; i < rows.length; i++){    
+                    for (var i = 0; i < rows.length; i++){
                         var f = rows[i][1].split(" ")[0].split("-");
                         var fechaIngreso = f[2] +"/" +f[1] +"/"+f[0];
                         var plansito = "";
@@ -747,7 +747,7 @@
                                 if (rows[i][6].includes("/")){
                                     if (rows[i][6].includes("Guatex"))
                                         plansito = "<h5 class='popup plan btn-sm' style='text-align:center; background-color: #f4cb38'>Guatex<span class='popuptext'>"+rows[i][6].split(":")[1]+"</span></h5>";
-                                    else 
+                                    else
                                         plansito = "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+rows[i][6]+"-</span></h5>";
                                 }
                                 else if (rows[i][6] < 1){
@@ -759,7 +759,7 @@
 
                         var trackingsito = rows[i][2];
                         if (trackingsito.length > 20)
-                                trackingsito = trackingsito.substr(0, trackingsito.length/2) + "<br>" + 
+                                trackingsito = trackingsito.substr(0, trackingsito.length/2) + "<br>" +
                                 trackingsito.substr(trackingsito.length/2, trackingsito.length);
                         table.row.add([
                             "<h5 title='Registro de Carga #"+rows[i][0]+"' class='seleccionado'>"+fechaIngreso+"</h5>",
@@ -782,7 +782,7 @@
         });
     }
 
-    var isMobile = (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) 
+    var isMobile = (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent)
     || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0,4)));
 
     function notificarSeleccionados(){
@@ -800,7 +800,7 @@
         nombre = nombre.split(">")[1].split("<")[0]
 
         var arreglo = ["Cliente", "CLIENTE", "cliente", "Anónimo", "ANÓNIMO", "anónimo", "Anonimo", "ANONIMO", "anonimo"];
-        
+
         if (!continuar){
             bootbox.dialog({
                 closeButton: false,
@@ -823,7 +823,7 @@
             size: 'medium',
             closeButton: false,
             title: "¿Por cuál medio desea notificar al cliente?",
-            message: "<div class='row'><div class='row'><div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><img class='col-lg-5 col-md-5 col-sm-5 col-xs-5' align='middle' style='cursor: pointer;' src='images/whatsapp128px.png' onclick='notificarViaWhatsApp("+(arreglo.indexOf(nombre)>-1)+")'></img><img class='col-lg-5 col-md-5 col-sm-5 col-xs-5' align='middle' style='cursor: pointer;' src='images/email128px.png' onclick='notificarViaEmail("+(arreglo.indexOf(nombre)>-1)+")'></img></div><div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><label class='col-lg-5 col-md-5 col-sm-5 col-xs-5' style='text-align: center; color: black; cursor: pointer;' onclick='notificarViaWhatsApp("+(arreglo.indexOf(nombre)>-1)+")'>Vía Whatsapp</label><label class='col-lg-5 col-md-5 col-sm-5 col-xs-5' style='text-align: center; color: black; cursor: pointer;' onclick='notificarViaEmail("+(arreglo.indexOf(nombre)>-1)+")'>Vía Correo Electrónico</label></div></div>",  
+            message: "<div class='row'><div class='row'><div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><img class='col-lg-5 col-md-5 col-sm-5 col-xs-5' align='middle' style='cursor: pointer;' src='images/whatsapp128px.png' onclick='notificarViaWhatsApp("+(arreglo.indexOf(nombre)>-1)+")'></img><img class='col-lg-5 col-md-5 col-sm-5 col-xs-5' align='middle' style='cursor: pointer;' src='images/email128px.png' onclick='notificarViaEmail("+(arreglo.indexOf(nombre)>-1)+")'></img></div><div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><label class='col-lg-5 col-md-5 col-sm-5 col-xs-5' style='text-align: center; color: black; cursor: pointer;' onclick='notificarViaWhatsApp("+(arreglo.indexOf(nombre)>-1)+")'>Vía Whatsapp</label><label class='col-lg-5 col-md-5 col-sm-5 col-xs-5' style='text-align: center; color: black; cursor: pointer;' onclick='notificarViaEmail("+(arreglo.indexOf(nombre)>-1)+")'>Vía Correo Electrónico</label></div></div>",
             buttons: {
                 confirm: {
                     label: 'Regresar',
@@ -889,7 +889,7 @@
                         size: 'medium',
                         closeButton: false,
                         title: (encontrados == 0 ? "¡No se encontró un número de celular asociado!" : "Confirmar número de celular"),
-                        message: msg,  
+                        message: msg,
                         buttons: {
                             regresar: {
                                 label: 'Regresar',
@@ -915,7 +915,7 @@
                                         size: 'medium',
                                         closeButton: false,
                                         title: "Ingreso de número de celular",
-                                        message: msg,  
+                                        message: msg,
                                         buttons: {
                                             regresar: {
                                                 label: 'Regresar',
@@ -936,20 +936,21 @@
                                                         return false;
                                                     }
                                                     whatsNumber = "502"+whatsNumber;
-                                                    urlmensaje = "Hola " + nombre + ", de parte de Chispudito Express te queremos avisar que los siguientes paquetes han arribado a nuestras bodegas: %0A";
+
+                                                    urlmensaje = "Buen día " + nombre + ", de parte de Chispudito Express te informamos que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:%0A%0A";
 
                                                     var strPaquetes = "";
                                                     for (var i = 0; i < data.length; i++){
-                                                        strPaquetes += " * Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " libras%0A";
+                                                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A   Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
                                                     }
-                                                    urlmensaje += strPaquetes + " Quedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0A Que tengas un buen día.";
+                                                    urlmensaje += strPaquetes + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0A Que tengas un buen día.";
                                                     urlmensaje = urlmensaje.replace(" ", "%20");
-                                                    
+
                                                     if (whatsWebWindow != null && !whatsWebWindow.closed){
                                                         whatsWebWindow.location.replace("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
                                                         whatsWebWindow.focus();
                                                     }
-                                                    else 
+                                                    else
                                                         whatsWebWindow = window.open("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
 
                                                     bootbox.confirm({
@@ -1016,24 +1017,24 @@
                                             return false;
                                         }
                                         whatsNumber = "502"+whatsNumber;
-                                        urlmensaje = "Hola " + nombre + ", de parte de Chispudito Express te queremos avisar que los siguientes paquetes han arribado a nuestras bodegas: %0A";
+                                        urlmensaje = "Buen día " + nombre + ", de parte de Chispudito Express te informamos que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:%0A%0A";
                                     }
                                     else{
                                         whatsNumber = "502"+rows[0]["celular"];
-                                        urlmensaje = "Hola " + rows[0]["usuario"] + ", de parte de Chispudito Express te queremos avisar que los siguientes paquetes han arribado a nuestras bodegas: %0A";
+                                        urlmensaje = "Buen día " + rows[0]["usuario"] + ", de parte de Chispudito Express te informamos que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:%0A%0A";
                                     }
                                     var strPaquetes = "";
                                     for (var i = 0; i < data.length; i++){
-                                        strPaquetes += " * Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " libras%0A";
+                                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A   Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
                                     }
-                                    urlmensaje += strPaquetes + " Quedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0A Que tengas un buen día.";
+                                    urlmensaje += strPaquetes + "%0A"%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0A Que tengas un buen día.";
                                     urlmensaje = urlmensaje.replace(" ", "%20").replace("Ã¡", "á").replace("Ã©", "é").replace("Ã³", "ó").replace("Ãº", "ú").replace("Ã¼", "ü").replace("Ã±", "ñ").replace("Ã", "í");
 
                                     if (whatsWebWindow != null && !whatsWebWindow.closed){
                                         whatsWebWindow.location.replace("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
                                         whatsWebWindow.focus();
                                     }
-                                    else 
+                                    else
                                         whatsWebWindow = window.open("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
 
                                     bootbox.confirm({
@@ -1095,7 +1096,7 @@
         else{
             var uid = data[0][2].split(">")[1].split("<")[0];
             var nombreCliente = data[0][3].split(">")[1].split("<")[0];
-            
+
             $.ajax({
                 url: "db/DBgetUserCelular.php",
                 type: "POST",
@@ -1105,21 +1106,21 @@
                 cache: false,
                 success: function(res){
                     var whatsNumber = "502"+res;
-                    var urlmensaje = "Hola " + nombreCliente + ", de parte de Chispudito Express te queremos avisar que los siguientes paquetes han arribado a nuestras bodegas: %0A";
-                
+                    urlmensaje = "Buen día " + nombreCliente  + ", de parte de Chispudito Express te informamos que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:%0A%0A";
+
                     var strPaquetes = "";
                     for (var i = 0; i < data.length; i++){
-                        strPaquetes += " * Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " libras%0A";
+                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A   Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
                     }
 
-                    urlmensaje += strPaquetes + " Quedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0A Que tengas un buen día.";
+                    urlmensaje += strPaquetes + "%0A"%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0A Que tengas un buen día.";
                     urlmensaje = urlmensaje.replace(" ", "%20").replace("Ã¡", "á").replace("Ã©", "é").replace("Ã³", "ó").replace("Ãº", "ú").replace("Ã¼", "ü").replace("Ã±", "ñ").replace("Ã", "í");
-                    
+
                     if (whatsWebWindow != null && !whatsWebWindow.closed){
                         whatsWebWindow.location.replace("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
                         whatsWebWindow.focus();
                     }
-                    else 
+                    else
                         whatsWebWindow = window.open("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
 
                     bootbox.confirm({
@@ -1177,7 +1178,7 @@
     }
 
     function notificarViaEmail(uidCliente){
-        
+
         bootbox.hideAll();
         var data = $("#inventario").DataTable().rows(".selected").data().toArray();
         var numero = "";
@@ -1228,7 +1229,7 @@
                         size: 'medium',
                         closeButton: false,
                         title: (encontrados == 0 ? "¡No se encontró un correo electrónico asociado!" : "Confirmar correo electrónico"),
-                        message: msg,  
+                        message: msg,
                         buttons: {
                             regresar: {
                                 label: 'Regresar',
@@ -1255,7 +1256,7 @@
                                         size: 'medium',
                                         closeButton: false,
                                         title: "Ingreso de correo electrónico",
-                                        message: msg,  
+                                        message: msg,
                                         buttons: {
                                             regresar: {
                                                 label: 'Regresar',
@@ -1276,13 +1277,13 @@
                                                         return false;
                                                     }
                                                     whatsNumber = "502"+whatsNumber;
-                                                    urlmensaje = "Hola " + nombre + ", de parte de Chispudito Express te queremos avisar que los siguientes paquetes han arribado a nuestras bodegas: %0A";
+                                                    urlmensaje = "Buen día " + nombre + ", de parte de Chispudito Express te informamos que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:%0A%0A";
 
                                                     var strPaquetes = "";
                                                     for (var i = 0; i < data.length; i++){
-                                                        strPaquetes += " * Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " libras%0A";
+                                                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A   Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
                                                     }
-                                                    urlmensaje += strPaquetes + " Quedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0A Que tengas un buen día.";
+                                                    urlmensaje += strPaquetes + "%0A"%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0A Que tengas un buen día.";
                                                     urlmensaje = urlmensaje.replace(" ", "%20");
                                                     window.open("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
                                                     var t = $("#inventario").DataTable();
@@ -1307,17 +1308,17 @@
                                             return false;
                                         }
                                         whatsNumber = "502"+whatsNumber;
-                                        urlmensaje = "Hola " + nombre + ", de parte de Chispudito Express te queremos avisar que los siguientes paquetes han arribado a nuestras bodegas: %0A";
+                                        urlmensaje = "Buen día " + nombre + ", de parte de Chispudito Express te informamos que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:%0A%0A";
                                     }
                                     else{
                                         whatsNumber = "502"+rows[0]["celular"];
-                                        urlmensaje = "Hola " + rows[0]["usuario"] + ", de parte de Chispudito Express te queremos avisar que los siguientes paquetes han arribado a nuestras bodegas: %0A";
+                                        urlmensaje = "Buen día " + rows[0]["usuario"] + ", de parte de Chispudito Express te informamos que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:%0A%0A";
                                     }
                                     var strPaquetes = "";
                                     for (var i = 0; i < data.length; i++){
-                                        strPaquetes += " * Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " libras%0A";
+                                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A   Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
                                     }
-                                    urlmensaje += strPaquetes + " Quedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0A Que tengas un buen día.";
+                                    urlmensaje += strPaquetes + "%0A"%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0A Que tengas un buen día.";
                                     urlmensaje = urlmensaje.replace(" ", "%20").replace("Ã¡", "á").replace("Ã©", "é").replace("Ã³", "ó").replace("Ãº", "ú").replace("Ã¼", "ü").replace("Ã±", "ñ").replace("Ã", "í");
                                     window.open("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
                                     var t = $("#inventario").DataTable();
@@ -1337,7 +1338,7 @@
         else{
             var uid = data[0][2].split(">")[1].split("<")[0];
             var nombreCliente = data[0][3].split(">")[1].split("<")[0];
-            
+
             $.ajax({
                 url: "db/DBgetUserEmail.php",
                 type: "POST",
@@ -1348,7 +1349,7 @@
                 success: function(res){
                     var strPaquetes = "";
                     for (var i = 0; i < data.length; i++){
-                        strPaquetes += " * Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " libras\n";
+                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A   Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
                     }
 
                     $.ajax({
@@ -1383,7 +1384,7 @@
             });
         }
     }
-    
+
     function planificarEntrega(){
         document.getElementById("divBotones").style.visibility = "hidden";
         var data = $("#inventario").DataTable().rows(".selected").data().toArray();
@@ -1434,14 +1435,14 @@
         for (var i = 0; i < arr.length; i++)
             uids = uids + (i == 0 ? "'":", '")+arr[i][2].split(">")[1].split("<")[0]+"'";
         uids = uids+")";
-    
+
         var anonimo = false;
         var arreglo = ["Cliente", "CLIENTE", "cliente", "Anónimo", "ANÓNIMO", "anónimo", "Anonimo", "ANONIMO", "anonimo"];
         for (var j = 0; j < arreglo.length; j++){
             if (uids.includes(arreglo[j])){
                 anonimo = true;
                 break;
-            }            
+            }
         }
 
         bootbox.dialog({
@@ -1500,7 +1501,7 @@
                             if (esp.replace(/\s/g,'').length === 0 || esp < 1){
                                 document.getElementById("spanLlenarCamposCarga").style.display="inline";
                                 setTimeout(function() {$('#spanLlenarCamposCarga').fadeOut('slow');}, 3000);
-                                return false;       
+                                return false;
                             }
                             plan = document.getElementById("form_carga_esperando").value;
                         }
@@ -1520,7 +1521,7 @@
                             todos = true;
                             wher = "estado IS NULL AND uid IN " + uids;
                         }
-                        
+
                         $.ajax({
                             url: "db/DBsetPaquete.php",
                             type: "POST",
@@ -1568,7 +1569,7 @@
                                                         plan == "Oficina" ? "<h5 class='plan btn-sm btn-success'>En Oficina</h5>" :
                                                         plan.includes("Guatex") ? "<h5 class='popup plan btn-sm' style='text-align:center; background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h5>" :
                                                         plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
-                                                        "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h5>"; 
+                                                        "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h5>";
                                                 t.row(rowIdx).data(dataRow);
                                         });
                                         t.rows(".selected").nodes().to$() .removeClass("selected");
@@ -1591,7 +1592,7 @@
             showOtherMonths: true,
             selectOtherMonths: true,
             showAnim: "slideDown",
-            minDate: 0, 
+            minDate: 0,
             maxDate: "+1M"
         });
 
@@ -1616,7 +1617,7 @@
             if (plan != data[i][5].toUpperCase()){
                 razon = false;
                 continuar = false;
-                break;   
+                break;
             }
         }
 
@@ -1844,7 +1845,7 @@
                                         },
                                         cache: false,
                                         success: function(res){
-                                            
+
                                         }
                                     });
                                     bootbox.alert("Uno de los paquetes de la entrega no pudo ser marcado como entregado (verifique los trackings), por favor realize la entrega nuevamente.");
@@ -1963,7 +1964,7 @@
         }
 
         document.getElementById("totalEntrega").value = "Q " + numberWithCommas(total);
-        
+
         var detalle = document.getElementById("detalleEntrega");
         var divDetalle = document.getElementById("divDetalle");
         var divRelleno = document.getElementById("divRelleno");
@@ -1981,7 +1982,7 @@
                 tarifAumnt = numberWithCommas(64 - t);
                 extra -= t*libras;
             }
-            else 
+            else
                 extra -= 60*libras;
             detalleStr = "Pago con Tarjeta de Crédito:<br> &nbsp&nbsp* Aumento de Tarifa: Q "+tarifAumnt+"<br> &nbsp&nbsp* Comisión: Q "+numberWithCommas(comision)+"<br> &nbsp&nbsp* Monto total agregado:<br> &nbsp&nbsp&nbsp&nbsp&nbsp&nbspQ " + numberWithCommas(extra);
         }
@@ -2004,7 +2005,7 @@
         var desc = document.getElementById("descuentoEntrega").value;
         if (desc.replace(/\s/g,'').length === 0){
             activateSpanEntrega("Por favor ingrese el descuento a aplicar.");
-            return false;       
+            return false;
         }
         calcularTotalEntrega();
     }
@@ -2012,7 +2013,7 @@
     function toggleDescuento(){
         var boton = document.getElementById("btnDescuento");
         var div = document.getElementById("divDescuentoEspecial");
-        
+
         if (boton.style.color == "white"){
             div.style.pointerEvents = "none";
             div.style.opacity = "0.4";
@@ -2034,7 +2035,7 @@
         if (boton.style.color == "white"){
             boton.style.backgroundColor = "#fff";
             boton.style.color = "#337ab7";
-            
+
             if (boton.innerHTML == "Tarjeta C."){
                 if (tarifa.title == "Cliente con tarifa corriente.")
                     tarifa.value = "Q 60";
@@ -2065,8 +2066,8 @@
             boton.style.backgroundColor = "#337ab7";
             boton.style.color = "white";
 
-            calcularTotalEntrega();   
+            calcularTotalEntrega();
         }
     }
-    
+
 </script>
