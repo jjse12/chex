@@ -941,9 +941,9 @@
 
                                                     var strPaquetes = "";
                                                     for (var i = 0; i < data.length; i++){
-                                                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A   Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
+                                                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
                                                     }
-                                                    urlmensaje += strPaquetes + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0A Que tengas un buen día.";
+                                                    urlmensaje += strPaquetes + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0AQue tengas un buen día.";
                                                     urlmensaje = urlmensaje.replace(" ", "%20");
 
                                                     if (whatsWebWindow != null && !whatsWebWindow.closed){
@@ -1025,9 +1025,10 @@
                                     }
                                     var strPaquetes = "";
                                     for (var i = 0; i < data.length; i++){
-                                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A   Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
+                                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
                                     }
-                                    urlmensaje += strPaquetes + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0A Que tengas un buen día.";
+
+                                    urlmensaje += strPaquetes + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0AQue tengas un buen día.";
                                     urlmensaje = urlmensaje.replace(" ", "%20").replace("Ã¡", "á").replace("Ã©", "é").replace("Ã³", "ó").replace("Ãº", "ú").replace("Ã¼", "ü").replace("Ã±", "ñ").replace("Ã", "í");
 
                                     if (whatsWebWindow != null && !whatsWebWindow.closed){
@@ -1110,10 +1111,10 @@
 
                     var strPaquetes = "";
                     for (var i = 0; i < data.length; i++){
-                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A   Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
+                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
                     }
 
-                    urlmensaje += strPaquetes + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0A Que tengas un buen día.";
+                    urlmensaje += strPaquetes + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0AQue tengas un buen día.";
                     urlmensaje = urlmensaje.replace(" ", "%20").replace("Ã¡", "á").replace("Ã©", "é").replace("Ã³", "ó").replace("Ãº", "ú").replace("Ã¼", "ü").replace("Ã±", "ñ").replace("Ã", "í");
 
                     if (whatsWebWindow != null && !whatsWebWindow.closed){
@@ -1281,9 +1282,9 @@
 
                                                     var strPaquetes = "";
                                                     for (var i = 0; i < data.length; i++){
-                                                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A   Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
+                                                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
                                                     }
-                                                    urlmensaje += strPaquetes + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0A Que tengas un buen día.";
+                                                    urlmensaje += strPaquetes + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0AQue tengas un buen día.";
                                                     urlmensaje = urlmensaje.replace(" ", "%20");
                                                     window.open("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
                                                     var t = $("#inventario").DataTable();
@@ -1316,9 +1317,9 @@
                                     }
                                     var strPaquetes = "";
                                     for (var i = 0; i < data.length; i++){
-                                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A   Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
+                                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
                                     }
-                                    urlmensaje += strPaquetes + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0A Que tengas un buen día.";
+                                    urlmensaje += strPaquetes + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0AQue tengas un buen día.";
                                     urlmensaje = urlmensaje.replace(" ", "%20").replace("Ã¡", "á").replace("Ã©", "é").replace("Ã³", "ó").replace("Ãº", "ú").replace("Ã¼", "ü").replace("Ã±", "ñ").replace("Ã", "í");
                                     window.open("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
                                     var t = $("#inventario").DataTable();
@@ -1349,7 +1350,7 @@
                 success: function(res){
                     var strPaquetes = "";
                     for (var i = 0; i < data.length; i++){
-                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A   Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
+                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
                     }
 
                     $.ajax({
