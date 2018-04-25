@@ -850,7 +850,7 @@
                 }
             }
 
-            var querysita = "SELECT celular, CONCAT(nombre, ' ', apellido) AS usuario FROM cliente WHERE ";
+            var querysita = "SELECT celular, tarifa, CONCAT(nombre, ' ', apellido) AS usuario FROM cliente WHERE ";
             for (var i = 0; i < nombres.length; i++)
                 querysita = querysita + "CONCAT(nombre, ' ', apellido) = '" + nombres[i] + "' OR ";
             querysita = querysita.substring(0, querysita.length-3);
@@ -939,11 +939,13 @@
 
                                                     urlmensaje = "Buen día " + nombre + ", de parte de Chispudito Express te informamos que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:%0A%0A";
 
-                                                    var strPaquetes = "";
+                                                    var strPaquetes = "", pesoTotal = 0;
                                                     for (var i = 0; i < data.length; i++){
                                                         strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
+                                                        pesoTotal += Number(data[i][4].split(">")[1].split("<")[0]);
                                                     }
-                                                    urlmensaje += strPaquetes + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0AQue tengas un buen día.";
+                                                    var totales = "%0A - Paquetes: "+data.length+"%0A - Peso total: "+pesoTotal+"%0A - Total a pagar: Q"+(pesoTotal*60)+"%0A";
+                                                    urlmensaje += strPaquetes + totales + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0AGracias por preferirnos.";
                                                     urlmensaje = urlmensaje.replace(" ", "%20");
 
                                                     if (whatsWebWindow != null && !whatsWebWindow.closed){
@@ -1008,7 +1010,7 @@
                                 label: (encontrados == 0 ? 'Listo, continuar' : "Si, continuar"),
                                 className: (encontrados  > 1 ? "gone" : "btn-success alinear-derecha"),
                                 callback: function(){
-                                    var urlmensaje = "", whatsNumber = "";
+                                    var urlmensaje = "", whatsNumber = "", tarifa = 60;
                                     if (encontrados == 0){
                                         whatsNumber = document.getElementById("inputNotifWhatsNumero").value;
                                         var nombre = document.getElementById("inputNotifWhatsCliente").value;
@@ -1022,13 +1024,17 @@
                                     else{
                                         whatsNumber = "502"+rows[0]["celular"];
                                         urlmensaje = "Buen día " + rows[0]["usuario"] + ", de parte de Chispudito Express te informamos que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:%0A%0A";
-                                    }
-                                    var strPaquetes = "";
-                                    for (var i = 0; i < data.length; i++){
-                                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
+                                        tarifa = Number(rows[0]["tarifa"]);
                                     }
 
-                                    urlmensaje += strPaquetes + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0AQue tengas un buen día.";
+                                    var strPaquetes = "", pesoTotal = 0;
+                                    for (var i = 0; i < data.length; i++){
+                                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
+                                        pesoTotal += Number(data[i][4].split(">")[1].split("<")[0]);
+                                    }
+                                    var totales = "%0A - Paquetes: "+data.length+"%0A - Peso total: "+pesoTotal+"%0A - Total a pagar: Q"+(pesoTotal*tarifa)+"%0A";
+
+                                    urlmensaje += strPaquetes + totales + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0AGracias por preferirnos.";
                                     urlmensaje = urlmensaje.replace(" ", "%20").replace("Ã¡", "á").replace("Ã©", "é").replace("Ã³", "ó").replace("Ãº", "ú").replace("Ã¼", "ü").replace("Ã±", "ñ").replace("Ã", "í");
 
                                     if (whatsWebWindow != null && !whatsWebWindow.closed){
@@ -1098,23 +1104,29 @@
             var uid = data[0][2].split(">")[1].split("<")[0];
             var nombreCliente = data[0][3].split(">")[1].split("<")[0];
 
+            var querysita = "SELECT celular, tarifa FROM cliente WHERE cid = '" + uid + "'";
+
             $.ajax({
-                url: "db/DBgetUserCelular.php",
+                url: "db/DBexecQuery.php",
                 type: "POST",
-                data: {
-                    uid: uid
+                data:{
+                    query: querysita
                 },
                 cache: false,
                 success: function(res){
-                    var whatsNumber = "502"+res;
+
+                    var whatsNumber = "502"+JSON.parse(res)[0].celular;
+                    var tarifa = JSON.parse(res)[0].tarifa;
                     urlmensaje = "Buen día " + nombreCliente  + ", de parte de Chispudito Express te informamos que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:%0A%0A";
 
-                    var strPaquetes = "";
+                    var strPaquetes = "", pesoTotal = 0;
                     for (var i = 0; i < data.length; i++){
                         strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
+                        pesoTotal += Number(data[i][4].split(">")[1].split("<")[0]);
                     }
+                    var totales = "%0A - Paquetes: "+data.length+"%0A - Peso total: "+pesoTotal+"%0A - Total a pagar: Q"+(pesoTotal*tarifa)+"%0A";
 
-                    urlmensaje += strPaquetes + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0AQue tengas un buen día.";
+                    urlmensaje += strPaquetes + totales + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0AGracias por preferirnos.";
                     urlmensaje = urlmensaje.replace(" ", "%20").replace("Ã¡", "á").replace("Ã©", "é").replace("Ã³", "ó").replace("Ãº", "ú").replace("Ã¼", "ü").replace("Ã±", "ñ").replace("Ã", "í");
 
                     if (whatsWebWindow != null && !whatsWebWindow.closed){
@@ -1284,7 +1296,7 @@
                                                     for (var i = 0; i < data.length; i++){
                                                         strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
                                                     }
-                                                    urlmensaje += strPaquetes + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0AQue tengas un buen día.";
+                                                    urlmensaje += strPaquetes + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0AGracias por preferirnos.";
                                                     urlmensaje = urlmensaje.replace(" ", "%20");
                                                     window.open("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
                                                     var t = $("#inventario").DataTable();
@@ -1319,7 +1331,7 @@
                                     for (var i = 0; i < data.length; i++){
                                         strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
                                     }
-                                    urlmensaje += strPaquetes + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0AQue tengas un buen día.";
+                                    urlmensaje += strPaquetes + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0AGracias por preferirnos.";
                                     urlmensaje = urlmensaje.replace(" ", "%20").replace("Ã¡", "á").replace("Ã©", "é").replace("Ã³", "ó").replace("Ãº", "ú").replace("Ã¼", "ü").replace("Ã±", "ñ").replace("Ã", "í");
                                     window.open("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
                                     var t = $("#inventario").DataTable();
