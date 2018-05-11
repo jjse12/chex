@@ -1223,16 +1223,16 @@
                     if (encontrados == 0){
                         msg = "<div class='row' style='background-color: #dadada'>"+
                             "<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>"+
-                                "<p style='color: black'>Por favor ingresa los siguientes datos del cliente para poder enviar la notificación.</p>"+
-                                "<form novalidate>"+
-                                    "<div class='control-group form-group col-lg-6 col-md-6 col-sm-6 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Correo electrónico:</label><input align='middle' style='text-align:center; width: 100%;' type='email' id='inputNotifEmailCorreo' placeholder='Email del cliente' onkeypress='return integersonly(this, event)'></div></div>"+
-                                    "<div class='control-group form-group col-lg-6 col-md-6 col-sm-6 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Nombre y apellido:</label><input align='middle' style='text-align:center; width: 100%;' type='text' id='inputNotifEmailCliente' placeholder='Nombre y apellido del cliente'></div></div>"+
-                                "</form>"+
+                            "<p style='color: black'>Por favor ingresa los siguientes datos del cliente para poder enviar la notificación.</p>"+
+                            "<form novalidate>"+
+                            "<div class='control-group form-group col-lg-6 col-md-6 col-sm-6 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Correo electrónico:</label><input align='middle' style='text-align:center; width: 100%;' type='email' id='inputNotifEmailCorreo' placeholder='Email del cliente'></div></div>"+
+                            "<div class='control-group form-group col-lg-6 col-md-6 col-sm-6 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Nombre y apellido:</label><input align='middle' style='text-align:center; width: 100%;' type='text' id='inputNotifEmailCliente' placeholder='Nombre y apellido del cliente'></div></div>"+
+                            "</form>"+
                             "</div>"+
-                        "</div>";
+                            "</div>";
                     }
                     else if (encontrados == 1){
-                        msg = "Los paquetes poseen un ID de Cliente auxiliar. Por medio de uno de los nombres de clientes que figuran en los registro de los paquetes, se encontró el siguiente correo electrónico en la base de datos:<br><div class='row'><div class='col-lg-2 col-md- col-sm-2 col-xs-2'></div><label class='col-lg-8 col-md-8 col-sm-8 col-xs-8' align='middle' style='font-size: 20px; background-color: #178ac4; text-align: center; color: white; border-radius: 5px'>"+rows[0]["email"]+"</label></div><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' align='middle' style='text-align: center; color: black;'>¿Enviar notificación al cliente usando este correo electrónico?</label></div>";
+                        msg = "Los paquetes poseen un ID de Cliente auxiliar. Por medio de uno de los nombres de clientes que figuran en los registro de los paquetes, se encontró el siguiente correo electrónico en la base de datos:<br><br><div class='row'><div class='col-lg-2 col-md- col-sm-2 col-xs-2'></div><label class='col-lg-8 col-md-8 col-sm-8 col-xs-8' align='middle' style='font-size: 20px; background-color: #178ac4; text-align: center; color: white; border-radius: 5px'>"+rows[0]["email"]+"</label></div><br><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' align='middle' style='text-align: center; color: black;'>¿Enviar notificación al cliente usando este correo electrónico?</label></div>";
                     }
                     else{
                         bootbox.alert("Se detectaron nombres de cliente diferentes entre los paquetes seleccionados, y estos están asociados a diferentes correos electrónicos. Por favor cerciorate de seleccionar los paquetes de un solo cliente a la vez.");
@@ -1257,13 +1257,13 @@
                                 className: (encontrados == 0 ? "gone" : "btn-primary alinear-izquierda"),
                                 callback: function(){
                                     msg = "<div class='row' style='background-color: #dadada'>"+
-                                            "<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>"+
-                                                "<p style='color: black'>Por favor ingresa los siguientes datos del cliente para poder enviar la notificación.</p>"+
-                                                "<form novalidate>"+
-                                                    "<div class='control-group form-group col-lg-6 col-md-6 col-sm-6 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Correo electrónico:</label><input align='middle' style='text-align:center; width: 100%;' type='email' id='inputNotifEmailCorreo' placeholder='Email del cliente' onkeypress='return integersonly(this, event)'></div></div>"+
-                                                    "<div class='control-group form-group col-lg-6 col-md-6 col-sm-6 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Nombre y apellido:</label><input align='middle' style='text-align:center; width: 100%;' type='text' id='inputNotifEmailCliente' placeholder='Nombre y apellido del cliente'></div></div>"+
-                                                "</form>"+
-                                            "</div>"+
+                                        "<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>"+
+                                        "<p style='color: black'>Por favor ingresa los siguientes datos del cliente para poder enviar la notificación.</p>"+
+                                        "<form novalidate>"+
+                                        "<div class='control-group form-group col-lg-6 col-md-6 col-sm-6 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Correo electrónico:</label><input align='middle' style='text-align:center; width: 100%;' type='email' id='inputNotifEmailCorreo' placeholder='Email del cliente'></div></div>"+
+                                        "<div class='control-group form-group col-lg-6 col-md-6 col-sm-6 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Nombre y apellido:</label><input align='middle' style='text-align:center; width: 100%;' type='text' id='inputNotifEmailCliente' placeholder='Nombre y apellido del cliente'></div></div>"+
+                                        "</form>"+
+                                        "</div>"+
                                         "</div>";
                                     bootbox.dialog({
                                         size: 'medium',
@@ -1283,25 +1283,45 @@
                                                 className: "btn-success alinear-derecha",
                                                 callback: function(){
                                                     var urlmensaje = "";
-                                                    var whatsNumber = document.getElementById("inputNotifWhatsNumero").value;
-                                                    var nombre = document.getElementById("inputNotifWhatsCliente").value;
-                                                    if (whatsNumber.length == 0 || nombre.length == 0){
+                                                    var email = document.getElementById("inputNotifEmailCorreo").value;
+                                                    var cliente = document.getElementById("inputNotifEmailCliente").value;
+                                                    if (email.length == 0 || cliente.length == 0){
                                                         bootbox.alert("Por favor llena correctamente los campos.");
                                                         return false;
                                                     }
-                                                    whatsNumber = "502"+whatsNumber;
-                                                    urlmensaje = "Buen día " + nombre + ", de parte de Chispudito Express te informamos que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:%0A%0A";
+
+                                                    urlmensaje = "Buen día " + cliente + ", de parte de Chispudito Express te informamos que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:<br><br>";
 
                                                     var strPaquetes = "";
                                                     for (var i = 0; i < data.length; i++){
-                                                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
+                                                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.<br>";
                                                     }
-                                                    urlmensaje += strPaquetes + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0AGracias por preferirnos.";
-                                                    urlmensaje = urlmensaje.replace(" ", "%20");
-                                                    window.open("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
-                                                    var t = $("#inventario").DataTable();
-                                                    t.rows(".selected").nodes().to$().removeClass("selected");
-                                                    t.draw(false);
+                                                    urlmensaje += strPaquetes + "<br>Quedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.<br>Gracias por preferirnos.";
+
+                                                    $.ajax({
+                                                        url: "PHPMailer/notificarViaEmail.php",
+                                                        type: "POST",
+                                                        data: {
+                                                            email: email,
+                                                            cliente: cliente,
+                                                            mensaje: urlmensaje
+                                                        },
+                                                        cache: false,
+                                                        success: function(res){
+                                                            if (res == "Enviado"){
+                                                                bootbox.alert("La notificación por correo electrónico ha sido enviada exitosamente.")
+                                                                var t = $("#inventario").DataTable();
+                                                                t.rows(".selected").nodes().to$().removeClass("selected");
+                                                                t.draw(false);
+                                                            }
+                                                            else{
+                                                                bootbox.alert("Hubo un problema en el servidor de envío de correo electrónico. Se obtuvo el siguiente mensaje: <br><br> \"" + res + "\"");
+                                                            }
+                                                        },
+                                                        error: function(){
+                                                            alert("Ocurrió un problema al intentar enviar el correo electrónico. Intenta nuevamente.");
+                                                        }
+                                                    });
                                                 }
                                             }
                                         }
@@ -1309,34 +1329,56 @@
                                 }
                             },
                             confirm: {
-                                label: (encontrados == 0 ? 'Listo, continuar' : "Si, continuar"),
+                                label: (encontrados === 0 ? 'Listo, enviar' : "Si, continuar"),
                                 className: (encontrados  > 1 ? "gone" : "btn-success alinear-derecha"),
                                 callback: function(){
-                                    var urlmensaje = "", whatsNumber = "";
-                                    if (encontrados == 0){
-                                        whatsNumber = document.getElementById("inputNotifWhatsNumero").value;
-                                        var nombre = document.getElementById("inputNotifWhatsCliente").value;
-                                        if (whatsNumber.length == 0 || nombre.length == 0){
+
+                                    if (encontrados === 0){
+                                        var email = document.getElementById("inputNotifEmailCorreo").value;
+                                        var cliente = document.getElementById("inputNotifEmailCliente").value;
+                                        if (email.length == 0 || cliente.length == 0){
                                             bootbox.alert("Por favor llena correctamente los campos.");
                                             return false;
                                         }
-                                        whatsNumber = "502"+whatsNumber;
-                                        urlmensaje = "Buen día " + nombre + ", de parte de Chispudito Express te informamos que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:%0A%0A";
                                     }
                                     else{
-                                        whatsNumber = "502"+rows[0]["celular"];
-                                        urlmensaje = "Buen día " + rows[0]["usuario"] + ", de parte de Chispudito Express te informamos que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:%0A%0A";
+                                        var email = rows[0]["email"];
+                                        var cliente = rows[0]["usuario"];
                                     }
+
+                                    var urlmensaje = "";
+                                    urlmensaje = "Buen día " + cliente + ", de parte de Chispudito Express te informamos que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:<br><br>";
+
                                     var strPaquetes = "";
                                     for (var i = 0; i < data.length; i++){
-                                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
+                                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.<br>";
                                     }
-                                    urlmensaje += strPaquetes + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0AGracias por preferirnos.";
-                                    urlmensaje = urlmensaje.replace(" ", "%20").replace("Ã¡", "á").replace("Ã©", "é").replace("Ã³", "ó").replace("Ãº", "ú").replace("Ã¼", "ü").replace("Ã±", "ñ").replace("Ã", "í");
-                                    window.open("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
-                                    var t = $("#inventario").DataTable();
-                                    t.rows(".selected").nodes().to$().removeClass("selected");
-                                    t.draw(false);
+                                    urlmensaje += strPaquetes + "<br>Quedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.<br>Gracias por preferirnos.";
+
+                                    $.ajax({
+                                        url: "PHPMailer/notificarViaEmail.php",
+                                        type: "POST",
+                                        data: {
+                                            email: email,
+                                            cliente: cliente,
+                                            mensaje: urlmensaje
+                                        },
+                                        cache: false,
+                                        success: function(res){
+                                            if (res == "Enviado"){
+                                                bootbox.alert("La notificación por correo electrónico ha sido enviada exitosamente.")
+                                                var t = $("#inventario").DataTable();
+                                                t.rows(".selected").nodes().to$().removeClass("selected");
+                                                t.draw(false);
+                                            }
+                                            else{
+                                                bootbox.alert("Hubo un problema en el servidor de envío de correo electrónico. Se obtuvo el siguiente mensaje: <br><br> \"" + res + "\"");
+                                            }
+                                        },
+                                        error: function(){
+                                            alert("Ocurrió un problema al intentar enviar el correo electrónico. Intenta nuevamente.");
+                                        }
+                                    });
                                 }
                             }
                         }
@@ -1350,7 +1392,7 @@
         }
         else{
             var uid = data[0][2].split(">")[1].split("<")[0];
-            var nombreCliente = data[0][3].split(">")[1].split("<")[0];
+            var cliente = data[0][3].split(">")[1].split("<")[0];
 
             $.ajax({
                 url: "db/DBgetUserEmail.php",
@@ -1360,18 +1402,23 @@
                 },
                 cache: false,
                 success: function(res){
+
+                    var urlmensaje = "";
+                    urlmensaje = "Buen día " + cliente + ", de parte de Chispudito Express te informamos que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:<br><br>";
+
                     var strPaquetes = "";
                     for (var i = 0; i < data.length; i++){
-                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
+                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.<br>";
                     }
+                    urlmensaje += strPaquetes + "<br>Quedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.<br>Gracias por preferirnos.";
 
                     $.ajax({
                         url: "PHPMailer/notificarViaEmail.php",
                         type: "POST",
                         data: {
-                            email: "", //res
-                            cliente: "Jenner Sánchez",
-                            paquetes: strPaquetes
+                            email: res,
+                            cliente: cliente,
+                            mensaje: urlmensaje
                         },
                         cache: false,
                         success: function(res){
@@ -1389,7 +1436,6 @@
                             alert("Ocurrió un problema al intentar enviar el correo electrónico. Intenta nuevamente.");
                         }
                     });
-
                 },
                 error: function() {
                     bootbox.alert("Ocurrió un problema al intentar conectarse al servidor y no se pudo obtener el correo electrónico del cliente. Intenta nuevamente.");
@@ -1397,6 +1443,7 @@
             });
         }
     }
+
 
     function planificarEntrega(){
         document.getElementById("divBotones").style.visibility = "hidden";
@@ -1621,27 +1668,34 @@
         var nombre = data[0][2].toUpperCase();
         var plan = data[0][5].toUpperCase();
         var continuar = true;
-        var razon = true;
+        let razon = true;
+        let msgError;
         for (var i = 1; i < data.length; i++){
-            if (nombre != data[i][2].toUpperCase()){
+            if (!data[i][2].toUpperCase().includes(nombre)){
                 continuar = false;
+                msgError = "La mercadería seleccionada pertenece a diferentes clientes, solo se puede entregar la mercadería de un cliente a la vez.";
                 break;
             }
             if (plan != data[i][5].toUpperCase()){
-                razon = false;
                 continuar = false;
+                msgError = "Los planes de entrega de los paquetes seleccionados no coinciden, verifique que no haya seleccionado paquetes de más."
                 break;
             }
         }
 
-        if (plan.includes(">ESPERANDO<")||plan.includes(">AVISAR<")||plan.includes(">SIN ESPECIFICAR<"))
+        if (continuar && plan.includes(">ESPERANDO<")||plan.includes(">AVISAR<")||plan.includes(">SIN ESPECIFICAR<")){
+            msgError = "Debe especificar un plan de entrega para los paquetes (Oficina, Por Ruta o Guatex)";
             continuar = false;
+        }
 
+
+        //alert('continuar: ' + continuar);
+        //alert('razon: ' + razon);
         if (!continuar){
             bootbox.dialog({
                 closeButton: false,
                 title: "¡Atención!",
-                message: (razon ? "La mercadería seleccionada pertenece a diferentes clientes, solo se puede entregar la mercadería de un cliente a la vez." : plan.includes(">ESPERANDO<")||plan.includes(">AVISAR<")||plan.includes(">SIN ESPECIFICAR<")) ? "Debe especificar un plan de entrega para los paquetes (Oficina, Por Ruta o Guatex)" : "Los planes de entrega de los paquetes seleccionados no coinciden, verifique que no haya seleccionado paquetes de más.",
+                message: msgError,
                 buttons: {
                     confirm: {
                         label: 'Entendido',

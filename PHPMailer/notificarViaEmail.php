@@ -9,20 +9,30 @@
 	//Configuración
 	$mail->isSMTP();
 	$mail->SMTPAuth = true;
+	/*
 	$mail->Host = "smtpout.secureserver.net";
 	$mail->Username = 'info@chispuditoexpress.com';
 	$mail->Password = 'Sanchez14587';
-	$mail->Port = 25; 
+	$mail->Port = 25;
+	*/
+
+    $mail->Host = 'smtp.gmail.com';
+    $mail->SMTPSecure = 'tls';
+    $mail->Username = 'jjse127@gmail.com';
+    $pass = preg_replace('/[^iJr2cave4A01Vo]+/', "", "klJnMaPvpiIeUuuRr52Qc");
+    $mail->Password = $pass;
+    $mail->Port = 587;
 
 
 	$mail->SetFrom('info@chispuditoexpress.com', 'Chispudito Express');
-	//$mail->AddReplyTo('info@chispuditoexpress.com', 'Chispudito Express');
+	$mail->AddReplyTo('info@chispuditoexpress.com', 'Chispudito Express');
+
 	$mail->AddAddress($_POST["email"], $_POST["cliente"]);
 	
 	$mail->isHTML(true);  // Set email format to HTML
 	$mail->CharSet = 'UTF-8';
-	$mail->Subject = 'Ya ha llegado tu pedido :D';
-	$mail->Body = "<br><br>Queremos informarte que los siguientes paquetes han arribado a nuestras bodegas.\n\n".$_POST["paquetes"]."\n Quedamos a la espera para que nos avises de que forma te haremos entrega de tu pedido. Que tengas un buen día.";
+	$mail->Subject = 'Ya tenemos tu pedido!';
+	$mail->Body = $_POST['mensaje'];
 	
 	if(!$mail->send()){
 	    echo 'Error: ' . $mail->ErrorInfo;
