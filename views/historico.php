@@ -21,61 +21,126 @@
 
 </style>
 <script>
-    $(document).ready( function () {
-        var tablaPaquetes = $('#historicoPaquetes').DataTable({
-            "bSort" : false,
-            "retrieve": true,
-            "dom": 'CT<"clear">lfrtip',
-            "tableTools": {
-                "sSwfPath": "./swf/copy_csv_xls_pdf.swf"
-            },
-            "select": true,
-            "responsive": true,
-            "scrollY": "500px",
-            "scrollCollapse": true,
-            "paging": true,
-            "language": {
-                "lengthMenu": "Mostrando _MENU_ paquetes por página",
-                "search": "Buscar:",
-                "zeroRecords": "No hay paquetes que coincidan con la búsqueda",
-                "info": "Mostrando paquetes del _START_ al _END_ de _TOTAL_ paquetes totales.",
-                "infoEmpty": "No se encontraron paquetes.",
-                "infoFiltered": "(Filtrando sobre _MAX_ paquetes)",
-                "paginate": {
-                    "first":      "Primera",
-                    "last":       "Última",
-                    "next":       "Siguiente",
-                    "previous":   "Anterior"
-                },
-                "loadingRecords": "Cargando Paquetes...",
-                "processing":     "Procesando...",
-            },
-            "footerCallback": function ( row, data, start, end, display ) {
-                var api = this.api(), data;
-                if (this.fnSettings().fnRecordsDisplay() == 0){
-                    api.column(3).footer().style.visibility = "hidden";
-                    return;
-                }
-                else{
-                    api.column(3).footer().style.visibility = "visible";
-                }
 
-                var intVal = function ( i ) {
-                    return typeof i === 'string' ?
-                        i.replace(/[\$,]/g, '')*1 :
-                        typeof i === 'number' ?
-                            i : 0;
-                };
-
-                $(api.column(3).footer() ).html(
-                    "<h5>Total: " + numberWithCommasNoFixed(
-                                        api.column(3, { page: 'current'} ).data().reduce( function (a, b) {
-                                        return intVal(a) + intVal(b.split(">")[1].split("<")[0]);
-                                        }, 0 )
-                                    ) + " Libras</h5>"
-                );
+    const settingsTablaPaquetes = {
+        "bSort": false,
+        'bFilter': true,
+        "retrieve": true,
+        "dom": 'CT<"clear">lfrtip',
+        "tableTools": {
+            "sSwfPath": "./swf/copy_csv_xls_pdf.swf"
+        },
+        "select": true,
+        "responsive": true,
+        "scrollY": "500px",
+        "scrollCollapse": true,
+        "paging": true,
+        "language": {
+            "lengthMenu": "Mostrando _MENU_ paquetes por página",
+            "search": "Buscar:",
+            "zeroRecords": "No hay paquetes que coincidan con la búsqueda",
+            "info": "Mostrando paquetes del _START_ al _END_ de _TOTAL_ paquetes totales.",
+            "infoEmpty": "No se encontraron paquetes.",
+            "infoFiltered": "(Filtrando sobre _MAX_ paquetes)",
+            "paginate": {
+                "first": "Primera",
+                "last": "Última",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            },
+            "loadingRecords": "Cargando Paquetes...",
+            "processing": "Procesando...",
+        },
+        "footerCallback": function (row, data, start, end, display) {
+            var api = this.api();
+            if (this.fnSettings().fnRecordsDisplay() == 0) {
+                api.column(3).footer().style.visibility = "hidden";
+                return;
             }
-        });
+            else {
+                api.column(3).footer().style.visibility = "visible";
+            }
+
+            var intVal = function (i) {
+                return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '') * 1 :
+                    typeof i === 'number' ?
+                        i : 0;
+            };
+
+            $(api.column(3).footer()).html(
+                "<h5>Total Página: " + numberWithCommasNoFixed(
+                api.column(3, {page: 'current'}).data().reduce(function (a, b) {
+                    return intVal(a) + intVal(b.split(">")[1].split("<")[0]);
+                }, 0)
+                ) + " Libras</h5><br>" +
+                "<h5><strong>Total: </strong>" + numberWithCommasNoFixed(
+                api.column(3).data().reduce(function (a, b) {
+                    return intVal(a) + intVal(b.split(">")[1].split("<")[0]);
+                }, 0)
+                ) + " Libras</h5>"
+            );
+        }
+    };
+
+    const settingsTablaPaquetesBusqueda = {
+        "bSort": false,
+        'bFilter': false,
+        "retrieve": true,
+        "dom": 'CT<"clear">lfrtip',
+        "tableTools": {
+            "sSwfPath": "./swf/copy_csv_xls_pdf.swf"
+        },
+        "select": true,
+        "responsive": true,
+        "scrollY": "500px",
+        "scrollCollapse": true,
+        "paging": false,
+        "language": {
+            "lengthMenu": "Mostrando _MENU_ paquetes por página",
+            "search": "Buscar:",
+            "zeroRecords": "No hay paquetes que coincidan con la búsqueda",
+            "info": "Mostrando paquetes del _START_ al _END_ de _TOTAL_ paquetes totales.",
+            "infoEmpty": "No se encontraron paquetes.",
+            "infoFiltered": "(Filtrando sobre _MAX_ paquetes)",
+            "paginate": {
+                "first": "Primera",
+                "last": "Última",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            },
+            "loadingRecords": "Cargando Paquetes...",
+            "processing": "Procesando...",
+        },
+        "footerCallback": function (row, data, start, end, display) {
+            var api = this.api();
+            if (this.fnSettings().fnRecordsDisplay() == 0) {
+                api.column(3).footer().style.visibility = "hidden";
+                return;
+            }
+            else {
+                api.column(3).footer().style.visibility = "visible";
+            }
+
+            var intVal = function (i) {
+                return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '') * 1 :
+                    typeof i === 'number' ?
+                        i : 0;
+            };
+
+            $(api.column(3).footer()).html(
+                "<h5>Total: " + numberWithCommasNoFixed(
+                api.column(3, {page: 'current'}).data().reduce(function (a, b) {
+                    return intVal(a) + intVal(b.split(">")[1].split("<")[0]);
+                }, 0)
+                ) + " Libras</h5>"
+            );
+        }
+    };
+
+    $(document).ready( function () {
+        $('#historicoPaquetes').DataTable(settingsTablaPaquetes);
 
         $("#historicoPaquetes tbody").on("mouseover", "h5.popup", function () {
             var span = $(this).children("span").toggleClass("show", true);
@@ -88,9 +153,9 @@
         
         $("#historicoPaquetes tbody").on("click", "img.info_pqt", function (){
 
+            var tablaPaquetes = $('#historicoPaquetes').DataTable();
             var index = tablaPaquetes.row($(this).closest('tr')).index();
             var arr = tablaPaquetes.rows(index).data().toArray();
-
             var tracking = arr[0][0].replace("<br>", "").split(">")[1].split("<")[0];
             var uid = arr[0][1].split(">")[1].split("<")[0];
             var uname = arr[0][2].split(">")[1].split("<")[0];
@@ -99,7 +164,7 @@
             var fechaEntrega = "";
             if (estado == "Entregado")
                 fechaEntrega = arr[0][4].split(">")[2].split("<")[0];
-            
+
 
             // DESPLIEGUE DE INFORMACIÓN DE UN PAQUETE AUN EN INVENTARIO (Sin Entregar)
             if (fechaEntrega == ""){
@@ -111,6 +176,11 @@
                     },
                     cache: false,
                     success: function(res){
+                        if (res === '[]'){
+                            bootbox.alert("No se encontró ningún paquete en la base de datos. Probablemente el paquete fue eliminado por alguien más, actualice la página.");
+                            return;
+                        }
+
                         var data = JSON.parse(res)[0];
                         var rcid = data["rcid"];
                         var fechaIngreso = data["fecha"];
@@ -142,7 +212,7 @@
                             backdrop: true,
                             closeButton: false,
                             title: "Paquete de " + uname,
-                            message: 
+                            message:
                             //TODO: agregar campos de nombre y id de cliente y trasladar el campo peso a la misma fila (implementar opción para modificar estos 3 campos)
                             "<div class='row' style='background-color: #dadada'>"+
                                 "<div class='row'>"+
@@ -226,10 +296,14 @@
                     url: "db/DBexecQuery.php",
                     type: "POST",
                     data: {
-                        query: "SELECT R.fecha, E.fecha AS fechaEntrega, C.rcid, C.plan, ruta, paquetes, liquidado, tarifa FROM paquete C JOIN entrega E ON C.estado = E.fecha JOIN carga R ON C.rcid = R.rcid WHERE tracking = '"+tracking+"'"
+                        query: "SELECT R.fecha, E.fecha AS fechaEntrega, P.rcid, P.plan, ruta, paquetes, liquidado, tarifa FROM paquete P JOIN entrega E ON P.estado = E.fecha JOIN carga R ON P.rcid = R.rcid WHERE tracking = '"+tracking+"'"
                     },
                     cache: false,
                     success: function(res){
+                        if (res === '[]'){
+                            bootbox.alert("No se encontró ningún paquete en la base de datos. Probablemente el paquete fue eliminado por alguien más, actualice la página.");
+                            return;
+                        }
                         var data = JSON.parse(res)[0];
                         var rcid = data["rcid"];
                         var fechaBoleta = data["fechaEntrega"];
@@ -247,7 +321,7 @@
                             apm = "AM";
                         }
                         fechaIngreso = fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + " " + apm
-                        
+
                         var plan = data["plan"];
                         var cobroRuta = "";
                         var titlePaquetes = "";
@@ -286,7 +360,7 @@
                             backdrop: true,
                             closeButton: false,
                             title: "Paquete de " + uname,
-                            message: 
+                            message:
                             //TODO: agregar campos de nombre y id de cliente y trasladar el campo peso a la misma fila (implementar opción para modificar estos 3 campos)
                             "<div class='row' style='background-color: #dadada'>"+
                                 "<div class='row'>"+
@@ -338,6 +412,10 @@
                                                         },
                                                         cache: false,
                                                         success: function(res){
+                                                            if (res === '[]'){
+                                                                bootbox.alert("No se encontró la boleta asociada en la base de datos. Probablemente la boleta fue eliminada por alguien más, actualice la página.");
+                                                                return;
+                                                            }
                                                             var data = JSON.parse(res)[0];
                                                             var tarifa = Number(data["tarifa"].replace(/[Q,\s]/g, ""));
                                                             var resta = peso*tarifa;
@@ -439,15 +517,25 @@
                 };
 
                 $(api.column(2).footer() ).html(
-                    "<h5>Total: " + numberWithCommasNoFixed(api.column(2, { page: 'current'} ).data().reduce( function (a, b) {
+                    "<h5>Total Página: " + numberWithCommasNoFixed(api.column(2, { page: 'current'} ).data().reduce( function (a, b) {
                                         return intVal(a) + intVal(b.split(">")[1].split("<")[0]);
-                                        }, 0)) + " Paquetes</h5>"
+                                        }, 0)) + " Paquetes</h5><br>" +
+                    "<h5><strong>Total: </strong>" + numberWithCommasNoFixed(
+                    api.column(2).data().reduce(function (a, b) {
+                        return intVal(a) + intVal(b.split(">")[1].split("<")[0]);
+                    }, 0)
+                    ) + " Paquetes</h5>"
                 );
 
                 $(api.column(3).footer() ).html(
                     "<h5>Total: " + numberWithCommasNoFixed(api.column(3, { page: 'current'} ).data().reduce( function (a, b) {
                                         return intVal(a) + intVal(b.split(">")[1].split("<")[0]);
-                                        }, 0 )) + " Libras</h5>"
+                                        }, 0 )) + " Libras</h5><br>" +
+                    "<h5><strong>Total: </strong>" + numberWithCommasNoFixed(
+                    api.column(3).data().reduce(function (a, b) {
+                        return intVal(a) + intVal(b.split(">")[1].split("<")[0]);
+                    }, 0)
+                    ) + " Libras</h5>"
                 );
             }
         });
@@ -464,10 +552,14 @@
                 url: "db/DBexecQuery.php",
                 type: "POST",
                 data: {
-                    query: "SELECT C.tracking AS tracking, C.uid AS uid, C.uname AS uname, C.libras AS libras, C.estado AS estado, E.liquidado AS liquidado FROM paquete C LEFT JOIN entrega E ON C.estado = E.fecha WHERE C.rcid = " + rcid
+                    query: "SELECT P.tracking AS tracking, P.uid AS uid, P.uname AS uname, P.libras AS libras, P.estado AS estado, E.liquidado AS liquidado FROM paquete P LEFT JOIN entrega E ON P.estado = E.fecha WHERE P.rcid = " + rcid
                 },
                 cache: false,
                 success: function(res){
+                    if (res === '[]'){
+                        bootbox.alert("No se encontraron los paquetes de la carga. Probablemente la carga fue eliminada por alguien más, actualice la página.");
+                        return;
+                    }
                     var rows = JSON.parse(res);
                     var fec = fechilla.split(" ")[0].split("-");
                     var hora = fechilla.split(" ")[1].split(":");
@@ -680,10 +772,14 @@
                                     url: "db/DBexecQuery.php",
                                     type: "POST",
                                     data: {
-                                        query: "SELECT fecha, R.rcid, plan FROM paquete C, carga R WHERE C.rcid = R.rcid AND tracking = '"+tracking+"'"
+                                        query: "SELECT fecha, R.rcid, plan FROM paquete P, carga R WHERE P.rcid = R.rcid AND tracking = '"+tracking+"'"
                                     },
                                     cache: false,
                                     success: function(res){
+                                        if (res === '[]'){
+                                            bootbox.alert("No se encontró ningún paquete en la base de datos. Probablemente el paquete fue eliminado por alguien más, actualice la página.");
+                                            return;
+                                        }
                                         var data = JSON.parse(res)[0];
                                         var rcid = data["rcid"];
                                         var fechaIngreso = data["fecha"];
@@ -800,10 +896,14 @@
                                     url: "db/DBexecQuery.php",
                                     type: "POST",
                                     data: {
-                                        query: "SELECT R.fecha, E.fecha AS fechaEntrega, P.rcid, P.plan, ruta, paquetes, liquidado, tarifa FROM paquete P JOIN entrega E ON C.estado = E.fecha JOIN carga R ON P.rcid = R.rcid WHERE tracking = '"+tracking+"'"
+                                        query: "SELECT R.fecha, E.fecha AS fechaEntrega, P.rcid, P.plan, ruta, paquetes, liquidado, tarifa FROM paquete P JOIN entrega E ON P.estado = E.fecha JOIN carga R ON P.rcid = R.rcid WHERE tracking = '"+tracking+"'"
                                     },
                                     cache: false,
                                     success: function(res){
+                                        if (res === '[]'){
+                                            bootbox.alert("No se encontró ningún paquete en la base de datos. Probablemente el paquete fue eliminado por alguien más, actualice la página.");
+                                            return;
+                                        }
                                         var data = JSON.parse(res)[0];
                                         var rcid = data["rcid"];
                                         var fechaBoleta = data["fechaEntrega"];
@@ -912,6 +1012,10 @@
                                                                         },
                                                                         cache: false,
                                                                         success: function(res){
+                                                                            if (res === '[]'){
+                                                                                bootbox.alert("No se encontró ninguna boleta asociada en la base de datos. Probablemente la boleta fue eliminada por alguien más, actualice la página.");
+                                                                                return;
+                                                                            }
                                                                             var data = JSON.parse(res)[0];
                                                                             var tarifa = Number(data["tarifa"].replace(/[Q,\s]/g, ""));
                                                                             var resta = peso*tarifa;
@@ -1026,26 +1130,41 @@
                 };
 
                 $(api.column(1).footer() ).html(
-                    "<h5>Total: " + numberWithCommasNoFixed(
+                    "<h5>Total Página: " + numberWithCommasNoFixed(
                                         api.column(1, { page: 'current'} ).data().reduce( function (a, b) {
                                         return intVal(a) + intVal(b.split(">")[1].split("<")[0]);
                                         }, 0 )
-                                    ) + " Paquetes</h5>"
+                                    ) + " Paquetes</h5><br>" +
+                    "<h5><strong>Total: </strong>" + numberWithCommasNoFixed(
+                    api.column(1).data().reduce(function (a, b) {
+                        return intVal(a) + intVal(b.split(">")[1].split("<")[0]);
+                    }, 0)
+                    ) + " Paquetes</h5>"
                 );
                 $(api.column(2).footer() ).html(
-                    "<h5>Total: " + numberWithCommasNoFixed(
+                    "<h5>Total Página: " + numberWithCommasNoFixed(
                                         api.column(2, { page: 'current'} ).data().reduce( function (a, b) {
                                         return intVal(a) + intVal(b.split(">")[1].split("<")[0]);
                                         }, 0 )
-                                    ) + " Libras</h5>"
+                                    ) + " Libras</h5><br>" +
+                    "<h5><strong>Total: </strong>" + numberWithCommasNoFixed(
+                    api.column(2).data().reduce(function (a, b) {
+                        return intVal(a) + intVal(b.split(">")[1].split("<")[0]);
+                    }, 0)
+                    ) + " Libras</h5>"
                 );
      
                 $(api.column(7).footer() ).html(
-                    "<h5>Total: <br>Q " + numberWithCommas(
+                    "<h5>Total Página: <br>Q " + numberWithCommas(
                                         api.column(7, { page: 'current'} ).data().reduce( function (a, b) {
                                         return intVal(a) + intVal(b.split(">")[1].split("<")[0].replace(/[Q,\s]/g, ""));
                                         }, 0)
-                                    ) + "</h5>"
+                                    ) + "</h5><br>" +
+                    "<h5><strong>Total Página:</strong><br>Q " + numberWithCommas(
+                    api.column(7).data().reduce( function (a, b) {
+                        return intVal(a) + intVal(b.split(">")[1].split("<")[0].replace(/[Q,\s]/g, ""));
+                    }, 0)
+                    ) + "</h5>"
                 );
             }
         });
@@ -1089,6 +1208,10 @@
                 },
                 cache: false,
                 success: function(res){
+                    if (res === '[]'){
+                        bootbox.alert("No se encontró ningún paquete asociado a la boleta en la base de datos. Probablemente estos fueron eliminados por alguien más, actualice la página.");
+                        return;
+                    }
                     var rows = JSON.parse(res);
                     bootbox.dialog({
                         backdrop: true,
@@ -1211,6 +1334,10 @@
                 cache: false,
                 success: function(res){
                     var rows = JSON.parse(res);
+                    if (res === '[]'){
+                        bootbox.alert("No se encontró la boleta en la base de datos. Probablemente la boleta fue eliminada por alguien más, actualice la página.");
+                        return;
+                    }
                     bootbox.dialog({
                         backdrop: true,
                         closeButton: false,
@@ -1542,6 +1669,10 @@
                                         },
                                         cache: false,
                                         success: function(res){
+                                            if (res === '[]'){
+                                                bootbox.alert("No se encontraron paquetes asociados a la boleta en la base de datos. Probablemente estos fueron eliminados por alguien más, actualice la página.");
+                                                return;
+                                            }
                                             var rows = JSON.parse(res);
                                             bootbox.dialog({
                                                 backdrop: true,
@@ -1634,6 +1765,26 @@
 
 <div id="contenidoHistoricoPHP" class="container" style="padding-top: 4.5cm">
     <div class="row" id="divHistoricoPaquetes">
+        <div class="col-lg-8 col-md-8 col-sm-8 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" id="divPaquetesBusqueda" style="display: none">
+            <div class="col-lg-8 col-md-8 col-sm-8">
+            <label class="col-lg-4 col-md-4 col-sm-4" style="text-align: end; color: black">Tracking: </label>
+            <input class="col-lg-8 col-md-8 col-sm-8"  type="text" value="1z97747e0314546429" id="paquetesBusqueda" placeholder="Tracking del paquete a buscar">
+            </div>
+            <button class="col-lg-3 col-md-3 col-sm-3 col-lg-offset-1 col-md-offset-1 col-sm-offset-1 btn btn-sm btn-primary" onclick="buscarPaquete()">Buscar</button>
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" id="divPaquetesFecha" style="display: none">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-lg-offset-1 col-md-offset-1 col-sm-offset-1">
+                <label style='color: #696969; width:100%; text-align: center'>Desde:
+                    <input type="text" style="text-align: center" id='paquetesFechaInicial'>
+                </label>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4">
+                <label style='color: #696969; width:100%; text-align: center'>Hasta
+                    <input type="text" style="text-align: center" id='paquetesFechaFinal'>
+                </label>
+            </div>
+            <button style="margin-top: 2.5%" class="col-lg-2 col-md-2 col-sm-2 col-lg-offset-1 col-md-offset-1 col-sm-offset-1 btn btn-sm btn-primary" onclick="buscarPaquetesFecha()">Buscar</button>
+        </div>
         <table id="historicoPaquetes" class="display" width="100%" cellspacing="0" style="width: 100%;">
             <thead>
                 <tr>
@@ -1726,6 +1877,198 @@
 <script type="text/javascript">
 
     var isAdmin = '<?php echo ADMIN; ?>';
+
+    function historicoPaquetesFecha(){
+
+        document.getElementById("divHistoricoPaquetes").style.display = "block";
+        if (document.getElementById('divPaquetesFecha').style.display === 'block')
+            return;
+
+        var t = $("#historicoPaquetes").DataTable();
+        t.clear();
+        t.draw();
+        if (document.getElementById('divPaquetesBusqueda').style.display === 'block'){
+            t.destroy();
+            t = $("#historicoPaquetes").DataTable(settingsTablaPaquetes);
+        }
+
+        document.getElementById('divPaquetesBusqueda').style.display = 'none';
+        document.getElementById('divPaquetesFecha').style.display = 'block';
+
+        $("#paquetesFechaInicial").datepicker({
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            showAnim: "clip",
+            minDate: new Date(2017, 10, 20),
+            maxDate: 0,
+            onSelect: function(dateText, inst){
+                let date = new Date();
+                date.setDate(inst.selectedDay);
+                date.setMonth(inst.selectedMonth);
+                date.setFullYear(inst.selectedYear);
+                $("#paquetesFechaFinal").datepicker('option', 'minDate', date);
+            }
+        });
+        let ini = new Date();
+        ini.setDate(1);
+        ini.setMonth(ini.getMonth()-2);
+        $('#paquetesFechaInicial').datepicker("setDate", ini);
+
+        $("#paquetesFechaFinal").datepicker({
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            showAnim: "slide",
+            minDate: ini,
+            maxDate: 0,
+            onSelect: function(dateText, inst){
+                let date = new Date();
+                date.setDate(inst.selectedDay);
+                date.setMonth(inst.selectedMonth);
+                date.setFullYear(inst.selectedYear);
+                $("#paquetesFechaInicial").datepicker('option', 'maxDate', date);
+            }
+        });
+        $('#paquetesFechaFinal').datepicker("setDate", new Date());
+    }
+
+    function buscarPaquetesFecha(){
+        let fIni= document.getElementById("paquetesFechaInicial").value.split('/');
+        let fFin= document.getElementById("paquetesFechaFinal").value.split('/');
+        let fechaInicio = fIni[2]+'-'+fIni[1]+'-'+fIni[0];
+        let fechaFinal= fFin[2]+'-'+fFin[1]+'-'+fFin[0];
+
+        $.ajax({
+            url: 'db/DBexecQuery.php',
+            method: 'POST',
+            data: {
+                query: "SELECT * FROM paquete P JOIN carga C ON P.rcid = C.rcid WHERE C.fecha BETWEEN '"
+                        + fechaInicio + "' AND '" + fechaFinal + "'"
+            },
+            cache: false,
+            success: function (res){
+                if (res === '[]'){
+                    bootbox.alert("No se encontró ningún paquete en la base de datos. Intente con otro rango de fechas");
+                    return;
+                }
+                var rows = JSON.parse(res);
+                let t = $("#historicoPaquetes").DataTable();
+                t.clear();
+                for (var i = 0; i < rows.length; i++){
+                    var estado = "<h5 style='text-align: center; cursor: default;' class='btn-sm btn-warning'>En Inventario</h5>";
+                    if (rows[i]["estado"] != null){
+                        var fec = rows[i]["estado"].split(" ")[0].split("-");
+                        var hora = rows[i]["estado"].split(" ")[1].split(":");
+                        var h = hora[0];
+                        var m = hora[1];
+                        var s = hora[2];
+                        var apm = "PM";
+                        if (h > 12)
+                            h = h-12;
+                        else if (h < 12){
+                            if (h == 0)
+                                h = 12;
+                            apm = "AM";
+                        }
+
+                        var color = "#f4cb38";
+                        if (rows[i]["liquidado"] != null)
+                            color = "#4c883c";
+                        estado = "<h5 style='text-align: center; cursor: default; background-color: "+color+";' class='popup btn-sm'>Entregado<span class='popuptext'>"+fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + " " + apm+"</span></h5>";
+                    }
+
+                    t.row.add([
+                        "<h5 class='seleccionado'>"+rows[i]["tracking"]+"</h5>",
+                        "<h5 class='seleccionado'>"+rows[i]["uid"]+"</h5>",
+                        "<h5 class='seleccionado'>"+rows[i]["uname"]+"</h5>",
+                        "<h5 class='seleccionado'>"+rows[i]["libras"]+"</h5>",
+                        estado,
+                        "<img align='center' style='text-align:center; cursor:pointer;' class='info_pqt' src='images/info_paquete.png'/>"
+                    ]);
+                }
+                //t.order([1, "asc"]);
+                t.draw(false);
+                t.columns.adjust().responsive.recalc();
+            },
+            error: function(){
+                bootbox.alert("Ocurrió un problema al intentar conectarse al servidor. Intente realizar la búsqueda nuevamente.");
+            }
+        });
+
+    }
+
+    function historicoBusquedaPaquete(){
+        document.getElementById("divHistoricoPaquetes").style.display = "block";
+        if (document.getElementById('divPaquetesBusqueda').style.display === 'block')
+            return;
+        document.getElementById('divPaquetesBusqueda').style.display = 'block';
+        document.getElementById('divPaquetesFecha').style.display = 'none';
+        //*
+        let t = $("#historicoPaquetes").DataTable();
+        t.clear();
+        t.draw(false);
+        t.destroy();
+        $("#historicoPaquetes").DataTable(settingsTablaPaquetesBusqueda);
+    }
+
+    function buscarPaquete(){
+        let tracking = document.getElementById('paquetesBusqueda').value;
+        if (tracking){
+            $.ajax({
+                url: 'db/DBgetPaquete.php',
+                method: 'POST',
+                data: {
+                    select: "*",
+                    where: "tracking = '" + tracking + "'"
+                },
+                cache: false,
+                success: function (res){
+                    if (res !== '[]'){
+                        var paquete = JSON.parse(res)[0];
+                        let t = $("#historicoPaquetes").DataTable();
+                        t.clear();
+                        var estado = "<h5 style='text-align: center; cursor: default;' class='btn-sm btn-warning'>En Inventario</h5>";
+                        if (paquete["estado"] != null){
+                            var fec = paquete["estado"].split(" ")[0].split("-");
+                            var hora = paquete["estado"].split(" ")[1].split(":");
+                            var h = hora[0];
+                            var m = hora[1];
+                            var s = hora[2];
+                            var apm = "PM";
+                            if (h > 12)
+                                h = h-12;
+                            else if (h < 12){
+                                if (h == 0)
+                                    h = 12;
+                                apm = "AM";
+                            }
+
+                            var color = "#f4cb38";
+                            if (paquete["liquidado"] != null)
+                                color = "#4c883c";
+                            estado = "<h5 style='text-align: center; cursor: default; background-color: "+color+";' class='popup btn-sm'>Entregado<span class='popuptext'>"+fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + " " + apm+"</span></h5>";
+                        }
+
+                        t.row.add([
+                            "<h5 class='seleccionado'>"+paquete["tracking"]+"</h5>",
+                            "<h5 class='seleccionado'>"+paquete["uid"]+"</h5>",
+                            "<h5 class='seleccionado'>"+paquete["uname"]+"</h5>",
+                            "<h5 class='seleccionado'>"+paquete["libras"]+"</h5>",
+                            estado,
+                            "<img align='center' style='text-align:center; cursor:pointer;' class='info_pqt' src='images/info_paquete.png'/>"
+                        ]);
+                        t.draw(false);
+                    }
+                    else{
+                        bootbox.alert('No se encontró ningún paquete con este número de tracking');
+                    }
+                },
+                error: function(){
+                    bootbox.alert("Ocurrió un problema al intentar conectarse al servidor. Intente realizar la búsqueda nuevamente.");
+                }
+            });
+        }
+        else bootbox.alert('Por favor ingrese un tracking para poder realizar la búsqueda');
+    }
 
     function updateTracking(campo, index, histPqts){
         var t = $(histPqts ? "#historicoPaquetes" : "#tablaPaquetesCarga").DataTable();
@@ -1873,11 +2216,18 @@
     }
 
     function loadHistoricoPaquetes(){
-        document.getElementById("divHistoricoCargas").style.display = "none";
-        document.getElementById("divBoletas").style.display = "none";
-        document.getElementById("divHistoricoPaquetes").style.display = "block";
+
 
         var t = $("#historicoPaquetes").DataTable();
+        if (document.getElementById('divPaquetesBusqueda').style.display === 'block'){
+            t.destroy();
+            t = $("#historicoPaquetes").DataTable(settingsTablaPaquetes);
+        }
+
+        document.getElementById('divPaquetesBusqueda').style.display = 'none';
+        document.getElementById('divPaquetesFecha').style.display = 'none';
+        document.getElementById("divHistoricoPaquetes").style.display = "block";
+
         t.clear();
         var oTableTools = TableTools.fnGetInstance("historicoPaquetes");
         if ( oTableTools != null && oTableTools.fnResizeRequired()){
@@ -1888,7 +2238,7 @@
             url: "db/DBexecQuery.php",
             type: "POST",
             data:{
-                query: "SELECT C.tracking AS tracking, C.uid AS uid, C.uname AS uname, C.libras AS libras, C.estado AS estado, E.liquidado AS liquidado, R.fecha AS fecha FROM paquete C LEFT JOIN entrega E ON C.estado = E.fecha JOIN carga R ON R.rcid = C.rcid ORDER BY fecha DESC, uname ASC, libras DESC"
+                query: "SELECT P.tracking AS tracking, P.uid AS uid, P.uname AS uname, P.libras AS libras, P.estado AS estado, E.liquidado AS liquidado, R.fecha AS fecha FROM paquete P LEFT JOIN entrega E ON P.estado = E.fecha JOIN carga R ON R.rcid = P.rcid ORDER BY fecha DESC, uname ASC, libras DESC"
             },
             cache: false,
             success: function(arr){
@@ -2100,10 +2450,10 @@
             fechas = fechas + (i == 0 ? "'":", '")+data[i][0].split("title='")[1].split("'")[0]+"'";
         fechas = fechas+")";
 
-        total = numberWithCommas(total);
+        //total = numberWithCommas(total);
         var total = 0;
         for (var i = 0; i < data.length; i++){
-            total += Number(data[i][6].split(">")[1].split("<")[0].replace(/[Q,\s]/g, ""));
+            total += Number(data[i][7].split(">")[1].split("<")[0].replace(/[Q,\s]/g, ""));
         }
         total = numberWithCommas(total);
 
