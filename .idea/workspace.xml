@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6b9070e8-d7fa-4c13-bbc0-c6162c9a7164" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/historico.php" beforeDir="false" afterPath="$PROJECT_DIR$/views/historico.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/inventario.php" beforeDir="false" afterPath="$PROJECT_DIR$/views/inventario.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/mercaderia.php" beforeDir="false" afterPath="$PROJECT_DIR$/views/mercaderia.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/db_vars.php" beforeDir="false" afterPath="$PROJECT_DIR$/db/db_vars.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -21,11 +17,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="db_vars.php" pinned="false" current-in-tab="false">
+      <file leaf-file-name="db_vars.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/db/db_vars.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="6" selection-start-line="9" selection-start-column="6" selection-end-line="9" selection-end-column="6" />
+            <state relative-caret-position="60">
+              <caret line="4" column="6" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="6" />
             </state>
           </provider>
         </entry>
@@ -386,11 +382,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
       <file leaf-file-name="DBexecQuery.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/db/DBexecQuery.php">
           <provider selected="true" editor-type-id="text-editor">
@@ -404,7 +395,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>footerCallba</find>
       <find>footerCall</find>
       <find>buscarPaquet</find>
       <find>.destroy</find>
@@ -434,6 +424,7 @@
       <find>paquete C</find>
       <find>Probable</find>
       <find>(res){</find>
+      <find>workspa</find>
     </findStrings>
     <replaceStrings>
       <replace>&quot;%0AQuedamos</replace>
@@ -465,8 +456,8 @@
         <option value="$PROJECT_DIR$/views/inventario.php" />
         <option value="$PROJECT_DIR$/views/mercaderia.php" />
         <option value="$PROJECT_DIR$/views/historico.php" />
-        <option value="$PROJECT_DIR$/db/db_vars.php" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/db/db_vars.php" />
       </list>
     </option>
   </component>
@@ -635,12 +626,12 @@
       <workItem from="1526484912376" duration="5394000" />
       <workItem from="1526570624108" duration="2460000" />
       <workItem from="1526580899211" duration="12217000" />
-      <workItem from="1526656709166" duration="14759000" />
+      <workItem from="1526656709166" duration="14924000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="85792000" />
+    <option name="totallyTimeSpent" value="85957000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -683,13 +674,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/views/inventario.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="27" column="4" selection-start-line="27" selection-start-column="4" selection-end-line="27" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/db/db_vars.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
@@ -1166,6 +1150,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-19398" />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/views/historico.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="203">
@@ -1313,13 +1305,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/db/db_vars.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="6" selection-start-line="9" selection-start-column="6" selection-end-line="9" selection-end-column="6" />
+        <state relative-caret-position="60">
+          <caret line="4" column="6" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="6" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
   </component>
 </project>
