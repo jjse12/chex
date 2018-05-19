@@ -945,7 +945,7 @@
                                                         pesoTotal += Number(data[i][4].split(">")[1].split("<")[0]);
                                                     }
                                                     var totales = "%0A - Paquetes: "+data.length+"%0A - Peso total: "+pesoTotal+"%0A - Total a pagar: Q"+(pesoTotal*60)+"%0A";
-                                                    urlmensaje += strPaquetes + totales + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0AGracias por preferirnos.";
+                                                    urlmensaje += strPaquetes + totales + "%0APor favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina.%0AGracias por preferirnos.";
                                                     urlmensaje = urlmensaje.replace(" ", "%20");
 
                                                     if (whatsWebWindow != null && !whatsWebWindow.closed){
@@ -1034,7 +1034,7 @@
                                     }
                                     var totales = "%0A - Paquetes: "+data.length+"%0A - Peso total: "+pesoTotal+"%0A - Total a pagar: Q"+(pesoTotal*tarifa)+"%0A";
 
-                                    urlmensaje += strPaquetes + totales + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0AGracias por preferirnos.";
+                                    urlmensaje += strPaquetes + totales + "%0APor favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina.%0AGracias por preferirnos.";
                                     urlmensaje = urlmensaje.replace(" ", "%20").replace("Ã¡", "á").replace("Ã©", "é").replace("Ã³", "ó").replace("Ãº", "ú").replace("Ã¼", "ü").replace("Ã±", "ñ").replace("Ã", "í");
 
                                     if (whatsWebWindow != null && !whatsWebWindow.closed){
@@ -1126,7 +1126,7 @@
                     }
                     var totales = "%0A - Paquetes: "+data.length+"%0A - Peso total: "+pesoTotal+"%0A - Total a pagar: Q"+(pesoTotal*tarifa)+"%0A";
 
-                    urlmensaje += strPaquetes + totales + "%0AQuedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.%0AGracias por preferirnos.";
+                    urlmensaje += strPaquetes + totales + "%0APor favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina.%0AGracias por preferirnos.";
                     urlmensaje = urlmensaje.replace(" ", "%20").replace("Ã¡", "á").replace("Ã©", "é").replace("Ã³", "ó").replace("Ãº", "ú").replace("Ã¼", "ü").replace("Ã±", "ñ").replace("Ã", "í");
 
                     if (whatsWebWindow != null && !whatsWebWindow.closed){
@@ -1203,7 +1203,7 @@
                 }
             }
 
-            var querysita = "SELECT email, CONCAT(nombre, ' ', apellido) AS usuario FROM cliente WHERE ";
+            var querysita = "SELECT email, tarifa, CONCAT(nombre, ' ', apellido) AS usuario FROM cliente WHERE ";
             for (var i = 0; i < nombres.length; i++)
                 querysita = querysita + "CONCAT(nombre, ' ', apellido) = '" + nombres[i] + "' OR ";
             querysita = querysita.substring(0, querysita.length-3);
@@ -1290,13 +1290,15 @@
                                                         return false;
                                                     }
 
-                                                    urlmensaje = "Buen día " + cliente + ", de parte de Chispudito Express te informamos que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:<br><br>";
+                                                    urlmensaje = "Buen día " + cliente + ".<br><br><strong>Chispudito Express</strong> te informa que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:<br><br>";
 
-                                                    var strPaquetes = "";
+                                                    var strPaquetes = "", pesoTotal = 0;
                                                     for (var i = 0; i < data.length; i++){
                                                         strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.<br>";
+                                                        pesoTotal += Number(data[i][4].split(">")[1].split("<")[0]);
                                                     }
-                                                    urlmensaje += strPaquetes + "<br>Quedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.<br>Gracias por preferirnos.";
+                                                    var totales = "<br> - Paquetes: "+data.length+"<br> - Peso total: "+pesoTotal+"<br> - Total a pagar: Q"+(pesoTotal*60)+"<br>";
+                                                    urlmensaje += strPaquetes + totales + "<br>Por favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina.<br><br>Gracias por preferirnos.";
 
                                                     $.ajax({
                                                         url: "PHPMailer/notificarViaEmail.php",
@@ -1332,7 +1334,7 @@
                                 label: (encontrados === 0 ? 'Listo, enviar' : "Si, continuar"),
                                 className: (encontrados  > 1 ? "gone" : "btn-success alinear-derecha"),
                                 callback: function(){
-
+                                    let tarifa = 60;
                                     if (encontrados === 0){
                                         var email = document.getElementById("inputNotifEmailCorreo").value;
                                         var cliente = document.getElementById("inputNotifEmailCliente").value;
@@ -1344,16 +1346,20 @@
                                     else{
                                         var email = rows[0]["email"];
                                         var cliente = rows[0]["usuario"];
+                                        tarifa = Number(rows[0]["tarifa"]);
                                     }
 
                                     var urlmensaje = "";
-                                    urlmensaje = "Buen día " + cliente + ", de parte de Chispudito Express te informamos que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:<br><br>";
+                                    urlmensaje = "Buen día " + cliente + ".<br><br><strong>Chispudito Express</strong> te informa que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:<br><br>";
 
-                                    var strPaquetes = "";
+                                    var strPaquetes = "", pesoTotal = 0;
                                     for (var i = 0; i < data.length; i++){
                                         strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.<br>";
+                                        pesoTotal += Number(data[i][4].split(">")[1].split("<")[0]);
                                     }
-                                    urlmensaje += strPaquetes + "<br>Quedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.<br>Gracias por preferirnos.";
+                                    var totales = "<br> - Paquetes: "+data.length+"<br> - Peso total: "+pesoTotal+"<br> - Total a pagar: Q"+(pesoTotal*tarifa)+"<br>";
+
+                                    urlmensaje += strPaquetes + totales + "<br>Por favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina.<br><br>Gracias por preferirnos.";
 
                                     $.ajax({
                                         url: "PHPMailer/notificarViaEmail.php",
@@ -1394,29 +1400,35 @@
             var uid = data[0][2].split(">")[1].split("<")[0];
             var cliente = data[0][3].split(">")[1].split("<")[0];
 
+            var querysita = "SELECT email, tarifa FROM cliente WHERE cid = '" + uid + "'";
+
             $.ajax({
-                url: "db/DBgetUserEmail.php",
+                url: "db/DBexecQuery.php",
                 type: "POST",
-                data: {
-                    uid: uid
+                data:{
+                    query: querysita
                 },
                 cache: false,
                 success: function(res){
 
+                    var tarifa = JSON.parse(res)[0].tarifa;
                     var urlmensaje = "";
-                    urlmensaje = "Buen día " + cliente + ", de parte de Chispudito Express te informamos que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:<br><br>";
+                    urlmensaje = "Buen día " + cliente + ".<br><br><strong>Chispudito Express</strong> te informa que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:<br><br>";
 
-                    var strPaquetes = "";
+                    var strPaquetes = "", pesoTotal = 0;
                     for (var i = 0; i < data.length; i++){
                         strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.<br>";
+                        pesoTotal += Number(data[i][4].split(">")[1].split("<")[0]);
                     }
-                    urlmensaje += strPaquetes + "<br>Quedamos a la espera de que nos informes la forma en que te entregaremos tu pedido.<br>Gracias por preferirnos.";
+                    var totales = "<br> - Paquetes: "+data.length+"<br> - Peso total: "+pesoTotal+"<br> - Total a pagar: Q"+(pesoTotal*tarifa)+"<br>";
+
+                    urlmensaje += strPaquetes + totales + "<br>Por favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina.<br><br>Gracias por preferirnos.";
 
                     $.ajax({
                         url: "PHPMailer/notificarViaEmail.php",
                         type: "POST",
                         data: {
-                            email: res,
+                            email: JSON.parse(res)[0].email,
                             cliente: cliente,
                             mensaje: urlmensaje
                         },

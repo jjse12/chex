@@ -1768,7 +1768,7 @@
         <div class="col-lg-8 col-md-8 col-sm-8 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" id="divPaquetesBusqueda" style="display: none">
             <div class="col-lg-8 col-md-8 col-sm-8">
             <label class="col-lg-4 col-md-4 col-sm-4" style="text-align: end; color: black">Tracking: </label>
-            <input class="col-lg-8 col-md-8 col-sm-8"  type="text" value="1z97747e0314546429" id="paquetesBusqueda" placeholder="Tracking del paquete a buscar">
+            <input class="col-lg-8 col-md-8 col-sm-8"  type="text" id="paquetesBusqueda" placeholder="Tracking del paquete a buscar">
             </div>
             <button class="col-lg-3 col-md-3 col-sm-3 col-lg-offset-1 col-md-offset-1 col-sm-offset-1 btn btn-sm btn-primary" onclick="buscarPaquete()">Buscar</button>
         </div>
