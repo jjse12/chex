@@ -78,6 +78,15 @@
             }
         });
 
+        $(".buscarIngreso").keyup(function () {
+            let val = $(this).val();
+            table.column(0).search(val).draw(false);
+        });
+        $(".buscarPlan").keyup(function () {
+            let val = $(this).val();
+            table.column(5).search(val).draw(false);
+        });
+
         $("#inventario tbody").on("click", "h5.seleccionado", function () {
             $(this).closest('tr').toggleClass("selected");
             table.draw(false);
@@ -677,11 +686,11 @@
         </thead>
         <tfoot>
             <tr>
-                <th></th>
+                <th class="dt-head-center"><input class="buscarIngreso" type="text" placeholder="Buscar"/></th>
                 <th></th>
                 <th></th>
                 <th colspan="2" class="dt-head-right"></th>
-                <th></th>
+                <th class="dt-head-center"><input class="buscarPlan" type="text" placeholder="Buscar"/></th>
                 <th></th>
             </tr>
         </tfoot>
