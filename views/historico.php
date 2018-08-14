@@ -2021,42 +2021,46 @@
                     where: "tracking LIKE '%" + tracking + "%'"
                 },
                 cache: false,
-                success: function (res){
-                    if (res !== '[]'){
-                        var paquete = JSON.parse(res)[0];
+                success: function (arr){
+                    if (arr !== '[]') {
                         let t = $("#historicoPaquetes").DataTable();
                         t.clear();
-                        var estado = "<h5 style='text-align: center; cursor: default;' class='btn-sm btn-warning'>En Inventario</h5>";
-                        if (paquete["estado"] != null){
-                            var fec = paquete["estado"].split(" ")[0].split("-");
-                            var hora = paquete["estado"].split(" ")[1].split(":");
-                            var h = hora[0];
-                            var m = hora[1];
-                            var s = hora[2];
-                            var apm = "PM";
-                            if (h > 12)
-                                h = h-12;
-                            else if (h < 12){
-                                if (h == 0)
-                                    h = 12;
-                                apm = "AM";
+                        var rows = JSON.parse(arr);
+                        for (var i = 0; i < rows.length; i++) {
+                            var estado = "<h5 style='text-align: center; cursor: default;' class='btn-sm btn-warning'>En Inventario</h5>";
+                            if (rows[i]["estado"] != null) {
+                                var fec = rows[i]["estado"].split(" ")[0].split("-");
+                                var hora = rows[i]["estado"].split(" ")[1].split(":");
+                                var h = hora[0];
+                                var m = hora[1];
+                                var s = hora[2];
+                                var apm = "PM";
+                                if (h > 12)
+                                    h = h - 12;
+                                else if (h < 12) {
+                                    if (h == 0)
+                                        h = 12;
+                                    apm = "AM";
+                                }
+
+                                var color = "#f4cb38";
+                                if (rows[i]["liquidado"] != null)
+                                    color = "#4c883c";
+                                estado = "<h5 style='text-align: center; cursor: default; background-color: " + color + ";' class='popup btn-sm'>Entregado<span class='popuptext'>" + fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + " " + apm + "</span></h5>";
                             }
 
-                            var color = "#f4cb38";
-                            if (paquete["liquidado"] != null)
-                                color = "#4c883c";
-                            estado = "<h5 style='text-align: center; cursor: default; background-color: "+color+";' class='popup btn-sm'>Entregado<span class='popuptext'>"+fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + " " + apm+"</span></h5>";
+                            t.row.add([
+                                "<h5 class='seleccionado'>" + rows[i]["tracking"] + "</h5>",
+                                "<h5 class='seleccionado'>" + rows[i]["uid"] + "</h5>",
+                                "<h5 class='seleccionado'>" + rows[i]["uname"] + "</h5>",
+                                "<h5 class='seleccionado'>" + rows[i]["libras"] + "</h5>",
+                                estado,
+                                "<img align='center' style='text-align:center; cursor:pointer;' class='info_pqt' src='images/info_paquete.png'/>"
+                            ]);
                         }
 
-                        t.row.add([
-                            "<h5 class='seleccionado'>"+paquete["tracking"]+"</h5>",
-                            "<h5 class='seleccionado'>"+paquete["uid"]+"</h5>",
-                            "<h5 class='seleccionado'>"+paquete["uname"]+"</h5>",
-                            "<h5 class='seleccionado'>"+paquete["libras"]+"</h5>",
-                            estado,
-                            "<img align='center' style='text-align:center; cursor:pointer;' class='info_pqt' src='images/info_paquete.png'/>"
-                        ]);
                         t.draw(false);
+                        t.columns.adjust().responsive.recalc();
                     }
                     else{
                         bootbox.alert('No se encontró ningún paquete con este número de tracking');
