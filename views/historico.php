@@ -2018,7 +2018,7 @@
                 method: 'POST',
                 data: {
                     select: "*",
-                    where: "tracking = '" + tracking + "'"
+                    where: "tracking LIKE '%" + tracking + "%'"
                 },
                 cache: false,
                 success: function (res){
