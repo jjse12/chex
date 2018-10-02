@@ -2091,7 +2091,7 @@
         var tarifa = Number(document.getElementById("tarifaEntrega").value.replace(/[Q,\s]/g, ""));
         var libras = Number(document.getElementById("librasEntrega").value);
         if (credito)
-            document.getElementById("subTotalEntrega").value = "Q " + numberWithCommas(libras*64*1.065);
+            document.getElementById("subTotalEntrega").value = "Q " + numberWithCommas(libras*68);
         else
             document.getElementById("subTotalEntrega").value = "Q " + numberWithCommas(libras*tarifa);
     }
@@ -2128,16 +2128,16 @@
             divDetalle.style.display = "block";
             divRelleno.style.display = "none";
             var extra = Number(document.getElementById("subTotalEntrega").value.replace(/[Q,\s]/g, ""));
-            var tarifAumnt = numberWithCommas(4), comision = 64*libras*0.065;
+            var tarifAumnt = numberWithCommas(4), comision = 68*libras;
             if (tarifa.title != "Cliente con tarifa corriente."){
                 var t = Number(tarifa.title.split(": ")[1].replace(/[Q,\s]/g, ""));
-                tarifAumnt = numberWithCommas(64 - t);
+                tarifAumnt = numberWithCommas(68 - t);
                 extra -= t*libras;
             }
             else
                 extra -= 60*libras;
             detalleStr = "Pago con Tarjeta de Crédito:<br> &nbsp&nbsp* Aumento de Tarifa: Q "+tarifAumnt
-                +"<br> &nbsp&nbsp* Comisión: Q "+numberWithCommas(comision)
+                // +"<br> &nbsp&nbsp* Comisión: Q "+numberWithCommas(comision)
                 +"<br> &nbsp&nbsp* Monto total agregado:<br> &nbsp&nbsp&nbsp&nbsp&nbsp&nbspQ " + numberWithCommas(extra);
         }
         else if (tarifa.title == "Cliente con tarifa corriente."){
@@ -2220,7 +2220,7 @@
                 tarifa.value = tarifa.title.split(": ")[1];
 
             if (boton.innerHTML == "Tarjeta C."){
-                tarifa.value = "Q 64";
+                tarifa.value = "Q 68";
                 if (cantCelulares !== null)
                     costoCelulares.val('Q ' + numberWithCommas(cantCelulares*115));
                 if (montoExtras !== null)
