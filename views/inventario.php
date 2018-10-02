@@ -532,7 +532,7 @@
                                                     else{
                                                         bootbox.alert("La información del paquete ha sido actualizada. El total de libras del registro de carga asociado también ha sido actualizado.");
                                                         var table = $('#inventario').DataTable();
-                                                        arr[0][0] = `<h5 class='seleccionado' data-celulares=${celularesN} data-cobro-extra=${extrasN} >${especial ? "<span style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i></span>" : ""}</h5>`,
+                                                        arr[0][0] = `<h5 class='seleccionado' data-celulares=${celularesN} data-cobro-extra=${extrasN} >${especial ? "<span title='Celulares: "+ celularesN + ", Cobro Extra: Q"+ numberWithCommas(extrasN) +"' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display: none;'>Especial</small></span>" : ""}</h5>`,
                                                         arr[0][3] = "<h5 class='seleccionado'>"+uid+"</h5>";
                                                         arr[0][4] = "<h5 class='seleccionado'>"+uname+"</h5>";
                                                         arr[0][5] = "<h5 class='seleccionado'>"+pesito+"</h5>";
@@ -555,7 +555,7 @@
                                         else{
                                             bootbox.alert("Se actualizó la información del paquete exitosamente.");
                                             var table = $('#inventario').DataTable();
-                                            arr[0][0] = `<h5 class='seleccionado' data-celulares=${celularesN} data-cobro-extra=${extrasN} >${especial ? "<span style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i></span>" : ""}</h5>`,
+                                            arr[0][0] = `<h5 class='seleccionado' data-celulares=${celularesN} data-cobro-extra=${extrasN} >${especial ? "<span title='Celulares: "+ celularesN + ", Cobro Extra: Q"+ numberWithCommas(extrasN) +"' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display: none;'>Especial</small></span>" : ""}</h5>`,
                                             arr[0][3] = "<h5 class='seleccionado'>"+uid+"</h5>";
                                             arr[0][4] = "<h5 class='seleccionado'>"+uname+"</h5>";
                                             arr[0][5] = "<h5 class='seleccionado'>"+pesito+"</h5>";
@@ -692,7 +692,7 @@
     <table id="inventario" class="display compact" width="100%" cellspacing="0">
         <thead>
             <tr>
-                <th class="dt-head-center"><span style="color: transparent; -webkit-text-stroke-width: 2px; -webkit-text-stroke-color: gold"><i class="fa fa-star fa-2x" aria-hidden="true"></i></span></th>
+                <th class="dt-head-center"><span style="color: transparent; -webkit-text-stroke-width: 2px; -webkit-text-stroke-color: gold"><i class="fa fa-star fa-2x"></i></span></th>
                 <th class="dt-head-center"><h5 style="color:black">Fecha de Ingreso</h5></th>
                 <th class="dt-head-center"><h5 style="color:black"># Tracking</h5></th>
                 <th class="dt-head-center"><h5 style="color:black">ID Cliente</h5></th>
@@ -792,7 +792,7 @@
                                 trackingsito = trackingsito.substr(0, trackingsito.length/2) + "<br>" +
                                 trackingsito.substr(trackingsito.length/2, trackingsito.length);
                         table.row.add([
-                            `<h5 class='seleccionado' data-celulares=${celulares} data-cobro-extra=${extras} >${especial ? "<span style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i></span>" : ""}</h5>`,
+                            `<h5 class='seleccionado' data-celulares=${celulares} data-cobro-extra=${extras} >${especial ? "<span title='Celulares: "+ celulares + ", Cobro Extra: Q"+ numberWithCommas(extras) +"' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display:none;'>Especial</small></span>" : ""}</h5>`,
                             "<h5 title='Registro de Carga #"+rows[i][0]+"' class='seleccionado'>"+fechaIngreso+"</h5>",
                             "<h5 class='seleccionado'>"+trackingsito+"</h5>",
                             "<h5 class='seleccionado'>"+rows[i][3]+"</h5>",
@@ -1766,8 +1766,8 @@
         });
     }
 
-    function cobrarEntrega(data, titulo, tarifa){
-        var paquetes = data.length, libras = 0;
+    function cobrarEntrega(data, titulo, tarifa) {
+        var paquetes = data.length, libras = 0, celulares = 0, extras = 0;
         var uids = data[0][3].split(">")[1].split("<")[0];
         var unombre = data[0][4].split(">")[1].split("<")[0];
         var plan = "";
@@ -1775,14 +1775,48 @@
         if (data[0][6].includes("Oficina"))
             plan = "Oficina";
         else if (data[0][6].includes("Guatex"))
-            plan = "Guatex: "+data[0][6].split(">")[2].split("<")[0];
+            plan = "Guatex: " + data[0][6].split(">")[2].split("<")[0];
         if (data[0][6].includes("Esperando"))
             plan = data[0][6].split(">")[2].split(" Paquetes")[0];
         if (data[0][6].includes("En Ruta"))
-            plan = "Por Ruta: " + data[0][6].split(">")[2].split("<")[0].replace("-", "").replace("-","");
+            plan = "Por Ruta: " + data[0][6].split(">")[2].split("<")[0].replace("-", "").replace("-", "");
 
-        for (var i = 0; i < data.length; i++)
+        for (var i = 0; i < data.length; i++) {
             libras += Number(data[i][5].split(">")[1].split("<")[0]);
+            celulares += Number(data[i][0].split('data-celulares=')[1].split(' ')[0]);
+            extras += Number(data[i][0].split('data-cobro-extra=')[1].split(' ')[0]);
+        }
+
+        let costoRutaClass = 'col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4 col-lg-4 col-md-4 col-sm-4 col-xs-4';
+        let celularesAddedClass = 'col-lg-4 col-md-4 col-sm-4 col-xs-4';
+        let extrasAddedClass = 'col-lg-4 col-md-4 col-sm-4 col-xs-4';
+
+        if (celulares > 0 && extras > 0) {
+            if (plan.includes("/")) {
+                costoRutaClass = 'col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1 col-lg-3 col-md-3 col-sm-3 col-xs-3';
+                extrasAddedClass = 'col-lg-3 col-md-3 col-sm-3 col-xs-3'
+            }
+            else {
+                celularesAddedClass = 'col-lg-offset-2 col-md-offset-2 col-sm-offset-2 col-xs-offset-2  col-lg-4 col-md-4 col-sm-4 col-xs-4';
+                extrasAddedClass = 'col-lg-4 col-md-4 col-sm-4 col-xs-4';
+            }
+        }
+        else if (celulares > 0) {
+            if (plan.includes("/")) {
+                costoRutaClass = 'col-lg-offset-2 col-md-offset-2 col-sm-offset-2 col-xs-offset-2 col-lg-4 col-md-4 col-sm-4 col-xs-4';
+            }
+            else {
+                celularesAddedClass = 'col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4 col-lg-4 col-md-4 col-sm-4 col-xs-4';
+            }
+        }
+        else if (extras > 0){
+            if (plan.includes("/")) {
+                costoRutaClass = 'col-lg-offset-2 col-md-offset-2 col-sm-offset-2 col-xs-offset-2 col-lg-4 col-md-4 col-sm-4 col-xs-4';
+            }
+            else {
+                extrasAddedClass = 'col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4 col-lg-4 col-md-4 col-sm-4 col-xs-4';
+            }
+        }
 
         var tarifaTitulo = "Cliente con tarifa corriente.";
         if (tarifa != 60)
@@ -1813,14 +1847,19 @@
                         (isMobile ? "<div class='col-xs-1'></div><div class='col-xs-4'></div>" : "") +
                         "<button onclick='toggleMetodoPago(this)' id='btnPendiente' style='color:#337ab7' type='button' class='btn btn-default col-lg-2 col-md-2 col-sm-2 col-xs-4''>Pendiente</button>"+
                         "<div class='col-lg-1 col-md-1 col-sm-1 col-xs-2'></div>"+
-                    "</div>"+
-                    "<div class='row' id='divCostoRuta'>"+
-                        "<div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div>"+
-                        "<div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'>"+
-                            "<div class='control-group form-group'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Costo de Envío (Q)</label><input onfocusout='roundField(this); calcularTotalEntrega()' onkeypress='return numbersonly(this, event, \"\")' onkeyup='this.value=this.value.replace(/^0+/, \"\");' id='costoRutaEntrega' type='text' class='form-control' style='width:100%; text-align:center;'/></div></div>"+
-                        "</div>"+
-                        "<div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div>"+
-                    "</div>"+
+                    "</div>" +
+                    (plan.includes("/") || celulares > 0 || extras > 0 ? (
+                        "<div class='row'>"+ (plan.includes("/") ?
+                            "<div id='divCostoRuta' class='"+ costoRutaClass +"'>"+
+                                "<div class='control-group form-group'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Costo de Envío (Q)</label><input onfocusout='roundField(this); calcularTotalEntrega()' onkeypress='return numbersonly(this, event, \"\")' onkeyup='this.value=this.value.replace(/^0+/, \"\");' id='costoRutaEntrega' type='text' class='form-control' style='width:100%; text-align:center;'/></div></div>"+
+                            "</div>" : "" ) + (celulares > 0 ?
+                            "<div id='divCostoCelulares' class='"+ celularesAddedClass +"'>" +
+                                "<div class='control-group form-group'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Costo por "+celulares+" Celulares</label><input disabled value='Q "+numberWithCommas(celulares*100)+"' onfocusout='roundField(this); calcularTotalEntrega()' onkeypress='return numbersonly(this, event, \"\")' onkeyup='this.value=this.value.replace(/^0+/, \"\");' id='costoCelulares' type='text' class='form-control' style='width:100%; text-align:center;'/></div></div>"+
+                            "</div>" : "" ) + (extras > 0 ?
+                            "<div id='divCostoExtras' class='"+ extrasAddedClass +"'>" +
+                                "<div class='control-group form-group'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Costos Extras</label><input disabled value='Q "+numberWithCommas(extras)+"' onfocusout='roundField(this); calcularTotalEntrega()' onkeypress='return numbersonly(this, event, \"\")' onkeyup='this.value=this.value.replace(/^0+/, \"\");' id='costosExtras' type='text' class='form-control' style='width:100%; text-align:center;'/></div></div>"+
+                            "</div>" : "" ) +
+                        "</div>" ) : "" )+
                     "<div class='row'>"+
                         "<div class='col-lg-1 col-md-1 col-sm-1'></div>"+
                         "<div class='control-group form-group col-lg-2 col-md-2 col-sm-2 col-xs-2'><div class='controls'>"+
@@ -2039,8 +2078,6 @@
             }
         });
         calcularTotalEntrega();
-        if (!plan.includes("/"))
-            document.getElementById("divCostoRuta").style.display = "none";
     }
 
     function activateSpanEntrega(str){
@@ -2066,8 +2103,16 @@
         if (document.getElementById("btnDescuento").style.color == "white")
             total -= Number(document.getElementById("descuentoEntrega").value);
 
-        if (document.getElementById("divCostoRuta").style.display != "none"){
+        if ($("#divCostoRuta").length){
             total += Number(document.getElementById("costoRutaEntrega").value);
+        }
+
+        if ($("#divCostoCelulares").length){
+            total += Number(document.getElementById("costoCelulares").value.replace(/[Q,\s]/g, ""));
+        }
+
+        if ($("#divCostoExtras").length){
+            total += Number(document.getElementById("costosExtras").value.replace(/[Q,\s]/g, ""));
         }
 
         document.getElementById("totalEntrega").value = "Q " + numberWithCommas(total);
