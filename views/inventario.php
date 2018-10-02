@@ -54,14 +54,20 @@
                 "loadingRecords": "Cargando Paquetes...",
                 "processing":     "Procesando...",
             },
+            "columnDefs": [
+                {
+                    "targets": [0, 7],
+                    "orderable": false
+                }
+            ],
             "footerCallback": function ( row, data, start, end, display ) {
                 var api = this.api(), data;
                 if (this.fnSettings().fnRecordsDisplay() == 0){
-                    api.column(3).footer().style.visibility = "hidden";
+                    api.column(4).footer().style.visibility = "hidden";
                     return;
                 }
                 else
-                    api.column(3).footer().style.visibility = "visible";
+                    api.column(4).footer().style.visibility = "visible";
 
                 var intVal = function ( i ) {
                     return typeof i === 'string' ?
@@ -70,8 +76,8 @@
                             i : 0;
                 };
 
-                $(api.column(3).footer() ).html(
-                    "<h5>Total: " + numberWithCommasNoFixed(api.column(4, { page: 'current'} ).data().reduce( function (a, b) {
+                $(api.column(4).footer() ).html(
+                    "<h5>Total: " + numberWithCommasNoFixed(api.column(5, { page: 'current'} ).data().reduce( function (a, b) {
                                         return intVal(a) + intVal(b.split(">")[1].split("<")[0]);
                                         }, 0)) + " Libras</h5>"
                 );
@@ -80,11 +86,11 @@
 
         $(".buscarIngreso").keyup(function () {
             let val = $(this).val();
-            table.column(0).search(val).draw(false);
+            table.column(1).search(val).draw(false);
         });
         $(".buscarPlan").keyup(function () {
             let val = $(this).val();
-            table.column(5).search(val).draw(false);
+            table.column(6).search(val).draw(false);
         });
 
         $("#inventario tbody").on("click", "h5.seleccionado", function () {
@@ -115,9 +121,9 @@
             e.stopPropagation();
             var index = table.row($(this).closest('tr')).index();
             var arr = table.rows(index).data().toArray();
-            var sinNotificar = !arr[0][5].includes("Notificado por Whatsapp");
-            var tracking = arr[0][1].replace("<br>", "").split(">")[1].split("<")[0];
-            var avisando = arr[0][5].includes("Avisar");
+            var sinNotificar = !arr[0][6].includes("Notificado por Whatsapp");
+            var tracking = arr[0][2].replace("<br>", "").split(">")[1].split("<")[0];
+            var avisando = arr[0][6].includes("Avisar");
             var sete = "plan = " + (sinNotificar ? (avisando ? "'@email'" : "'email'") : (avisando ? "'@whatsmail'" : "'whatsmail'"));
             $.ajax({
                 url: "db/DBsetPaquete.php",
@@ -135,7 +141,7 @@
                         bootbox.alert("No se pudo efectuar el cambio en la base de datos, intente nuevamente");
                     }
                     else{
-                        arr[0][5] = sinNotificar ? (!avisando ? "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>":
+                        arr[0][6] = sinNotificar ? (!avisando ? "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>":
 
                             "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>"
                          ):
@@ -155,9 +161,9 @@
             e.stopPropagation();
             var index = table.row($(this).closest('tr')).index();
             var arr = table.rows(index).data().toArray();
-            var sinNotificar = !arr[0][5].includes("Notificado por Email");
-            var tracking = arr[0][1].replace("<br>", "").split(">")[1].split("<")[0];
-            var avisando = arr[0][5].includes("Avisar");
+            var sinNotificar = !arr[0][6].includes("Notificado por Email");
+            var tracking = arr[0][2].replace("<br>", "").split(">")[1].split("<")[0];
+            var avisando = arr[0][6].includes("Avisar");
             var sete = "plan = " + (sinNotificar ? (avisando ? "'@whats'" : "'whats'") : (avisando ? "'@whatsmail'" : "'whatsmail'"));
             ///*
             $.ajax({
@@ -176,7 +182,7 @@
                         bootbox.alert("No se pudo efectuar el cambio en la base de datos, intente nuevamente");
                     }
                     else{
-                        arr[0][5] = sinNotificar ? (!avisando ? "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/></div></div></h5>" :
+                        arr[0][6] = sinNotificar ? (!avisando ? "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/></div></div></h5>" :
                             "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/></div></div></h5>"
                         ) :
                         (!avisando ? "<div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/><div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h5 class='sin-plan plan btn-sm btn-danger'>Sin Especificar</h5>" :
@@ -194,19 +200,19 @@
         $("#inventario tbody").on("click", "h5.plan", function () {
             var index = table.row($(this).closest('tr')).index();
             var arr = table.rows(index).data().toArray();
-            var nombre = arr[0][3].split(">")[1].split("<")[0];
-            var uid = arr[0][2].split(">")[1].split("<")[0];
-            var tracking = arr[0][1].replace("<br>", "").split(">")[1].split("<")[0];
+            var nombre = arr[0][4].split(">")[1].split("<")[0];
+            var uid = arr[0][3].split(">")[1].split("<")[0];
+            var tracking = arr[0][2].replace("<br>", "").split(">")[1].split("<")[0];
 
             var plan = "";
-            if (arr[0][5].includes("Oficina"))
+            if (arr[0][6].includes("Oficina"))
                 plan = "Oficina";
-            else if (arr[0][5].includes("Guatex"))
-                plan = "Guatex:"+arr[0][5].split(">")[2].split("<")[0];
-            if (arr[0][5].includes("Esperando"))
-                plan = arr[0][5].split(">")[2].split(" Paquetes")[0];
-            if (arr[0][5].includes("En Ruta"))
-                plan = arr[0][5].split(">")[2].split("<")[0].replace("-", "").replace("-","");
+            else if (arr[0][6].includes("Guatex"))
+                plan = "Guatex:"+arr[0][6].split(">")[2].split("<")[0];
+            if (arr[0][6].includes("Esperando"))
+                plan = arr[0][6].split(">")[2].split(" Paquetes")[0];
+            if (arr[0][6].includes("En Ruta"))
+                plan = arr[0][6].split(">")[2].split("<")[0].replace("-", "").replace("-","");
 
             var arreglo = ["Cliente", "CLIENTE", "cliente", "Anónimo", "ANÓNIMO", "anónimo", "Anonimo", "ANONIMO", "anonimo"];
             var anonimo = arreglo.indexOf(uid) != -1;
@@ -305,8 +311,8 @@
                                             else{
                                                 table.rows().every( function(rowIdx, tableLoop, rowLoop) {
                                                     var dataRow = String(this.data()).split(",");
-                                                    if (dataRow[2].split(">")[1].split("<")[0].toUpperCase() == uid.toUpperCase()){
-                                                        dataRow[5] = plan == "" ? "<h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>" :
+                                                    if (dataRow[3].split(">")[1].split("<")[0].toUpperCase() == uid.toUpperCase()){
+                                                        dataRow[6] = plan == "" ? "<h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>" :
                                                         plan == "Oficina" ? "<h5 class='plan btn-sm btn-success'>En Oficina</h5>" :
                                                         plan.includes("Guatex") ? "<h5 class='popup plan btn-sm' style='background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h5>" :
                                                         plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
@@ -318,7 +324,7 @@
                                             }
                                         }
                                         else{
-                                            arr[0][5] = plan == "" ? "<h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>" :
+                                            arr[0][6] = plan == "" ? "<h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>" :
                                                         plan == "Oficina" ? "<h5 class='plan btn-sm btn-success'>En Oficina</h5>" :
                                                         plan.includes("Guatex") ? "<h5 class='popup plan btn-sm' style='background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h5>" :
                                                         plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
@@ -382,27 +388,26 @@
 
             var index = table.row($(this).closest('tr')).index();
             var arr = table.rows(index).data().toArray();
-
-            var fechaIng = arr[0][0].split(">")[1].split("<")[0];
-            var rcid = arr[0][0].split("#")[1].split("'")[0];
-            var tracking = arr[0][1].replace("<br>", "").split(">")[1].split("<")[0];
-            var uid = arr[0][2].split(">")[1].split("<")[0];
-            var uname = arr[0][3].split(">")[1].split("<")[0];
-            var peso = arr[0][4].split(">")[1].split("<")[0];
+            var celulares = arr[0][0].split('data-celulares=')[1].split(' ')[0];
+            var extras = arr[0][0].split('data-cobro-extra=')[1].split(' ')[0];
+            var fechaIng = arr[0][1].split(">")[1].split("<")[0];
+            var rcid = arr[0][1].split("#")[1].split("'")[0];
+            var tracking = arr[0][2].replace("<br>", "").split(">")[1].split("<")[0];
+            var uid = arr[0][3].split(">")[1].split("<")[0];
+            var uname = arr[0][4].split(">")[1].split("<")[0];
+            var peso = arr[0][5].split(">")[1].split("<")[0];
             var plan = "";
-            if (arr[0][5].includes("Oficina"))
+            if (arr[0][6].includes("Oficina"))
                 plan = "Oficina";
-            else if (arr[0][5].includes("Guatex"))
-                plan = "Guatex:"+arr[0][5].split(">")[2].split("<")[0];
-            if (arr[0][5].includes("Esperando"))
-                plan = arr[0][5].split(">")[2].split(" Paquetes")[0];
-            if (arr[0][5].includes("En Ruta"))
-                plan = arr[0][5].split(">")[2].split("<")[0].replace("-", "").replace("-","");
+            else if (arr[0][6].includes("Guatex"))
+                plan = "Guatex:"+arr[0][6].split(">")[2].split("<")[0];
+            if (arr[0][6].includes("Esperando"))
+                plan = arr[0][6].split(">")[2].split(" Paquetes")[0];
+            if (arr[0][6].includes("En Ruta"))
+                plan = arr[0][6].split(">")[2].split("<")[0].replace("-", "").replace("-","");
 
             var tom = new Date();
             tom.setTime(tom.getTime() + 86400000);
-            //tomor = tom.getDate() + "/" + tom.getMonth() + "/" + tom.getFullYear()
-            //console.log("mañana: " + tomor);
             bootbox.dialog({
                 closeButton: false,
                 title: "Modificar paquete de " + uname,
@@ -415,7 +420,8 @@
                                     "<div class='control-group form-group col-lg-3 col-md-3 col-sm-3 col-xs-3'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Peso</label><input placeholder='Peso' value='" + peso +"' onkeyup='this.value=this.value.replace(/^0+/, \"\");' onkeypress='return integersonly(this, event);' type='text' maxlength='3' style='text-align:center;' class='form-control' id='form_carga_libras'/></div></div>"+
                                     "<div class='control-group form-group col-lg-3 col-md-3 col-sm-3 col-xs-3'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>ID Cliente</label><input onfocusout='getUserName2(this.value)' value='" + uid + "' style='text-align: center;' type='text' maxlength='7' class='form-control' placeholder='ID Cliente' id='form_carga_uid'/><div id='spanIDCliente' style='display:none'><span class='dialog-text'> Atención: No existe ningún cliente asociado a este ID.</span></div></div></div>"+
                                     "<div class='control-group form-group col-lg-6 col-md-6 col-sm-6 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Nombre Cliente</label><input placeholder='Nombre Cliente' value='" + uname + "' style='text-align: center;' type='email' maxlength='50' class='form-control' id='form_carga_uname' /></div></div>"+
-                                    "<br><br>"+
+                                    "<div class='control-group form-group col-lg-3 col-md-3 col-sm-3 col-xs-3'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Celulares</label><input placeholder='Cantidad' value='" + (celulares > 0 ? celulares : "") +"' onkeyup='this.value=this.value.replace(/^0+/, \"\");' onkeypress='return integersonly(this, event);' type='text' maxlength='3' style='text-align:center;' class='form-control' id='form_carga_celulares'/></div></div>"+
+                                    "<div class='control-group form-group col-lg-3 col-md-3 col-sm-3 col-xs-3'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Cobro Extra</label><input placeholder='Monto (Q)' value='" + (extras > 0 ? extras : "") +"' onkeyup='this.value=this.value.replace(/^0+/, \"\");' onkeypress='return integersonly(this, event);' type='text' maxlength='5' style='text-align:center;' class='form-control' id='form_carga_cobro_extra'/></div></div>"+
                                     "<div class='control-group form-group col-lg-6 col-md-6 col-sm-6 col-xs-6'>"+
                                         "<label style='color: #337ab7; width:100%; text-align: center'>Plan de Entrega</label>"+
                                             "<button onclick='toggleActivadito(this)' id='btnOficina' style='width:50%; color:#337ab7' type='button' class='btn btn-default'>Oficina</button>"+
@@ -424,7 +430,7 @@
                                             "<button onclick='toggleActivadito(this)' id='btnEsperando' style='width:50%; color:#337ab7' type='button' class='btn btn-default'>Esperando</button>"+
                                         //"</div>"+
                                     "</div>"+
-                                    "<div class='col-lg-6 col-md-6 col-sm-6 col-xs-6'>"+
+                                    "<div class='col-lg-offset-3 col-md-offset-3 col-sm-offset-3 col-xs-offset-3 col-lg-6 col-md-6 col-sm-6 col-xs-6' style='margin-bottom: 10px;'>"+
                                         "<div id='divFechaRuta' style='display:none'>"+
                                             "<label style='color: #696969; width:100%; text-align: center'>Fecha de Ruta</label>"+
                                         "<br></div>"+
@@ -451,6 +457,13 @@
                             var uname = document.getElementById("form_carga_uname").value;
                             var pesito = document.getElementById("form_carga_libras").value;
                             var esp = document.getElementById("form_carga_esperando").value;
+                            var celularesN = document.getElementById("form_carga_celulares").value;
+                            var extrasN = document.getElementById("form_carga_cobro_extra").value;
+                            if (celularesN == '')
+                                celularesN = 0;
+                            if (extrasN == '')
+                                extrasN = 0;
+
                             var plan = "";
 
                             if (uid.replace(/\s/g,'').length === 0 || uname.replace(/\s/g,'').length === 0 || pesito.length === 0){
@@ -487,7 +500,8 @@
                                 url: "db/DBsetPaquete.php",
                                 type: "POST",
                                 data: {
-                                    set: "uid='"+uid+"', uname='"+uname+"', libras="+pesito+", plan='"+plan+"'",
+                                    set: "uid='"+uid+"', uname='"+uname+"', libras="+pesito+", plan='"+plan+"' ,"
+                                            + "celulares="+celularesN+", cobro_extra="+extrasN,
                                     where: "tracking = '"+tracking+"'"
                                 },
                                 cache: false,
@@ -498,6 +512,7 @@
                                     else if (Number(res) < 1)
                                         bootbox.alert("No se pudo efectuar el cambio en la base de datos, intente nuevamente");
                                     else{
+                                        var especial = celularesN + extrasN > 0;
                                         if (peso != pesito){
                                             $.ajax({
                                                 url: "db/DBsetCarga.php",
@@ -517,10 +532,11 @@
                                                     else{
                                                         bootbox.alert("La información del paquete ha sido actualizada. El total de libras del registro de carga asociado también ha sido actualizado.");
                                                         var table = $('#inventario').DataTable();
-                                                        arr[0][2] = "<h5 class='seleccionado'>"+uid+"</h5>";
-                                                        arr[0][3] = "<h5 class='seleccionado'>"+uname+"</h5>";
-                                                        arr[0][4] = "<h5 class='seleccionado'>"+pesito+"</h5>";
-                                                        arr[0][5] = plan == "" ? "<h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>" :
+                                                        arr[0][0] = `<h5 class='seleccionado' data-celulares=${celularesN} data-cobro-extra=${extrasN} >${especial ? "<span style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i></span>" : ""}</h5>`,
+                                                        arr[0][3] = "<h5 class='seleccionado'>"+uid+"</h5>";
+                                                        arr[0][4] = "<h5 class='seleccionado'>"+uname+"</h5>";
+                                                        arr[0][5] = "<h5 class='seleccionado'>"+pesito+"</h5>";
+                                                        arr[0][6] = plan == "" ? "<h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>" :
                                                                     plan == "Oficina" ? "<h5 class='plan btn-sm btn-success'>En Oficina</h5>" :
                                                                     plan.includes("Guatex") ? "<h5 class='popup plan btn-sm' style='background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h5>" :
                                                                     plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
@@ -539,10 +555,11 @@
                                         else{
                                             bootbox.alert("Se actualizó la información del paquete exitosamente.");
                                             var table = $('#inventario').DataTable();
-                                            arr[0][2] = "<h5 class='seleccionado'>"+uid+"</h5>";
-                                            arr[0][3] = "<h5 class='seleccionado'>"+uname+"</h5>";
-                                            arr[0][4] = "<h5 class='seleccionado'>"+pesito+"</h5>";
-                                            arr[0][5] = plan == "" ? "<h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>" :
+                                            arr[0][0] = `<h5 class='seleccionado' data-celulares=${celularesN} data-cobro-extra=${extrasN} >${especial ? "<span style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i></span>" : ""}</h5>`,
+                                            arr[0][3] = "<h5 class='seleccionado'>"+uid+"</h5>";
+                                            arr[0][4] = "<h5 class='seleccionado'>"+uname+"</h5>";
+                                            arr[0][5] = "<h5 class='seleccionado'>"+pesito+"</h5>";
+                                            arr[0][6] = plan == "" ? "<h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>" :
                                                         plan == "Oficina" ? "<h5 class='plan btn-sm btn-success'>En Oficina</h5>" :
                                                         plan.includes("Guatex") ? "<h5 class='popup plan btn-sm' style='background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h5>" :
                                                         plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
@@ -675,6 +692,7 @@
     <table id="inventario" class="display compact" width="100%" cellspacing="0">
         <thead>
             <tr>
+                <th class="dt-head-center"><span style="color: transparent; -webkit-text-stroke-width: 2px; -webkit-text-stroke-color: gold"><i class="fa fa-star fa-2x" aria-hidden="true"></i></span></th>
                 <th class="dt-head-center"><h5 style="color:black">Fecha de Ingreso</h5></th>
                 <th class="dt-head-center"><h5 style="color:black"># Tracking</h5></th>
                 <th class="dt-head-center"><h5 style="color:black">ID Cliente</h5></th>
@@ -686,6 +704,7 @@
         </thead>
         <tfoot>
             <tr>
+                <th></th>
                 <th class="dt-head-center"><input class="buscarIngreso" type="text" placeholder="Buscar"/></th>
                 <th></th>
                 <th></th>
@@ -765,12 +784,15 @@
                                 else plansito = "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+rows[i][6]+" Paquetes</span></h5>";
                             break;
                         }
-
+                        var celulares = rows[i][7];
+                        var extras = rows[i][8];
+                        var especial = celulares + extras > 0;
                         var trackingsito = rows[i][2];
                         if (trackingsito.length > 20)
                                 trackingsito = trackingsito.substr(0, trackingsito.length/2) + "<br>" +
                                 trackingsito.substr(trackingsito.length/2, trackingsito.length);
                         table.row.add([
+                            `<h5 class='seleccionado' data-celulares=${celulares} data-cobro-extra=${extras} >${especial ? "<span style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i></span>" : ""}</h5>`,
                             "<h5 title='Registro de Carga #"+rows[i][0]+"' class='seleccionado'>"+fechaIngreso+"</h5>",
                             "<h5 class='seleccionado'>"+trackingsito+"</h5>",
                             "<h5 class='seleccionado'>"+rows[i][3]+"</h5>",
@@ -798,10 +820,10 @@
         document.getElementById("divBotones").style.visibility = "hidden";
         var data = $("#inventario").DataTable().rows(".selected").data().toArray();
 
-        var nombre = data[0][2];
+        var nombre = data[0][3];
         var continuar = true;
         for (var i = 1; i < data.length; i++){
-            if (nombre.toUpperCase() != data[i][2].toUpperCase()){
+            if (nombre.toUpperCase() != data[i][3].toUpperCase()){
                 continuar = false;
                 break;
             }
@@ -854,8 +876,8 @@
         if (uidCliente){
             var nombres = new Array();
             for (var i = 0; i < data.length; i++){
-                if (nombres.indexOf(data[i][3].split(">")[1].split("<")[0]) == -1) {
-                    nombres.push(data[i][3].split(">")[1].split("<")[0]);
+                if (nombres.indexOf(data[i][4].split(">")[1].split("<")[0]) == -1) {
+                    nombres.push(data[i][4].split(">")[1].split("<")[0]);
                 }
             }
 
@@ -950,8 +972,8 @@
 
                                                     var strPaquetes = "", pesoTotal = 0;
                                                     for (var i = 0; i < data.length; i++){
-                                                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
-                                                        pesoTotal += Number(data[i][4].split(">")[1].split("<")[0]);
+                                                        strPaquetes += "*  Tracking: " + data[i][2].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][5].split(">")[1].split("<")[0] + " lb.%0A";
+                                                        pesoTotal += Number(data[i][5].split(">")[1].split("<")[0]);
                                                     }
                                                     var totales = "%0A - Paquetes: "+data.length+"%0A - Peso total: "+pesoTotal+"%0A - Total a pagar: Q"+(pesoTotal*60)+"%0A";
                                                     urlmensaje += strPaquetes + totales + "%0APor favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina.%0AGracias por preferirnos.";
@@ -1038,8 +1060,8 @@
 
                                     var strPaquetes = "", pesoTotal = 0;
                                     for (var i = 0; i < data.length; i++){
-                                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
-                                        pesoTotal += Number(data[i][4].split(">")[1].split("<")[0]);
+                                        strPaquetes += "*  Tracking: " + data[i][2].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][5].split(">")[1].split("<")[0] + " lb.%0A";
+                                        pesoTotal += Number(data[i][5].split(">")[1].split("<")[0]);
                                     }
                                     var totales = "%0A - Paquetes: "+data.length+"%0A - Peso total: "+pesoTotal+"%0A - Total a pagar: Q"+(pesoTotal*tarifa)+"%0A";
 
@@ -1110,8 +1132,8 @@
             });
         }
         else{
-            var uid = data[0][2].split(">")[1].split("<")[0];
-            var nombreCliente = data[0][3].split(">")[1].split("<")[0];
+            var uid = data[0][3].split(">")[1].split("<")[0];
+            var nombreCliente = data[0][4].split(">")[1].split("<")[0];
 
             var querysita = "SELECT celular, tarifa FROM cliente WHERE cid = '" + uid + "'";
 
@@ -1130,8 +1152,8 @@
 
                     var strPaquetes = "", pesoTotal = 0;
                     for (var i = 0; i < data.length; i++){
-                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.%0A";
-                        pesoTotal += Number(data[i][4].split(">")[1].split("<")[0]);
+                        strPaquetes += "*  Tracking: " + data[i][2].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][5].split(">")[1].split("<")[0] + " lb.%0A";
+                        pesoTotal += Number(data[i][5].split(">")[1].split("<")[0]);
                     }
                     var totales = "%0A - Paquetes: "+data.length+"%0A - Peso total: "+pesoTotal+"%0A - Total a pagar: Q"+(pesoTotal*tarifa)+"%0A";
 
@@ -1207,8 +1229,8 @@
         if (uidCliente){
             var nombres = new Array();
             for (var i = 0; i < data.length; i++){
-                if (nombres.indexOf(data[i][3].split(">")[1].split("<")[0]) == -1) {
-                    nombres.push(data[i][3].split(">")[1].split("<")[0]);
+                if (nombres.indexOf(data[i][4].split(">")[1].split("<")[0]) == -1) {
+                    nombres.push(data[i][4].split(">")[1].split("<")[0]);
                 }
             }
 
@@ -1303,8 +1325,8 @@
 
                                                     var strPaquetes = "", pesoTotal = 0;
                                                     for (var i = 0; i < data.length; i++){
-                                                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.<br>";
-                                                        pesoTotal += Number(data[i][4].split(">")[1].split("<")[0]);
+                                                        strPaquetes += "*  Tracking: " + data[i][2].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][5].split(">")[1].split("<")[0] + " lb.<br>";
+                                                        pesoTotal += Number(data[i][5].split(">")[1].split("<")[0]);
                                                     }
                                                     var totales = "<br> - Paquetes: "+data.length+"<br> - Peso total: "+pesoTotal+"<br> - Total a pagar: Q"+(pesoTotal*60)+"<br>";
                                                     urlmensaje += strPaquetes + totales + "<br>Por favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina.<br><br>Gracias por preferirnos.";
@@ -1363,8 +1385,8 @@
 
                                     var strPaquetes = "", pesoTotal = 0;
                                     for (var i = 0; i < data.length; i++){
-                                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.<br>";
-                                        pesoTotal += Number(data[i][4].split(">")[1].split("<")[0]);
+                                        strPaquetes += "*  Tracking: " + data[i][2].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][5].split(">")[1].split("<")[0] + " lb.<br>";
+                                        pesoTotal += Number(data[i][5].split(">")[1].split("<")[0]);
                                     }
                                     var totales = "<br> - Paquetes: "+data.length+"<br> - Peso total: "+pesoTotal+"<br> - Total a pagar: Q"+(pesoTotal*tarifa)+"<br>";
 
@@ -1406,8 +1428,8 @@
             });
         }
         else{
-            var uid = data[0][2].split(">")[1].split("<")[0];
-            var cliente = data[0][3].split(">")[1].split("<")[0];
+            var uid = data[0][3].split(">")[1].split("<")[0];
+            var cliente = data[0][4].split(">")[1].split("<")[0];
 
             var querysita = "SELECT email, tarifa FROM cliente WHERE cid = '" + uid + "'";
 
@@ -1426,8 +1448,8 @@
 
                     var strPaquetes = "", pesoTotal = 0;
                     for (var i = 0; i < data.length; i++){
-                        strPaquetes += "*  Tracking: " + data[i][1].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][4].split(">")[1].split("<")[0] + " lb.<br>";
-                        pesoTotal += Number(data[i][4].split(">")[1].split("<")[0]);
+                        strPaquetes += "*  Tracking: " + data[i][2].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][5].split(">")[1].split("<")[0] + " lb.<br>";
+                        pesoTotal += Number(data[i][5].split(">")[1].split("<")[0]);
                     }
                     var totales = "<br> - Paquetes: "+data.length+"<br> - Peso total: "+pesoTotal+"<br> - Total a pagar: Q"+(pesoTotal*tarifa)+"<br>";
 
@@ -1470,10 +1492,10 @@
         document.getElementById("divBotones").style.visibility = "hidden";
         var data = $("#inventario").DataTable().rows(".selected").data().toArray();
 
-        var nombre = data[0][2].toUpperCase();
+        var nombre = data[0][3].toUpperCase();
         var continuar = true;
         for (var i = 1; i < data.length; i++){
-            if (nombre != data[i][2].toUpperCase()){
+            if (nombre != data[i][3].toUpperCase()){
                 continuar = false;
                 break;
             }
@@ -1501,7 +1523,7 @@
             });
             return;
         }
-        planEntregaVarios(data, data[0][3].split(">")[1].split("<")[0]);
+        planEntregaVarios(data, data[0][4].split(">")[1].split("<")[0]);
     }
 
     function planEntregaVarios(arr, nombre){
@@ -1514,7 +1536,7 @@
 
         var uids = "(";
         for (var i = 0; i < arr.length; i++)
-            uids = uids + (i == 0 ? "'":", '")+arr[i][2].split(">")[1].split("<")[0]+"'";
+            uids = uids + (i == 0 ? "'":", '")+arr[i][3].split(">")[1].split("<")[0]+"'";
         uids = uids+")";
 
         var anonimo = false;
@@ -1586,14 +1608,14 @@
                             }
                             plan = document.getElementById("form_carga_esperando").value;
                         }
-                        else if (document.getElementById("btnRuta").style.color == "white"){
+                        else if (document.getElementById("btnRuta").style.color === "white"){
                             var f = $("#divFechaRuta").datepicker("getDate");
                             plan = (f.getDate() < 10 ? "0" : "") + f.getDate() + "/" + (f.getMonth()+1 < 10 ? "0" : "") + (f.getMonth()+1) + "/" + f.getFullYear() ;
                         }
 
                         var trackStr = "(";
                         for (var i = 0; i < arr.length; i++)
-                            trackStr = trackStr + (i == 0 ? "'":", '")+arr[i][1].replace("<br>", "").split(">")[1].split("<")[0]+"'";
+                            trackStr = trackStr + (i === 0 ? "'":", '")+arr[i][2].replace("<br>", "").split(">")[1].split("<")[0]+"'";
                         trackStr = trackStr+")";
 
                         var wher = "tracking IN "+trackStr;
@@ -1627,8 +1649,8 @@
                                         else{
                                             t.rows().every( function(rowIdx, tableLoop, rowLoop) {
                                                 var dataRow = String(this.data()).split(",");
-                                                if (uids.toUpperCase().includes(dataRow[2].split(">")[1].split("<")[0].toUpperCase())) {
-                                                    dataRow[5] = plan == "" ? "<h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>" :
+                                                if (uids.toUpperCase().includes(dataRow[3].split(">")[1].split("<")[0].toUpperCase())) {
+                                                    dataRow[6] = plan == "" ? "<h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>" :
                                                     plan == "Oficina" ? "<h5 class='plan btn-sm btn-success'>En Oficina</h5>" :
                                                     plan.includes("Guatex") ? "<h5 class='popup plan btn-sm' style='text-align:center; background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h5>" :
                                                     plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
@@ -1646,7 +1668,7 @@
                                     else{
                                         t.rows(".selected").every( function(rowIdx, tableLoop, rowLoop) {
                                                 var dataRow = String(this.data()).split(",");
-                                                dataRow[5] = plan == "" ? "<h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>" :
+                                                dataRow[6] = plan == "" ? "<h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>" :
                                                         plan == "Oficina" ? "<h5 class='plan btn-sm btn-success'>En Oficina</h5>" :
                                                         plan.includes("Guatex") ? "<h5 class='popup plan btn-sm' style='text-align:center; background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h5>" :
                                                         plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
@@ -1686,20 +1708,20 @@
         document.getElementById("divBotones").style.visibility = "hidden";
         var data = $("#inventario").DataTable().rows(".selected").data().toArray();
 
-        var nombre = data[0][2].toUpperCase();
-        var plan = data[0][5].toUpperCase();
+        var nombre = data[0][3].toUpperCase();
+        var plan = data[0][6].toUpperCase();
         var continuar = true;
         let razon = true;
         let msgError;
         for (var i = 1; i < data.length; i++){
-            if (!data[i][2].toUpperCase().includes(nombre)){
+            if (!data[i][3].toUpperCase().includes(nombre)){
                 continuar = false;
                 msgError = "La mercadería seleccionada pertenece a diferentes clientes, solo se puede entregar la mercadería de un cliente a la vez.";
                 break;
             }
-            if (plan != data[i][5].toUpperCase()){
+            if (plan != data[i][6].toUpperCase()){
                 continuar = false;
-                msgError = "Los planes de entrega de los paquetes seleccionados no coinciden, verifique que no haya seleccionado paquetes de más."
+                msgError = "Los planes de entrega de los paquetes seleccionados no coinciden, verifique que no haya seleccionado paquetes de más.";
                 break;
             }
         }
@@ -1709,9 +1731,6 @@
             continuar = false;
         }
 
-
-        //alert('continuar: ' + continuar);
-        //alert('razon: ' + razon);
         if (!continuar){
             bootbox.dialog({
                 closeButton: false,
@@ -1733,13 +1752,13 @@
             url: "db/DBgetUserTarifa.php",
             type: "POST",
             data: {
-                uid: data[0][2].split(">")[1].split("<")[0]
+                uid: data[0][3].split(">")[1].split("<")[0]
             },
             cache: false,
             success: function(res){
                 if (res == 0)
                     res = 60;
-                cobrarEntrega(data, "Entregando mercadería a " + data[0][3].split(">")[1].split("<")[0], Number(res));
+                cobrarEntrega(data, "Entregando mercadería a " + data[0][4].split(">")[1].split("<")[0], Number(res));
             },
             error: function() {
                 bootbox.alert("Ocurrió un problema al intentar conectarse al servidor.");
@@ -1749,21 +1768,21 @@
 
     function cobrarEntrega(data, titulo, tarifa){
         var paquetes = data.length, libras = 0;
-        var uids = data[0][2].split(">")[1].split("<")[0];
-        var unombre = data[0][3].split(">")[1].split("<")[0];
+        var uids = data[0][3].split(">")[1].split("<")[0];
+        var unombre = data[0][4].split(">")[1].split("<")[0];
         var plan = "";
 
-        if (data[0][5].includes("Oficina"))
+        if (data[0][6].includes("Oficina"))
             plan = "Oficina";
-        else if (data[0][5].includes("Guatex"))
-            plan = "Guatex: "+data[0][5].split(">")[2].split("<")[0];
-        if (data[0][5].includes("Esperando"))
-            plan = data[0][5].split(">")[2].split(" Paquetes")[0];
-        if (data[0][5].includes("En Ruta"))
-            plan = "Por Ruta: " + data[0][5].split(">")[2].split("<")[0].replace("-", "").replace("-","");
+        else if (data[0][6].includes("Guatex"))
+            plan = "Guatex: "+data[0][6].split(">")[2].split("<")[0];
+        if (data[0][6].includes("Esperando"))
+            plan = data[0][6].split(">")[2].split(" Paquetes")[0];
+        if (data[0][6].includes("En Ruta"))
+            plan = "Por Ruta: " + data[0][6].split(">")[2].split("<")[0].replace("-", "").replace("-","");
 
         for (var i = 0; i < data.length; i++)
-            libras += Number(data[i][4].split(">")[1].split("<")[0]);
+            libras += Number(data[i][5].split(">")[1].split("<")[0]);
 
         var tarifaTitulo = "Cliente con tarifa corriente.";
         if (tarifa != 60)
@@ -1892,7 +1911,7 @@
 
                         var trackStr = "(";
                         for (var i = 0; i < data.length; i++)
-                            trackStr = trackStr + (i == 0 ? "'":", '")+data[i][1].replace("<br>", "").split(">")[1].split("<")[0]+"'";
+                            trackStr = trackStr + (i == 0 ? "'":", '")+data[i][2].replace("<br>", "").split(">")[1].split("<")[0]+"'";
                         trackStr = trackStr+")";
                         var tarif = document.getElementById("tarifaEntrega").value;
                         var total = document.getElementById("totalEntrega").value;

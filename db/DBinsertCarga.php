@@ -18,7 +18,7 @@
                 $query .= "'".$carga[0].
                         "', '".$carga[1].
                         "', '".$carga[2].
-                        "', ".$carga[3].", ".$rcid.", NULL, ''), (";
+                        "', ".$carga[3].", ".$rcid.", NULL, '', 0, 0), (";
             }
             $query = substr($query, 0, strlen($query)-3);
             if ($conn->query($query))

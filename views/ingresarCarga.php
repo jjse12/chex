@@ -558,7 +558,7 @@
                     var arr = invent.rows({search:'applied'}).data().toArray();
                     var uids = "";
                     for (var i = 0; i < arr.length; i++){
-                        var id = arr[i][2].split(">")[1].split("<")[0].toUpperCase();
+                        var id = arr[i][3].split(">")[1].split("<")[0].toUpperCase();
                         if ((arreglo.indexOf(id) == -1) && (uids.split(",").indexOf(id) == -1))
                             uids += id+",";
                     }

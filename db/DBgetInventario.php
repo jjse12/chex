@@ -1,7 +1,7 @@
 <?php
     require_once("db_vars.php");
     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-    $query = "SELECT P.rcid, fecha, tracking, uid, uname, libras, plan FROM paquete P JOIN carga C ON P.rcid = C.rcid WHERE P.estado IS NULL";
+    $query = "SELECT P.rcid, fecha, tracking, uid, uname, libras, plan, celulares, cobro_extra FROM paquete P JOIN carga C ON P.rcid = C.rcid WHERE P.estado IS NULL";
     $result = $conn->query($query);
     $res = "[";
     while($row = mysqli_fetch_row($result))
