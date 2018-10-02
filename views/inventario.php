@@ -1854,10 +1854,10 @@
                                 "<div class='control-group form-group'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Costo de Envío (Q)</label><input onfocusout='roundField(this); calcularTotalEntrega()' onkeypress='return numbersonly(this, event, \"\")' onkeyup='this.value=this.value.replace(/^0+/, \"\");' id='costoRutaEntrega' type='text' class='form-control' style='width:100%; text-align:center;'/></div></div>"+
                             "</div>" : "" ) + (celulares > 0 ?
                             "<div id='divCostoCelulares' class='"+ celularesAddedClass +"'>" +
-                                "<div class='control-group form-group'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Costo por "+celulares+" Celulares</label><input disabled value='Q "+numberWithCommas(celulares*100)+"' onfocusout='roundField(this); calcularTotalEntrega()' onkeypress='return numbersonly(this, event, \"\")' onkeyup='this.value=this.value.replace(/^0+/, \"\");' id='costoCelulares' type='text' class='form-control' style='width:100%; text-align:center;'/></div></div>"+
+                                "<div class='control-group form-group'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Costo por "+celulares+" Celulares</label><input data-cantidad='"+celulares+"' disabled value='Q "+numberWithCommas(celulares*100)+"' onfocusout='roundField(this); calcularTotalEntrega()' onkeypress='return numbersonly(this, event, \"\")' onkeyup='this.value=this.value.replace(/^0+/, \"\");' id='costoCelulares' type='text' class='form-control' style='width:100%; text-align:center;'/></div></div>"+
                             "</div>" : "" ) + (extras > 0 ?
                             "<div id='divCostoExtras' class='"+ extrasAddedClass +"'>" +
-                                "<div class='control-group form-group'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Costos Extras</label><input disabled value='Q "+numberWithCommas(extras)+"' onfocusout='roundField(this); calcularTotalEntrega()' onkeypress='return numbersonly(this, event, \"\")' onkeyup='this.value=this.value.replace(/^0+/, \"\");' id='costosExtras' type='text' class='form-control' style='width:100%; text-align:center;'/></div></div>"+
+                                "<div class='control-group form-group'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Costos Extras</label><input data-monto='"+extras+"' disabled value='Q "+numberWithCommas(extras)+"' onfocusout='roundField(this); calcularTotalEntrega()' onkeypress='return numbersonly(this, event, \"\")' onkeyup='this.value=this.value.replace(/^0+/, \"\");' id='costosExtras' type='text' class='form-control' style='width:100%; text-align:center;'/></div></div>"+
                             "</div>" : "" ) +
                         "</div>" ) : "" )+
                     "<div class='row'>"+
@@ -2136,7 +2136,9 @@
             }
             else
                 extra -= 60*libras;
-            detalleStr = "Pago con Tarjeta de Crédito:<br> &nbsp&nbsp* Aumento de Tarifa: Q "+tarifAumnt+"<br> &nbsp&nbsp* Comisión: Q "+numberWithCommas(comision)+"<br> &nbsp&nbsp* Monto total agregado:<br> &nbsp&nbsp&nbsp&nbsp&nbsp&nbspQ " + numberWithCommas(extra);
+            detalleStr = "Pago con Tarjeta de Crédito:<br> &nbsp&nbsp* Aumento de Tarifa: Q "+tarifAumnt
+                +"<br> &nbsp&nbsp* Comisión: Q "+numberWithCommas(comision)
+                +"<br> &nbsp&nbsp* Monto total agregado:<br> &nbsp&nbsp&nbsp&nbsp&nbsp&nbspQ " + numberWithCommas(extra);
         }
         else if (tarifa.title == "Cliente con tarifa corriente."){
             divDetalle.style.display = "none";
@@ -2184,6 +2186,15 @@
 
     function toggleMetodoPago(boton){
         var tarifa = document.getElementById("tarifaEntrega");
+        var costoCelulares = $('#costoCelulares');
+        var costosExtras= $('#costosExtras');
+        var cantCelulares = null;
+        var montoExtras = null;
+        if (costoCelulares.length)
+            cantCelulares = costoCelulares.data('cantidad');
+        if (costosExtras.length)
+            montoExtras = costosExtras.data('monto');
+
         if (boton.style.color == "white"){
             boton.style.backgroundColor = "#fff";
             boton.style.color = "#337ab7";
@@ -2193,7 +2204,13 @@
                     tarifa.value = "Q 60";
                 else
                     tarifa.value = tarifa.title.split(": ")[1];
-                calcularTotalEntrega    ();
+
+                if (cantCelulares !== null)
+                    costoCelulares.val('Q ' + numberWithCommas(cantCelulares*100));
+                if (montoExtras !== null)
+                    costosExtras.val('Q ' + numberWithCommas(montoExtras));
+
+                calcularTotalEntrega();
             }
         }
         else{
@@ -2202,8 +2219,14 @@
             else
                 tarifa.value = tarifa.title.split(": ")[1];
 
-            if (boton.innerHTML == "Tarjeta C.")
+            if (boton.innerHTML == "Tarjeta C."){
                 tarifa.value = "Q 64";
+                if (cantCelulares !== null)
+                    costoCelulares.val('Q ' + numberWithCommas(cantCelulares*115));
+                if (montoExtras !== null)
+                    costosExtras.val('Q ' + numberWithCommas(montoExtras*1.12));
+            }
+
             document.getElementById("btnEfectivo").style.backgroundColor = "#fff";
             document.getElementById("btnEfectivo").style.color = "#337ab7";
             document.getElementById("btnCredito").style.backgroundColor = "#fff";
