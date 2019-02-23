@@ -41,75 +41,6 @@
     -webkit-transform: scale(2); 
 }
 
-#inventario.display tbody tr.odd > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd > .sorting_1 {
-  background-color: #36adec !important;
-}
-#inventario.display tbody tr.odd > .sorting_2, table.dataTable.order-column.stripe tbody tr.odd > .sorting_2 {
-  background-color: #36adec !important;
-}
-#inventario.display tbody tr.odd > .sorting_3, table.dataTable.order-column.stripe tbody tr.odd > .sorting_3 {
-  background-color: #36adec !important;
-}
-
-#inventario.display tbody tr.even > .sorting_1, table.dataTable.order-column.stripe tbody tr.even > .sorting_1 {
-  background-color: #3ABBFF !important;
-}
-#inventario.display tbody tr.even > .sorting_2, table.dataTable.order-column.stripe tbody tr.even > .sorting_2 {
-  background-color: #3ABBFF !important;
-}
-#inventario.display tbody tr.even > .sorting_3, table.dataTable.order-column.stripe tbody tr.even > .sorting_3 {
-  background-color: #3ABBFF !important;
-}
-
-#inventario.display tbody tr:hover > .sorting_1,
-#inventario.display tbody tr.odd:hover > .sorting_1,
-#inventario.display tbody tr.even:hover > .sorting_1, table.dataTable.order-column.hover tbody tr:hover > .sorting_1,
-#inventario.order-column.hover tbody tr.odd:hover > .sorting_1,
-#inventario.order-column.hover tbody tr.even:hover > .sorting_1 {
-  background-color: #1B64B4 !important;
-}
-
-#inventario.display tbody tr:hover > .sorting_2,
-#inventario.display tbody tr.odd:hover > .sorting_2,
-#inventario.display tbody tr.even:hover > .sorting_2, table.dataTable.order-column.hover tbody tr:hover > .sorting_2,
-#inventario.order-column.hover tbody tr.odd:hover > .sorting_2,
-#inventario.order-column.hover tbody tr.even:hover > .sorting_2 {
-  background-color: #1B64B4 !important;
-}
-
-#inventario.display tbody tr:hover > .sorting_3,
-#inventario.display tbody tr.odd:hover > .sorting_3,
-#inventario.display tbody tr.even:hover > .sorting_3, table.dataTable.order-column.hover tbody tr:hover > .sorting_3,
-#inventario.order-column.hover tbody tr.odd:hover > .sorting_3,
-#inventario.order-column.hover tbody tr.even:hover > .sorting_3 {
-  background-color: #1B64B4 !important;
-}
-
-#inventario tbody tr.selected,
-#tablaBoletas tbody tr.selected {
-    background-color: #3c983c !important;
-}
-
-#inventario.display tbody tr.odd.selected > .sorting_1, #tablaBoletas.display tbody tr.odd.selected > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.selected > .sorting_1 {
-  background-color: #3c983c !important;
-}
-#inventario.display tbody tr.odd.selected > .sorting_2, #tablaBoletas.display tbody tr.odd.selected > .sorting_2, table.dataTable.order-column.stripe tbody tr.odd.selected > .sorting_2 {
-  background-color: #3c983c !important;
-}
-#inventario.display tbody tr.odd.selected > .sorting_3, #tablaBoletas.display tbody tr.odd.selected > .sorting_3, table.dataTable.order-column.stripe tbody tr.odd.selected > .sorting_3 {
-  background-color: #3c983c !important;
-}
-
-#inventario.display tbody tr.even.selected > .sorting_1, #tablaBoletas.display tbody tr.even.selected > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.selected > .sorting_1 {
-  background-color: #3c983c !important;
-}
-#inventario.display tbody tr.even.selected > .sorting_2, #tablaBoletas.display tbody tr.even.selected > .sorting_2, table.dataTable.order-column.stripe tbody tr.even.selected > .sorting_2 {
-  background-color: #3c983c !important;
-}
-#inventario.display tbody tr.even.selected > .sorting_3, #tablaBoletas.display tbody tr.even.selected > .sorting_3, table.dataTable.order-column.stripe tbody tr.even.selected > .sorting_3 {
-  background-color: #3c983c !important;
-}
-
 .popup, .popup-notif{
     position: relative;
     cursor: pointer;
@@ -136,7 +67,7 @@
     white-space: nowrap;
 }
 
-.popup-notif .popupicon{
+.popup-notif .popupicon {
     display: none;
     width: auto;
     background-color: transparent;
@@ -146,7 +77,7 @@
     z-index: 1;
     right: 100%;
     bottom: 0;
-}z
+}
 
 /* Popup arrow */
 .popup .popuptext::after{

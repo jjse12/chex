@@ -8,20 +8,21 @@
             $.ajax({
                 url: "db/DBgetEmpleadoPermisos.php",
                 type: "POST",
+                datatype: 'json',
                 data: {
                     user: nombre,
                     pass: password
                 },
                 cache: false,
-                success: function(res){
-                    if (res != "-1"){
-                        
+                success: function(response){
+                    if (response.data) {
                         $.ajax({
                             url: "views/session.php",
                             type: "POST",
                             data: {
+                                username: nombre,
                                 user_login_status: 1,
-                                user_admin: (res.includes("0") ? 0 : 1)
+                                user_admin: response.data
                             },
                             cache: false,
                             success: function(res){
@@ -31,9 +32,12 @@
                                 }, 1000);
                             }
                         });
+
                     }
-                    else
-                        bootbox.alert('El usuario o la contraseña ingresados no son correctos.');
+                    else {
+                        bootbox.alert(response.message ?
+                            response.message : 'Ocurrió un problema al conectarse a la base de datos para verificar usuario. Intente nuevamente.');
+                    }
                 },
                 error: function(){
                     bootbox.alert('Ocurrió un problema al conectarse a la base de datos para verificar usuario. Intente nuevamente.');

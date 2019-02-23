@@ -1,25 +1,35 @@
 <div style="position: fixed; z-index: 1029; left: 0; right: 0; background-color: #fff;" class='row-same-height col-lg-12 col-md-12 col-sm-12 col-xs-12'>
-  <div class='col-lg-4 col-md-4 col-sm-4'></div>
-  <div class='col-lg-4 col-md-4 col-sm-4 col-xs-12'>
+  <div class="col-lg-3 col-md-3 col-sm-3">
+      <br>
+      <h3 style="color: orange;"><?php echo $_SESSION['username'];?></h3>
+  </div>
+  <div class='col-lg-6 col-md-6 col-sm-6 col-xs-12'>
     <section  style="background: #eaeaea;" class="tabbable"">
       <nav class="course-tabs">
         <ul class="nav nav-pills">
-          <li style="width: 49%" onclick="scroll0()" class="active alpha"><a href="#tab1" style="text-align: center;" align="center" data-toggle="tab">Registros Internos</a></li>
-          <li style="width: 50%" onclick="scroll0(); insertarNuevosClientes();"><a href="#tab2" data-toggle="tab" style="text-align: center;" align="center">Clientes ChispuditoExpress</a></li>
+          <li style="width: 33%" onclick="scroll0(); loadFacturas();"><a href="#tab1" style="text-align: center;" align="center" data-toggle="tab">Facturas Clientes</a></li>
+          <li style="width: 33%" onclick="scroll0()" class="active alpha"><a href="#tab2" style="text-align: center;" align="center" data-toggle="tab">Registros Internos</a></li>
+          <li style="width: 33%" onclick="scroll0(); insertarNuevosClientes();"><a href="#tab3" data-toggle="tab" style="text-align: center;" align="center">Clientes ChispuditoExpress</a></li>
         </ul>
       </nav>
     </section>
   </div>
-  <div class='col-lg-4 col-md-4 col-sm-4'></div>
 </div>
 
 <div class="tab-content box">
-  <div class="tab-pane fade active in" id="tab1">
+    <div class="tab-pane fade" id="tab1">
+        <div class="container">
+            <?php
+                include("facturas.php");
+            ?>
+        </div>
+    </div>
+  <div class="tab-pane fade active in" id="tab2">
     <?php 
       include("mercaderia.php");
     ?>
   </div>
-  <div class="tab-pane fade" id="tab2">
+  <div class="tab-pane fade" id="tab3">
       <div class="container">
         <?php 
           include("clientes.php");
