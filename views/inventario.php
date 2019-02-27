@@ -975,8 +975,8 @@
                                                         strPaquetes += "*  Tracking: " + data[i][2].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][5].split(">")[1].split("<")[0] + " lb.%0A";
                                                         pesoTotal += Number(data[i][5].split(">")[1].split("<")[0]);
                                                     }
-                                                    var totales = "%0A - Paquetes: "+data.length+"%0A - Peso total: "+pesoTotal+"%0A - Total a pagar: Q"+(pesoTotal*60)+"%0A";
-                                                    urlmensaje += strPaquetes + totales + "%0APor favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina.%0AGracias por preferirnos.";
+                                                    var totales = "%0A - Paquetes: "+data.length+"%0A - Peso total: "+pesoTotal+" lb.%0A - Total a pagar: Q"+(pesoTotal*60)+" (tarifa aplica en *efectivo*)%0A";
+                                                    urlmensaje += strPaquetes + totales + "%0APor favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina (recuerda que si solicitas servicio ruta, debes agregar al total el costo del envío).%0AGracias por preferirnos. Chispudito Express";
                                                     urlmensaje = urlmensaje.replace(" ", "%20");
 
                                                     if (whatsWebWindow != null && !whatsWebWindow.closed){
@@ -1063,9 +1063,9 @@
                                         strPaquetes += "*  Tracking: " + data[i][2].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][5].split(">")[1].split("<")[0] + " lb.%0A";
                                         pesoTotal += Number(data[i][5].split(">")[1].split("<")[0]);
                                     }
-                                    var totales = "%0A - Paquetes: "+data.length+"%0A - Peso total: "+pesoTotal+"%0A - Total a pagar: Q"+(pesoTotal*tarifa)+"%0A";
+                                    var totales = "%0A - Paquetes: "+data.length+"%0A - Peso total: "+pesoTotal+" lb.%0A - Total a pagar: Q"+(pesoTotal*tarifa)+" (tarifa aplica en *efectivo*)%0A";
 
-                                    urlmensaje += strPaquetes + totales + "%0APor favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina.%0AGracias por preferirnos.";
+                                    urlmensaje += strPaquetes + totales + "%0APor favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina (recuerda que si solicitas servicio ruta, debes agregar al total el costo del envío).%0AGracias por preferirnos. Chispudito Express";
                                     urlmensaje = urlmensaje.replace(" ", "%20").replace("Ã¡", "á").replace("Ã©", "é").replace("Ã³", "ó").replace("Ãº", "ú").replace("Ã¼", "ü").replace("Ã±", "ñ").replace("Ã", "í");
 
                                     if (whatsWebWindow != null && !whatsWebWindow.closed){
@@ -1155,9 +1155,9 @@
                         strPaquetes += "*  Tracking: " + data[i][2].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][5].split(">")[1].split("<")[0] + " lb.%0A";
                         pesoTotal += Number(data[i][5].split(">")[1].split("<")[0]);
                     }
-                    var totales = "%0A - Paquetes: "+data.length+"%0A - Peso total: "+pesoTotal+"%0A - Total a pagar: Q"+(pesoTotal*tarifa)+"%0A";
+                    var totales = "%0A - Paquetes: "+data.length+"%0A - Peso total: "+pesoTotal+" lb.%0A - Total a pagar: Q"+(pesoTotal*tarifa)+" (tarifa aplica en *efectivo*)%0A";
 
-                    urlmensaje += strPaquetes + totales + "%0APor favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina.%0AGracias por preferirnos.";
+                    urlmensaje += strPaquetes + totales + "%0APor favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina (recuerda que si solicitas servicio ruta, debes agregar al total el costo del envío).%0AGracias por preferirnos. Chispudito Express";
                     urlmensaje = urlmensaje.replace(" ", "%20").replace("Ã¡", "á").replace("Ã©", "é").replace("Ã³", "ó").replace("Ãº", "ú").replace("Ã¼", "ü").replace("Ã±", "ñ").replace("Ã", "í");
 
                     if (whatsWebWindow != null && !whatsWebWindow.closed){
@@ -1328,8 +1328,8 @@
                                                         strPaquetes += "*  Tracking: " + data[i][2].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][5].split(">")[1].split("<")[0] + " lb.<br>";
                                                         pesoTotal += Number(data[i][5].split(">")[1].split("<")[0]);
                                                     }
-                                                    var totales = "<br> - Paquetes: "+data.length+"<br> - Peso total: "+pesoTotal+"<br> - Total a pagar: Q"+(pesoTotal*60)+"<br>";
-                                                    urlmensaje += strPaquetes + totales + "<br>Por favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina.<br><br>Gracias por preferirnos.";
+                                                    var totales = "<br> - Paquetes: "+data.length+"<br> - Peso total: "+pesoTotal+" lb.<br> - Total a pagar: Q"+(pesoTotal*60)+" (tarifa aplica en <b>efectivo</b>)<br>";
+                                                    urlmensaje += strPaquetes + totales + "<br>Por favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina (recuerda que si solicitas servicio ruta, debes agregar al total el costo del envío).<br><br>Gracias por preferirnos. Chispudito Express";
 
                                                     $.ajax({
                                                         url: "PHPMailer/notificarViaEmail.php",
@@ -1388,9 +1388,9 @@
                                         strPaquetes += "*  Tracking: " + data[i][2].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][5].split(">")[1].split("<")[0] + " lb.<br>";
                                         pesoTotal += Number(data[i][5].split(">")[1].split("<")[0]);
                                     }
-                                    var totales = "<br> - Paquetes: "+data.length+"<br> - Peso total: "+pesoTotal+"<br> - Total a pagar: Q"+(pesoTotal*tarifa)+"<br>";
+                                    var totales = "<br> - Paquetes: "+data.length+"<br> - Peso total: "+pesoTotal+" lb.<br> - Total a pagar: Q"+(pesoTotal*tarifa)+" (tarifa aplica en <b>efectivo</b>)<br>";
 
-                                    urlmensaje += strPaquetes + totales + "<br>Por favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina.<br><br>Gracias por preferirnos.";
+                                    urlmensaje += strPaquetes + totales + "<br>Por favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina (recuerda que si solicitas servicio ruta, debes agregar al total el costo del envío).<br><br>Gracias por preferirnos. Chispudito Express";
 
                                     $.ajax({
                                         url: "PHPMailer/notificarViaEmail.php",
@@ -1451,9 +1451,9 @@
                         strPaquetes += "*  Tracking: " + data[i][2].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][5].split(">")[1].split("<")[0] + " lb.<br>";
                         pesoTotal += Number(data[i][5].split(">")[1].split("<")[0]);
                     }
-                    var totales = "<br> - Paquetes: "+data.length+"<br> - Peso total: "+pesoTotal+"<br> - Total a pagar: Q"+(pesoTotal*tarifa)+"<br>";
+                    var totales = "<br> - Paquetes: "+data.length+"<br> - Peso total: "+pesoTotal+" lb.<br> - Total a pagar: Q"+(pesoTotal*tarifa)+" (tarifa aplica en <b>efectivo</b>)<br>";
 
-                    urlmensaje += strPaquetes + totales + "<br>Por favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina.<br><br>Gracias por preferirnos.";
+                    urlmensaje += strPaquetes + totales + "<br>Por favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina (recuerda que si solicitas servicio ruta, debes agregar al total el costo del envío).<br><br>Gracias por preferirnos. Chispudito Express";
 
                     $.ajax({
                         url: "PHPMailer/notificarViaEmail.php",
