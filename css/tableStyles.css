@@ -87,6 +87,10 @@
     background-color: #1B64B4 !important;
 }
 
+#facturas.dataTable tbody th, #facturas.dataTable tbody td{
+    padding: 0 0 !important;
+}
+
 
 #inventario tbody tr.selected,
 #tablaBoletas tbody tr.selected,

@@ -22,12 +22,16 @@
         <!-- jQuery -->
         <link href="css/custom.css" rel="stylesheet">
         <link href="css/tableStyles.css" rel="stylesheet">
+        <link href="css/general.css" rel="stylesheet">
+        <link href="css/loader.css" rel="stylesheet">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
         <script type="text/javascript" src="js/jquery.js"></script>
         <script type="text/javascript" src="js/jquery.session.js"></script>
         <script type="text/javascript" src="js/bootbox.js"></script>
         <script type="text/javascript" src="js/bootstrap.min.js"></script>
 
+        <script type="text/javascript" src="js/loader.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
     </head>
     <!--
     <body style="overflow: hidden; height: 100%">
@@ -55,7 +59,11 @@
         </div>
 
         <script type="text/javascript">
-            
+
+            $(document).ajaxStart(function() {
+                Pace.restart();
+            });
+
             function numberWithCommas(num) {
                 return Number(num).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             }
