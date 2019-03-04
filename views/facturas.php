@@ -1,4 +1,5 @@
-<link href="../css/facturaStyles.css" rel="stylesheet">
+<script src="js/facturas.js"></script>
+<link href="css/facturaStyles.css" rel="stylesheet">
 
 <br><br>
 <br><br>

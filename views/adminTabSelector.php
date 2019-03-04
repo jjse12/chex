@@ -1,4 +1,3 @@
-<script src="../js/facturas.js"></script>
 
 <div style="position: fixed; z-index: 1029; left: 0; right: 0; background-color: #fff;" class='row-same-height col-lg-12 col-md-12 col-sm-12 col-xs-12'>
   <div class="col-lg-3 col-md-3 col-sm-3">
