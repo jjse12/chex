@@ -4,26 +4,10 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="">
-        <meta name="author" content="">
-        <meta name="google-site-verification" content="Mv8LjSSeN7Y9foYL0jati7qHBMEBA_1QAEmBuwOlQr8" />
-        <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
-        <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
-        <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
-        <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
-        <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
-        <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
-        <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
-        <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
-        <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
-        <link rel="icon" type="image/png" href="/android-chrome-192x192.png" sizes="192x192">
-        <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
-        <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
-        <link rel="manifest" href="/manifest.json">
         <meta name="msapplication-TileColor" content="#2d89ef">
         <meta name="msapplication-TileImage" content="/mstile-144x144.png">
         <meta name="theme-color" content="#ffffff">
+
         <title>Chispudito Express - Administración</title>
 
         <!-- Bootstrap Core CSS -->
@@ -33,17 +17,21 @@
         <link href="css/modern-business.css" rel="stylesheet">
 
         <!-- Custom Fonts -->
-
         <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="css/sansita-stylesheet.css" type="text/css" charset="utf-8" />
         <!-- jQuery -->
         <link href="css/custom.css" rel="stylesheet">
+        <link href="css/tableStyles.css" rel="stylesheet">
+        <link href="css/general.css" rel="stylesheet">
+        <link href="css/loader.css" rel="stylesheet">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
         <script type="text/javascript" src="js/jquery.js"></script>
         <script type="text/javascript" src="js/jquery.session.js"></script>
         <script type="text/javascript" src="js/bootbox.js"></script>
         <script type="text/javascript" src="js/bootstrap.min.js"></script>
 
+        <script type="text/javascript" src="js/loader.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
     </head>
     <!--
     <body style="overflow: hidden; height: 100%">
@@ -71,7 +59,11 @@
         </div>
 
         <script type="text/javascript">
-            
+
+            $(document).ajaxStart(function() {
+                Pace.restart();
+            });
+
             function numberWithCommas(num) {
                 return Number(num).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             }

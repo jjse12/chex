@@ -1,5 +1,6 @@
 <?php
-    $db_connection = new mysqli("198.71.225.64", "chispuditoex", "Chispudito2015", "usercreator");
+    require_once("server_db_vars.php");
+    $db_connection = new mysqli(SERVER_DB_HOST, SERVER_DB_USER, SERVER_DB_PASS, SERVER_DB_NAME);
     $email = $db_connection->real_escape_string(strip_tags($_POST['email'], ENT_QUOTES));
     $sql = "SELECT * FROM cliente WHERE email = '" . $email . "';";
     $query_check_user_name = $db_connection->query($sql);

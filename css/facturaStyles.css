@@ -1,0 +1,11 @@
+div.factura-content{
+    overflow: hidden;
+}
+
+.factura-image {
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}

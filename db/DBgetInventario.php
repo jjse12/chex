@@ -3,19 +3,22 @@
     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     $query = "SELECT P.rcid, fecha, tracking, uid, uname, libras, plan, celulares, cobro_extra FROM paquete P JOIN carga C ON P.rcid = C.rcid WHERE P.estado IS NULL";
     $result = $conn->query($query);
-    $res = "[";
-    while($row = mysqli_fetch_row($result))
-    {   
-        $i = 0;
-        $res .= "[";
-        foreach($row as $cell){
-            if ($i == 5)
-                $res .= $cell.",";
-            else $res .= "\"" . $cell ."\",";
-            $i = $i+1;
+    if (isset($result) && $result !== false){
+        $res = "[";
+        while($row = mysqli_fetch_row($result))
+        {
+            $i = 0;
+            $res .= "[";
+            foreach($row as $cell){
+                if ($i == 5)
+                    $res .= $cell.",";
+                else $res .= "\"" . $cell ."\",";
+                $i = $i+1;
+            }
+            $res = substr($res, 0, strlen($res)-1)."],";
         }
-        $res = substr($res, 0, strlen($res)-1)."],";
-    }   
-    $res = substr($res, 0, strlen($res)-1)."]";
-    echo $res;
+        $res = substr($res, 0, strlen($res)-1)."]";
+        echo $res;
+    }
+    else header("HTTP/1.1 500 Internal Server Error");
 ?>
