@@ -16,7 +16,7 @@
         }
         else {
             echo json_encode([
-                'success' => true,
+                'success' => false,
                 'message' => 'El usuario o la contraseña ingresados no son correctos.',
                 'data'    => null
             ]);
