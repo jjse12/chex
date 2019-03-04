@@ -1,17 +1,6 @@
-<link href="/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
-<link href="/css/dataTables.tableTools.css" rel="stylesheet" type="text/css">
-<link href="/css/dataTables.bootstrap.css" rel="stylesheet" type="text/css">
-<link href="/css/dataTables.colVis.css" rel="stylesheet" type="text/css">
-<link href="/css/dataTables.responsive.css" rel="stylesheet" type="text/css">
-<script type="text/javascript" src="/js/jquery.dataTables.js"></script>
-<script type="text/javascript" src="/js/dataTables.tableTools.js"></script>
-<script type="text/javascript" src="/js/dataTables.bootstrap.js"></script>
-<script type="text/javascript" src="/js/dataTables.colVis.js"></script>
-<script type="text/javascript" src="/js/dataTables.responsive.js"></script>
-
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>-->
-<script src="/js/facturas.js"></script>
-<link href="/css/facturaStyles.css" rel="stylesheet">
+<script src="../js/facturas.js"></script>
+<link href="../css/facturaStyles.css" rel="stylesheet">
 
 <br><br>
 <br><br>

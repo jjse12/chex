@@ -22,6 +22,11 @@ class ChexFacturasPDF extends TCPDF {
     /* @var string $fileDate*/
     private $fileDate;
 
+    /**
+     * ChexFacturasPDF constructor.
+     * @param $facturas
+     * @throws Exception
+     */
     public function __construct($facturas){
         parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);;
 
@@ -33,9 +38,9 @@ class ChexFacturasPDF extends TCPDF {
         $this->setImageScale(PDF_IMAGE_SCALE_RATIO);
         $this->SetFont('helvetica', '', 10, '', true);
 
-        date_default_timezone_set('America/Guatemala');
-        $this->displayDate = date('d/m/Y H:i A');
-        $this->fileDate = date('Y-m-d__H:i:s');
+        $date = new \DateTime('now', new \DateTimeZone('America/Guatemala'));
+        $this->displayDate = $date->format('d/m/Y H:i A');
+        $this->fileDate = $date->format('Y-m-d__H:i:s');
     }
 
     /**
