@@ -2,5 +2,5 @@ db/server_db_vars.php
 db/db_vars.php
 reportesFacturas/*
 git
-**/.idea/workspace.xml
-**/.idea/tasks.xml
+.idea/workspace.xml
+.idea/tasks.xml

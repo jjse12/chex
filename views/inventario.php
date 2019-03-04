@@ -54,9 +54,10 @@
                 "loadingRecords": "Cargando Paquetes...",
                 "processing":     "Procesando...",
             },
+            "order": [[4, 'asc']],
             "columnDefs": [
                 {
-                    "targets": [0, 7],
+                    "targets": [0, 2, 7],
                     "orderable": false
                 }
             ],
@@ -141,12 +142,12 @@
                         bootbox.alert("No se pudo efectuar el cambio en la base de datos, intente nuevamente");
                     }
                     else{
-                        arr[0][6] = sinNotificar ? (!avisando ? "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>":
+                        arr[0][6] = sinNotificar ? (!avisando ? "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-whatsapp' src='../images/whatsapp35px.png'/></div></div></h5>":
 
-                            "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>"
+                            "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-whatsapp' src='../images/whatsapp35px.png'/></div></div></h5>"
                          ):
-                        (!avisando ? "<div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/><div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h5 class='sin-plan plan btn-sm btn-danger'>Sin Especificar</h5>":
-                            "<div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/><div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar"
+                        (!avisando ? "<div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/><div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='../images/whatsapp20px.png'/></div><h5 class='sin-plan plan btn-sm btn-danger'>Sin Especificar</h5>":
+                            "<div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/><div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='../images/whatsapp20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar"
                         );
                         table.row(index).data(arr[0]).draw(false);
                     }
@@ -542,7 +543,7 @@
                                                                     plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
                                                                     "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h5>";
                                                         table.row(index).data(arr[0]);
-                                                        table.order([2, "asc"]);
+                                                        table.order([4, "asc"]);
                                                         table.draw(false);
                                                     }
 
@@ -565,7 +566,7 @@
                                                         plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
                                                         "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h5>";
                                             table.row(index).data(arr[0]);
-                                            table.order([2, "asc"]);
+                                            table.order([4, "asc"]);
                                             table.draw(false);
                                         }
                                     }
@@ -617,10 +618,6 @@
                 }
             }
         });
-        //cargado = true;
-        //}
-
-        // TERMINA DEFINICIÓN DE METODOS PARA TABLA INVENTARIO //
 
         loadInventario();
     });
@@ -802,7 +799,7 @@
                             "<img class='icon-update' src='images/edit.png'/>"
                         ]);
                     }
-                    table.order([2, "asc"]);
+                    table.order([4, "asc"]);
                     table.draw(false);
                     table.columns.adjust().responsive.recalc();
                 }
@@ -874,15 +871,15 @@
         var data = $("#inventario").DataTable().rows(".selected").data().toArray();
         var numero = "";
         if (uidCliente){
-            var nombres = new Array();
-            for (var i = 0; i < data.length; i++){
+            var nombres = [];
+            for (let i = 0; i < data.length; i++){
                 if (nombres.indexOf(data[i][4].split(">")[1].split("<")[0]) == -1) {
                     nombres.push(data[i][4].split(">")[1].split("<")[0]);
                 }
             }
 
             var querysita = "SELECT celular, tarifa, CONCAT(nombre, ' ', apellido) AS usuario FROM cliente WHERE ";
-            for (var i = 0; i < nombres.length; i++)
+            for (let i = 0; i < nombres.length; i++)
                 querysita = querysita + "CONCAT(nombre, ' ', apellido) = '" + nombres[i] + "' OR ";
             querysita = querysita.substring(0, querysita.length-3);
 

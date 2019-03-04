@@ -24,8 +24,15 @@
             ]);
         }
         else {
-            header("HTTP/1.1 500 Internal Server Error");
+            echo json_encode([
+                'success' => false,
+                'message' => "Error en la consulta a la base de datos:
+                              <br><br>{$conn->error}<br><br>
+                              <b>Consulta:</b>
+                              <br>{$query}"
+            ]);
         }
+        $conn->close();
     }
     else {
         echo json_encode([

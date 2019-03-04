@@ -29,12 +29,13 @@ $(document).ready( function () {
             "loadingRecords": "Cargando Facturas...",
             "processing":     "Procesando...",
         },
-        /*"columnDefs": [
+        "order": [[4, 'asc']],
+        "columnDefs": [
             {
-                "targets": [0, 7],
+                "targets": [0, 2, 6],
                 "orderable": false
             }
-        ],*/
+        ],
         /*"footerCallback": function ( row, data, start, end, display ) {
             var api = this.api(), data;
             if (this.fnSettings().fnRecordsDisplay() == 0){
@@ -63,66 +64,62 @@ $(document).ready( function () {
     $("#facturas tbody").on("click", ".seleccionado", function () {
         $(this).closest('tr').toggleClass("selected");
         table.draw(false);
-        if (table.rows('.selected').data().toArray().length == 0)
+        if (table.rows('.selected').data().toArray().length === 0)
             document.getElementById("divFacturaOpciones").style.visibility = "hidden";
         else document.getElementById("divFacturaOpciones").style.visibility= "visible";
     });
 
+    let showFacturaDialog = factura => {
+
+        let status = factura.pendiente === '1' ? 'fa fa-times fa-1x fa-lg' : 'fa fa-check fa-1x fa-lg';
+        let statusColor = factura.pendiente === '1' ? 'orange' : 'lime';
+
+        let images = '';
+        factura.images.map(img => {
+            images += facturaImage(img);
+        });
+
+        let content =
+            `<div class="container-flex">
+                <div>
+                    <b>Enviada: </b><i style="color: ${statusColor}" class='${status}'></i><br>
+                    <b>Id Cliente:</b> ${factura.uid}<br>
+                    <b>Tracking:</b> ${factura.tracking}<br>
+                    <b>Monto:</b> US$ ${factura.amount}<br>
+                    <b>Descripción:</b> ${factura.description}
+                </div>
+                <div class="factura-content">${images}</div>
+            </div>`;
+
+        bootbox.dialog({
+            title: "Detalles de factura de " + factura.uname + ":",
+            message: `${content}`
+        });
+    };
+
     $("#facturas tbody").on("click", "div.factura-data", function () {
         // var index = table.row($(this).closest('tr')).index();
         let factura = $(this).data('factura');
-        let id = factura.id;
-        let cliente = factura.uname;
-        let descripcion = factura.description;
-        let monto = factura.amount;
-        let status = factura.pendiente === '1' ? 'fa fa-times fa-1x fa-lg' : 'fa fa-check fa-1x fa-lg';
-        let statusColor = factura.pendiente === '1' ? 'orange' : 'lime';
-        let tracking = factura.tracking;
-        let uid = factura.uid;
 
         $.ajax({
             url: "db/DBgetFacturasImage.php",
             data: {
-                facturasId : [id]
+                facturasId : [factura.id]
             },
             type: "POST",
-            cache: false,
-            success: function(response)
-            {
-                if (response.data) {
-                    Pace.restart();
-                    Pace.start();
-                    let images = '';
-                    response.data[id].map(img => {
-                       images += facturaImage(img);
-                    });
-                    let content =
-                        `<div class="container-flex">
-                            <div>
-                                <b>Enviada: </b><i style="color: ${statusColor}" class='${status}'></i><br>
-                                <b>Id Cliente:</b> ${uid}<br>
-                                <b>Tracking:</b> ${tracking}<br>
-                                <b>Monto:</b> ${monto}<br>
-                                <b>Descripción:</b> ${descripcion}
-                            </div>
-                            <div class="factura-content">${images}</div></div>`;
-                    bootbox.dialog({
-                        title: "Detalles de factura de " + cliente + ":",
-                        message: `${content}`
-                    });
-                    Pace.stop();
-                }
-                else if (response.message) {
-                    bootbox.alert(response.message);
-                }
-                else {
-                    bootbox.alert("No se encontraron capturas de pantalla asociadas.");
-                }
-            },
-            error: function() {
-                bootbox.alert("Ocurrió un error al conectarse a la base de datos.");
+        }).then(response => {
+            if (response.data && response.data[factura.id]) {
+                factura.images = response.data[factura.id];
+                showFacturaDialog(factura);
             }
-        });
+            else if (response.message) {
+                bootbox.alert(response.message);
+            }
+            else {
+                bootbox.alert("No se encontraron capturas de pantalla asociadas.");
+            }
+        },
+        () => bootbox.alert("Ocurrió un error al conectarse a la base de datos."));
     });
 });
 
@@ -155,8 +152,8 @@ function loadFacturas(){
                         `<h6 class='seleccionado'>${factura['tracking']}</h6>`,
                         `<h6 class='seleccionado'>${factura['uid']}</h6>`,
                         `<h6 class='seleccionado'>${factura['uname']}</h6>`,
-                        `<h6 class='seleccionado'>${factura['amount']}</h6>`,
-                        `<div style='cursor:pointer; text-align: center; color: slategray' class='factura-data' data-factura='${JSON.stringify(factura)}'><i class='fa fa-eye fa-2x fa-lg'></div>`
+                        `<h6 class='seleccionado'>US$ ${factura['amount']}</h6>`,
+                        `<div style='cursor:pointer; text-align: center; color: darkslategray' class='factura-data' data-factura='${JSON.stringify(factura)}'><i class='fa fa-eye fa-2x fa-lg'></div>`
                     ]);
                 }
                 table.draw(false);
@@ -224,25 +221,34 @@ function generarPDF()
                             var matches = filenameRegex.exec(disposition);
                             if (matches != null && matches[1]) {
                                 filename = matches[1].replace(/['"]/g, '');
-                                window.open('/reportes-facturas/'+filename);
+                                window.open('/reportesFacturas/'+filename);
                             }
+
+                            Swal.fire({
+                                title: 'Documento Creado',
+                                text: 'PDF creado exitosamente',
+                                type: 'success',
+                                showCancelButton: true,
+                                allowEscapeKey : false,
+                                allowOutsideClick: false,
+                                focusConfirm: false,
+                                confirmButtonText: 'Continuar',
+                                cancelButtonText: 'Marcar facturas como "Enviadas"',
+                                cancelButtonColor: 'limegreen',
+                            }).then(res => {
+                                console.log(res);
+                                if (!res.value){
+                                    setearPendientes(Object.keys(facturas));
+                                }
+                            });
+                            document.getElementById("divFacturaOpciones").style.visibility = "hidden";
                         }
-                        // window
-                        Swal.fire({
-                            title: 'Documento Creado',
-                            text: 'PDF creado exitosamente',
-                            type: 'success',
-                            showCancelButton: true,
-                            focusConfirm: false,
-                            cancelButtonText: 'Continuar',
-                            cancelButtonClass: 'btn-default',
-                            confirmButtonText: 'Marcar facturas como "Enviadas"',
-                            confirmButtonClass: 'btn-primary',
-                        }).then(res => {
-                            if (res.value){
-                                setearPendientes(Object.keys(facturas));
-                            }
-                        });
+                        else {
+                            bootbox.alert("No se pudo abrir el PDF de facturas. Por favor contacta al administrador para verificar si el archivo fue creado exitosamente.");
+                        }
+                    },
+                    error: function() {
+                        bootbox.alert("Ocurrió un error al intentar generar el PDF de facturas.");
                     }
                 });
             }

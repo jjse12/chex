@@ -22,9 +22,9 @@
         <tr>
             <th class="dt-head-center"><h5 style="color:black">Estado</h5></th>
             <th class="dt-head-center"><h5 style="color:black">Fecha</h5></th>
-            <th class="dt-head-center"><h5 style="color:black">Tracking</h5></th>
+            <th class="dt-head-center"><h5 style="color:black"># Tracking</h5></th>
             <th class="dt-head-center"><h5 style="color:black">ID Cliente</h5></th>
-            <th class="dt-head-center"><h5 style="color:black">Nombre</h5></th>
+            <th class="dt-head-center"><h5 style="color:black">Nombre Cliente</h5></th>
             <th class="dt-head-center"><h5 style="color:black">Costo</h5></th>
             <th class="dt-head-center"><h5 style="color:black"></h5></th>
         </tr>
