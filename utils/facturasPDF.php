@@ -7,7 +7,7 @@
  */
 
 
-require_once 'vendor/tecnickcom/tcpdf/tcpdf.php';
+require_once '../vendor/tecnickcom/tcpdf/tcpdf.php';
 
 class ChexFacturasPDF extends TCPDF {
 

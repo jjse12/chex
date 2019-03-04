@@ -50,7 +50,7 @@
     <div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style="padding-top: 6px;">
         <div class='col-lg-2 col-md-2 col-sm-2'></div>
         <div class='col-lg-8 col-md-8 col-sm-8 col-xs-12'>
-            <button id="btnPDF" onclick="generarPDF()" class="btn-lg btn-primary" align="center" style="width:60%; text-align: center ;">Generar PDF</button>
+            <button id="btnPDF" onclick="generarPDF()" class="btn-lg" align="center" style="background: limegreen; color: white; width:60%; text-align: center ;">Generar PDF</button>
         </div>
     </div>
 </div>

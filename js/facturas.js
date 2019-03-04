@@ -168,7 +168,8 @@ function loadFacturas(){
 
 function generarPDF()
 {
-    let selectedRows = $("#facturas").DataTable().rows(".selected").data().toArray();
+    let table = $("#facturas").DataTable();
+    let selectedRows = table.rows(".selected").data().toArray();
     let facturas = {};
     selectedRows.map(row => {
         let factura = $(row[6]).data('factura');
@@ -207,7 +208,7 @@ function generarPDF()
                 });
 
                 $.ajax({
-                    url: '/facturasPDF.php',
+                    url: '../utils/facturasPDF.php',
                     type: 'post',
                     data: {
                         facturas: facturas
@@ -236,11 +237,13 @@ function generarPDF()
                                 cancelButtonText: 'Marcar facturas como "Enviadas"',
                                 cancelButtonColor: 'limegreen',
                             }).then(res => {
-                                console.log(res);
                                 if (!res.value){
                                     setearPendientes(Object.keys(facturas));
                                 }
                             });
+
+                            table.rows(".selected").nodes().to$().removeClass("selected");
+                            table.draw(false);
                             document.getElementById("divFacturaOpciones").style.visibility = "hidden";
                         }
                         else {
