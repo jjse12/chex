@@ -38,9 +38,14 @@ class ChexFacturasPDF extends TCPDF {
         $this->setImageScale(PDF_IMAGE_SCALE_RATIO);
         $this->SetFont('helvetica', '', 10, '', true);
 
+        /*
         $date = new \DateTime('now', new \DateTimeZone('America/Guatemala'));
         $this->displayDate = $date->format('d/m/Y H:i A');
         $this->fileDate = $date->format('Y-m-d__H:i:s');
+        */
+        date_default_timezone_set('America/Guatemala');
+        $this->displayDate = date('d/m/Y H:i A');
+        $this->fileDate = date('Y-m-d__H:i:s');
     }
 
     /**
@@ -86,10 +91,16 @@ class ChexFacturasPDF extends TCPDF {
         $this->Cell('', '',self::COMPANY_NAME, 'T', 0, 'R', 0);
     }
 
+    /**
+     * @throws Exception
+     */
     public function render(){
 
         foreach ($this->facturas as $factura){
             $this->AddPage();
+            $formatedDateCreated = (new DateTime($factura['date_created']))->format('d/m/Y H:i A');
+            $this->Cell(0, 0, "Fecha de Creación: {$formatedDateCreated}", '', 0, 'L', 0);
+            $this->Ln();
             $this->Cell(0, 0, "Id Cliente: {$factura['clientId']}", '', 0, 'L', 0);
             $this->Ln();
             $this->Cell(0, 0, "Tracking: {$factura['tracking']}", '', 0, 'L', 0);

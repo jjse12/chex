@@ -34,11 +34,12 @@
 </div>
 
 <div class="container" align="center" id="divFacturaOpciones"
-     style="background-color: white; position: fixed; left: 0; right: 0; bottom: 0; padding-bottom: 6px; z-index: 10026; visibility: hidden;">
+     style="background-color: white; position: fixed; left: 0; right: 0; bottom: 0; padding-bottom: 6px; z-index: 100; visibility: hidden;">
     <div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style="padding-top: 6px;">
         <div class='col-lg-2 col-md-2 col-sm-2'></div>
         <div class='col-lg-8 col-md-8 col-sm-8 col-xs-12'>
-            <button id="btnPDF" onclick="generarPDF()" class="btn-lg" align="center" style="background: limegreen; color: white; width:60%; text-align: center ;">Generar PDF</button>
+            <button id="btnPDF" onclick="generarPDF()" class="btn-lg" align="center" style="background: limegreen; color: white; width:50%; text-align: center ;">Generar PDF</button>
+            <button id="btnEliminarFacturas" onclick="eliminarFacturas()" class="btn-lg btn-danger" align="center" style="width:49%; text-align: center ;">Eliminar Facturas</button>
         </div>
     </div>
 </div>

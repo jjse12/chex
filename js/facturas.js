@@ -174,6 +174,7 @@ function generarPDF()
     selectedRows.map(row => {
         let factura = $(row[6]).data('factura');
         facturas[factura.id] = {
+            date_created: factura.date_created,
             clientId: factura.uid,
             tracking: factura.tracking,
             description: factura.description,
@@ -298,13 +299,80 @@ function setearPendientes(ids) {
             else {
                 Swal.fire({
                     title: 'Error',
-                    text: 'Ocurrión un error, no se pudo actualizar el estado de las facturas',
+                    text: 'Ocurrió un error, no se pudo actualizar el estado de las facturas',
                     type: 'error',
                     focusConfirm: true,
                     confirmButtonText: 'Ok',
                     confirmButtonClass: 'btn-success'
                 });
             }
+        },
+        error: () => bootbox.alert("Ocurrió un error al conectarse a la base de datos.")
+    });
+}
+
+function eliminarFacturasConfirmado() {
+    let table = $("#facturas").DataTable();
+    let selectedRows = table.rows(".selected").data().toArray();
+    let facturas = [];
+    selectedRows.map(row => {
+        let factura = $(row[6]).data('factura');
+        facturas.push(factura.id);
+    });
+
+    $.ajax({
+        url: "db/DBdeleteFacturas.php",
+        data: {
+            where: `id IN (${facturas.join(', ')})`
+        },
+        type: "POST",
+        cache: false,
+        success: function (res) {
+            if (res.success){
+                loadFacturas();
+                Swal.fire({
+                    title: 'Facturas eliminadas',
+                    text: 'La tabla de facturas ha sido actualizada',
+                    type: 'success',
+                    focusConfirm: true,
+                    confirmButtonText: 'Ok',
+                    confirmButtonClass: 'btn-success'
+                });
+
+                table.rows(".selected").nodes().to$().removeClass("selected");
+                table.draw(false);
+                document.getElementById("divFacturaOpciones").style.visibility = "hidden";
+            }
+            else {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error, no se pudieron eliminar las facturas',
+                    type: 'error',
+                    focusConfirm: true,
+                    confirmButtonText: 'Ok',
+                    confirmButtonClass: 'btn-success'
+                });
+            }
+        },
+        error: () => bootbox.alert("Ocurrió un error al conectarse a la base de datos.")
+    });
+}
+
+function eliminarFacturas()
+{
+    Swal.fire({
+        title: '¡Atención!',
+        text: '¿Seguro que deseas eliminar las facturas seleccionadas?',
+        type: 'warning',
+        showCancelButton: true,
+        allowEscapeKey : false,
+        allowOutsideClick: false,
+        focusConfirm: false,
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar',
+    }).then(res => {
+        if (res.value){
+            eliminarFacturasConfirmado();
         }
     });
 }
