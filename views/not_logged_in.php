@@ -15,7 +15,7 @@
                 },
                 cache: false,
                 success: function(response){
-                    if (response.data) {
+                    if (response.data !== null) {
                         $.ajax({
                             url: "views/session.php",
                             type: "POST",
