@@ -209,7 +209,7 @@ function generarPDF()
                 });
 
                 $.ajax({
-                    url: '../utils/facturasPDF.php',
+                    url: 'utils/facturasPDF.php',
                     type: 'post',
                     data: {
                         facturas: facturas
