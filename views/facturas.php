@@ -39,7 +39,7 @@
         <div class='col-lg-2 col-md-2 col-sm-2'></div>
         <div class='col-lg-8 col-md-8 col-sm-8 col-xs-12'>
             <button id="btnPDF" onclick="generarPDF()" class="btn-lg" align="center" style="background: limegreen; color: white; width:50%; text-align: center ;">Generar PDF</button>
-            <button id="btnEliminarFacturas" onclick="eliminarFacturas()" class="btn-lg btn-danger" align="center" style="width:49%; text-align: center ;">Eliminar Facturas</button>
+            <button id="btnEliminarFacturas" class="btn-lg btn-danger" align="center" style="width:49%; text-align: center ;">Eliminar Facturas</button>
         </div>
     </div>
 </div>

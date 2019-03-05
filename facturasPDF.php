@@ -7,7 +7,7 @@
  */
 
 
-require_once '../vendor/tecnickcom/tcpdf/tcpdf.php';
+require_once 'vendor/tecnickcom/tcpdf/tcpdf.php';
 
 class ChexFacturasPDF extends TCPDF {
 
@@ -99,11 +99,11 @@ class ChexFacturasPDF extends TCPDF {
         foreach ($this->facturas as $factura){
             $this->AddPage();
             $formatedDateCreated = (new DateTime($factura['date_created']))->format('d/m/Y H:i A');
-            $this->Cell(0, 0, "Fecha de Creación: {$formatedDateCreated}", '', 0, 'L', 0);
-            $this->Ln();
-            $this->Cell(0, 0, "Id Cliente: {$factura['clientId']}", '', 0, 'L', 0);
+            $this->Cell(0, 0, "Fecha de Registro: {$formatedDateCreated}", '', 0, 'L', 0);
             $this->Ln();
             $this->Cell(0, 0, "Tracking: {$factura['tracking']}", '', 0, 'L', 0);
+            $this->Ln();
+            $this->Cell(0, 0, "Id Cliente: {$factura['clientId']}", '', 0, 'L', 0);
             $this->Ln();
             $this->Cell(0, 0, "Monto: \${$factura['amount']}", '', 0, 'L', 0);
             $this->Ln();
@@ -125,8 +125,13 @@ class ChexFacturasPDF extends TCPDF {
 $facturas = $_POST['facturas'];
 
 if (isset($facturas)){
-    $pdf = new ChexFacturasPDF($facturas);
-    $pdf->render();
+    try {
+        $pdf = new ChexFacturasPDF($facturas);
+        $pdf->render();
+    } catch (Exception $e) {
+        header("HTTP/1.1 500 Internal Server Error");
+        echo "Error al procesar el pdf";
+    }
 }
 else {
     header("HTTP/1.1 500 Internal Server Error");
