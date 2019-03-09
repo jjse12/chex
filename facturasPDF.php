@@ -45,7 +45,7 @@ class ChexFacturasPDF extends TCPDF {
         */
         date_default_timezone_set('America/Guatemala');
         $this->displayDate = date('d/m/Y H:i A');
-        $this->fileDate = date('Y-m-d__H:i:s');
+        $this->fileDate = date('d-m-Y__H-i-s__A');
     }
 
     /**
@@ -117,8 +117,12 @@ class ChexFacturasPDF extends TCPDF {
             $this->writeHTML('<hr>', true, false, false, false, '');
         }
 
-        $path =  $_SERVER['DOCUMENT_ROOT'];
-        $this->Output("{$path}reportesFacturas/facturas__{$this->fileDate}.pdf", 'FD');
+        $path =  $_SERVER['DOCUMENT_ROOT'] . 'reportesFacturas/';
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $path =  $_SERVER['DOCUMENT_ROOT'] . 'chex/reportesFacturas/';
+            $path = str_replace('/', '\\', $path);
+        }
+        $this->Output("{$path}facturas__{$this->fileDate}.pdf", 'FD');
     }
 }
 
