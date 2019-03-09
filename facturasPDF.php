@@ -44,8 +44,8 @@ class ChexFacturasPDF extends TCPDF {
         $this->fileDate = $date->format('Y-m-d__H:i:s');
         */
         date_default_timezone_set('America/Guatemala');
-        $this->displayDate = date('d/m/Y H:i A');
-        $this->fileDate = date('d-m-Y__H-i-s__A');
+        $this->displayDate = date('d/m/Y h:i A');
+        $this->fileDate = date('d-m-Y__h-i-s__A');
     }
 
     /**
