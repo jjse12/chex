@@ -29,13 +29,16 @@ function loadFacturas(){
                         icon = 'fa-clock';
                     }
 
+                    let date = moment(factura.date_created);
+                    date = date.format('DD/MM/YYYY hh:mm a');
+
                     table.row.add([
                         `<div class='seleccionado' title="${enviado}" style='color: ${color}; align-self: center; text-align: center;'><i class='fa ${icon} fa-2x fa-lg'></i><small style='display:none;'>${enviado}</small></div>`,
-                        `<h6 class='seleccionado'>${factura['date_created']}<span style="display: none">${enviado}</span></h6>`,
-                        `<h6 class='seleccionado'>${factura['tracking']}</h6>`,
-                        `<h6 class='seleccionado'>${factura['uid']}</h6>`,
-                        `<h6 class='seleccionado'>${factura['uname']}</h6>`,
-                        `<h6 class='seleccionado'>${Number(factura['amount']).toMoney()}</h6>`,
+                        `<h6 class='seleccionado'>${date}<span style="display: none">${enviado}</span></h6>`,
+                        `<h6 class='seleccionado'>${factura.tracking}</h6>`,
+                        `<h6 class='seleccionado'>${factura.uid}</h6>`,
+                        `<h6 class='seleccionado'>${factura.uname}</h6>`,
+                        `<h6 class='seleccionado'>${Number(factura.amount).toMoney()}</h6>`,
                         `<div style='cursor:pointer; text-align: center; color: darkslategray' class='factura-data' data-factura='${JSON.stringify(factura)}'><i class='fa fa-eye fa-2x fa-lg'></div>`
                     ]);
                 }
