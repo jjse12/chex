@@ -11,7 +11,7 @@ require_once 'vendor/tecnickcom/tcpdf/tcpdf.php';
 
 class ChexFacturasPDF extends TCPDF {
 
-    const COMPANY_NAME = "Chispudito Express";
+    const COMPANY_NAME = 'Chispudito Express';
 
     /* @var array $facturas */
     private $facturas;
@@ -38,11 +38,6 @@ class ChexFacturasPDF extends TCPDF {
         $this->setImageScale(PDF_IMAGE_SCALE_RATIO);
         $this->SetFont('helvetica', '', 10, '', true);
 
-        /*
-        $date = new \DateTime('now', new \DateTimeZone('America/Guatemala'));
-        $this->displayDate = $date->format('d/m/Y H:i A');
-        $this->fileDate = $date->format('Y-m-d__H:i:s');
-        */
         date_default_timezone_set('America/Guatemala');
         $this->displayDate = date('d/m/Y h:i A');
         $this->fileDate = date('d-m-Y__h-i-s__A');
@@ -98,7 +93,7 @@ class ChexFacturasPDF extends TCPDF {
 
         foreach ($this->facturas as $factura){
             $this->AddPage();
-            $formatedDateCreated = (new DateTime($factura['date_created']))->format('d/m/Y H:i A');
+            $formatedDateCreated = (new DateTime($factura['date_created']))->format('d/m/Y h:i A');
             $this->Cell(0, 0, "Fecha de Registro: {$formatedDateCreated}", '', 0, 'L', 0);
             $this->Ln();
             $this->Cell(0, 0, "Tracking: {$factura['tracking']}", '', 0, 'L', 0);

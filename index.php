@@ -29,6 +29,7 @@
         <script type="text/javascript" src="js/bootbox.js"></script>
         <script type="text/javascript" src="js/bootstrap.min.js"></script>
 
+        <script type="text/javascript" src="js/moment.min.js"></script>
         <script type="text/javascript" src="./js/loader.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
     </head>
@@ -58,6 +59,7 @@
         </div>
 
         <script type="text/javascript">
+            moment.locale('es');
 
             $(document).ajaxStart(function() {
                 Pace.restart();

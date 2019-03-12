@@ -9,3 +9,7 @@ div.factura-content{
     margin-left: auto;
     margin-right: auto;
 }
+
+span.factura-editable {
+    cursor: pointer;
+}

@@ -7,8 +7,7 @@
   	else{
 	    $myArray = array();
 	    while($row = $result->fetch_assoc()) {
-	            $myArray[] = $row;
+	        $myArray[] = $row;
 	    }
 	    echo json_encode($myArray);
 	}
-?>
