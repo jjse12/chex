@@ -30,7 +30,8 @@
         <script type="text/javascript" src="js/bootstrap.min.js"></script>
 
         <script type="text/javascript" src="js/moment.min.js"></script>
-        <script type="text/javascript" src="./js/loader.js"></script>
+        <script type="text/javascript" src="js/loader.js"></script>
+        <script type="text/javascript" src="js/utils.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
     </head>
     <!--

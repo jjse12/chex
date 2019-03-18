@@ -1,3 +1,5 @@
+<script type="text/javascript" src="notificacion.js"></script>
+
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.16/r-2.2.0/datatables.min.css"/>
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.16/r-2.2.0/datatables.min.js"></script>
 
@@ -728,6 +730,7 @@
 
 <script type="text/javascript">
     var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+    var dataPaqueteIndice = 1;
 
     function loadInventario(){
         var table = $('#inventario').DataTable();
@@ -737,72 +740,72 @@
             url: "db/DBgetInventario.php",
             cache: false,
             success: function(arr) {
-                if (arr != "]"){
-                    var rows = JSON.parse(arr);
-                    for (var i = 0; i < rows.length; i++){
-                        var f = rows[i][1].split(" ")[0].split("-");
-                        var fechaIngreso = f[2] +"/" +f[1] +"/"+f[0];
-                        var plansito = "";
-                        switch (rows[i][6]){
-                            case "":
-                                plansito = "<h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>";
+                var paquetes = JSON.parse(arr);
+                
+                paquetes.map(paquete => {
+                    var f = paquete.fecha.split(" ")[0].split("-");
+                    var fechaIngreso = f[2] +"/" +f[1] +"/"+f[0];
+                    var plansito = "";
+                    switch (paquete.plan){
+                        case "":
+                            plansito = "<h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>";
                             break;
-                            case "whats":
-                                plansito = "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/></div></div></h5>";
+                        case "whats":
+                            plansito = "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/></div></div></h5>";
                             break;
-                            case "email":
-                                plansito = "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>";
+                        case "email":
+                            plansito = "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>";
                             break;
-                            case "whatsmail":
-                                plansito = "<div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/><div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h5 class='sin-plan plan btn-sm btn-danger'>Sin Especificar</h5>";
+                        case "whatsmail":
+                            plansito = "<div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/><div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h5 class='sin-plan plan btn-sm btn-danger'>Sin Especificar</h5>";
                             break;
-                            case "@whats":
-                                plansito = "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/></div></div></h5>";
+                        case "@whats":
+                            plansito = "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/></div></div></h5>";
                             break;
-                            case "@email":
-                                plansito = "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>";
+                        case "@email":
+                            plansito = "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>";
                             break;
-                            case "@whatsmail":
-                                plansito = "<div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/><div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar";
+                        case "@whatsmail":
+                            plansito = "<div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/><div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar";
                             break;
-                            case "Oficina":
-                                plansito = "<h5 class='plan btn-sm btn-success'>En Oficina</h5>";
+                        case "Oficina":
+                            plansito = "<h5 class='plan btn-sm btn-success'>En Oficina</h5>";
                             break;
-                            default:
-                                if (rows[i][6].includes("/")){
-                                    if (rows[i][6].includes("Guatex"))
-                                        plansito = "<h5 class='popup plan btn-sm' style='text-align:center; background-color: #f4cb38'>Guatex<span class='popuptext'>"+rows[i][6].split(":")[1]+"</span></h5>";
-                                    else
-                                        plansito = "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+rows[i][6]+"-</span></h5>";
-                                }
-                                else if (rows[i][6] < 1){
-                                    plansito = "<h5 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>";
-                                }
-                                else plansito = "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+rows[i][6]+" Paquetes</span></h5>";
+                        default:
+                            if (paquete.plan.includes("/")){
+                                if (paquete.plan.includes("Guatex"))
+                                    plansito = "<h5 class='popup plan btn-sm' style='text-align:center; background-color: #f4cb38'>Guatex<span class='popuptext'>"+paquete.plan.split(":")[1]+"</span></h5>";
+                                else
+                                    plansito = "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+paquete.plan+"-</span></h5>";
+                            }
+                            else if (paquete.plan < 1){
+                                plansito = "<h5 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>";
+                            }
+                            else plansito = "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+paquete.paquete+" Paquetes</span></h5>";
                             break;
-                        }
-                        var celulares = rows[i][7];
-                        var extras = rows[i][8];
-                        var especial = celulares + extras > 0;
-                        var trackingsito = rows[i][2];
-                        if (trackingsito.length > 20)
-                                trackingsito = trackingsito.substr(0, trackingsito.length/2) + "<br>" +
-                                trackingsito.substr(trackingsito.length/2, trackingsito.length);
-                        table.row.add([
-                            `<h5 class='seleccionado' data-celulares=${celulares} data-cobro-extra=${extras} >${especial ? "<span title='Celulares: "+ celulares + ", Cobro Extra: Q"+ numberWithCommas(extras) +"' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display:none;'>Especial</small></span>" : ""}</h5>`,
-                            "<h5 title='Registro de Carga #"+rows[i][0]+"' class='seleccionado'>"+fechaIngreso+"</h5>",
-                            "<h5 class='seleccionado'>"+trackingsito+"</h5>",
-                            "<h5 class='seleccionado'>"+rows[i][3]+"</h5>",
-                            "<h5 class='seleccionado'>"+rows[i][4]+"</h5>",
-                            "<h5 class='seleccionado'>"+rows[i][5]+"</h5>",
-                            plansito,
-                            "<img class='icon-update' src='images/edit.png'/>"
-                        ]);
                     }
-                    table.order([4, "asc"]);
-                    table.draw(false);
-                    table.columns.adjust().responsive.recalc();
-                }
+                    var celulares = paquete.celulares;
+                    var extras = paquete.cobro_extra;
+                    var especial = celulares + extras > 0;
+                    var trackingsito = paquete.tracking;
+                    if (trackingsito.length > 20)
+                        trackingsito = trackingsito.substr(0, trackingsito.length/2) + "<br>" +
+                            trackingsito.substr(trackingsito.length/2, trackingsito.length);
+                    table.row.add([
+                        `<h5 class='seleccionado' data-celulares=${celulares} data-cobro-extra=${extras} >${especial ? "<span title='Celulares: "+ celulares + ", Cobro Extra: Q"+ numberWithCommas(extras) +"' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display:none;'>Especial</small></span>" : ""}</h5>`,
+                        `<h5 data-paquete='${JSON.stringify(paquete)}' title='Registro de Carga #${paquete.rcid}' class='seleccionado'>${fechaIngreso}</h5>`,
+                        "<h5 class='seleccionado'>"+trackingsito+"</h5>",
+                        "<h5 class='seleccionado'>"+paquete.uid+"</h5>",
+                        "<h5 class='seleccionado'>"+paquete.uname+"</h5>",
+                        "<h5 class='seleccionado'>"+paquete.libras+"</h5>",
+                        plansito,
+                        "<img class='icon-update' src='images/edit.png'/>"
+                    ]);
+                });
+                
+                table.order([4, "asc"]);
+                table.draw(false);
+                table.columns.adjust().responsive.recalc();
             },
             error: function(){
                 bootbox.alert("No se pudo cargar el inventario, ocurrió un problema al intentar conectarse al servidor.");
@@ -815,19 +818,22 @@
 
     function notificarSeleccionados(){
         document.getElementById("divBotones").style.visibility = "hidden";
-        var data = $("#inventario").DataTable().rows(".selected").data().toArray();
+        let selectedRows = $("#inventario").DataTable().rows(".selected").data().toArray();
 
-        var nombre = data[0][3];
-        var continuar = true;
-        for (var i = 1; i < data.length; i++){
-            if (nombre.toUpperCase() != data[i][3].toUpperCase()){
+        let ids = [];
+        selectedRows.map(row => {
+            let paquete = $(row[dataPaqueteIndice]).data('paquete');
+            ids.push(paquete.uid);
+        });
+
+        let comparerId = ids[0];
+        let continuar = true;
+        for (let i = 1; i < ids.length; i++){
+            if (comparerId.toUpperCase() !== ids[i].toUpperCase()){
                 continuar = false;
                 break;
             }
         }
-        nombre = nombre.split(">")[1].split("<")[0]
-
-        var arreglo = ["Cliente", "CLIENTE", "cliente", "Anónimo", "ANÓNIMO", "anónimo", "Anonimo", "ANONIMO", "anonimo"];
 
         if (!continuar){
             bootbox.dialog({
@@ -838,20 +844,39 @@
                     confirm: {
                         label: 'Entendido',
                         className: "btn-primary",
-                        callback: function(){
-                            document.getElementById("divBotones").style.visibility = "visible";
-                        }
+                        callback: () => { document.getElementById("divBotones").style.visibility = "visible"; }
                     }
                 }
             });
             return;
         }
 
+        let specialUids = ["Cliente", "CLIENTE", "cliente", "Anónimo", "ANÓNIMO", "anónimo", "Anonimo", "ANONIMO", "anonimo"];
+        let searchByUid = specialUids.indexOf(comparerId) === -1;
+
         bootbox.dialog({
             size: 'medium',
             closeButton: false,
             title: "¿Por cuál medio desea notificar al cliente?",
-            message: "<div class='row'><div class='row'><div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><img class='col-lg-5 col-md-5 col-sm-5 col-xs-5' align='middle' style='cursor: pointer;' src='images/whatsapp128px.png' onclick='notificarViaWhatsApp("+(arreglo.indexOf(nombre)>-1)+")'></img><img class='col-lg-5 col-md-5 col-sm-5 col-xs-5' align='middle' style='cursor: pointer;' src='images/email128px.png' onclick='notificarViaEmail("+(arreglo.indexOf(nombre)>-1)+")'></img></div><div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><label class='col-lg-5 col-md-5 col-sm-5 col-xs-5' style='text-align: center; color: black; cursor: pointer;' onclick='notificarViaWhatsApp("+(arreglo.indexOf(nombre)>-1)+")'>Vía Whatsapp</label><label class='col-lg-5 col-md-5 col-sm-5 col-xs-5' style='text-align: center; color: black; cursor: pointer;' onclick='notificarViaEmail("+(arreglo.indexOf(nombre)>-1)+")'>Vía Correo Electrónico</label></div></div>",
+            message: `
+                <div class='row'>
+                    <div class='row'>
+                        <div class='row'>
+                            <img class='col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1 col-lg-5 col-md-5 col-sm-5 col-xs-5' align='middle'
+                                 style='cursor: pointer;' src='images/whatsapp128px.png' onclick='notificarViaWhatsApp(${searchByUid})' alt="Notificar vía WhatsApp"/>
+                            <img class='col-lg-5 col-md-5 col-sm-5 col-xs-5' align='middle' style='cursor: pointer;' src='images/email128px.png' onclick='notificarViaEmail(${searchByUid})' alt="Notifica via Email"/>
+                        </div>
+                        <div class='row'>
+                            <label class='col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1 col-lg-5 col-md-5 col-sm-5 col-xs-5'
+                                   style='text-align: center; color: black; cursor: pointer;' onclick='notificarViaWhatsApp(${searchByUid})'>
+                                Vía Whatsapp
+                            </label>
+                            <label class='col-lg-5 col-md-5 col-sm-5 col-xs-5' style='text-align: center; color: black; cursor: pointer;' onclick='notificarViaEmail(${searchByUid})'>
+                                Vía Correo Electrónico
+                            </label>
+                        </div>
+                    </div>
+                </div>`,
             buttons: {
                 confirm: {
                     label: 'Regresar',
@@ -866,375 +891,363 @@
 
     var whatsWebWindow = null;
 
-    function notificarViaWhatsApp(uidCliente){
-        bootbox.hideAll();
-        var data = $("#inventario").DataTable().rows(".selected").data().toArray();
-        var numero = "";
-        if (uidCliente){
-            var nombres = [];
-            for (let i = 0; i < data.length; i++){
-                if (nombres.indexOf(data[i][4].split(">")[1].split("<")[0]) == -1) {
-                    nombres.push(data[i][4].split(">")[1].split("<")[0]);
-                }
+    clientNotificationDestFoundDialog = (dest, isWhatsAppNotification = true) => {
+        let destFoundText = 'número de celular',
+            destClass = 'col-sm-offset-4 col-md-offset-4 col-lg-offset-4 col-lg-4 col-md-4 col-sm-4 col-xs-12',
+            finalQuestion = '¿Enviar notificación por WhatsApp a este número?';
+
+        if (!isWhatsAppNotification){
+            destFoundText = 'correo electrónico';
+            destClass = 'col-sm-offset-2 col-md-offset-2 col-lg-offset-2 col-lg-8 col-md-8 col-sm-8 col-xs-12';
+            finalQuestion = '¿Enviar notificación al cliente usando este correo electrónico?';
+        }
+
+        return `Los paquetes poseen un ID de Cliente auxiliar. Por medio de uno de los nombres de clientes que figuran en los registro de los paquetes, se encontró el siguiente ${destFoundText} en la base de datos:
+        <br>
+        <div class='row'>
+            <label class='${destClass}' align='middle'
+                style='font-size: 20px; background-color: #dadada; text-align: center; color: #349b25; border-radius: 7px'>
+                ${dest}
+            </label>
+        </div>
+        <div class='row'>
+            <label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' align='middle' style='text-align: center; color: black;'>
+                ${finalQuestion}
+            </label>
+        </div>`;
+    };
+
+    askForClientDataDialog = (isWhatsAppNotification = true) => {
+        let label = 'Número de celular:',
+            id = 'inputNotificationPhoneNumber',
+            placeholder = 'Celular del cliente',
+            type = 'text',
+            maxlength = 8,
+            onKeyPress = 'return integersonly(this, event)',
+            destClass = 'col-lg-4 col-md-4 col-sm-4 col-xs-4',
+            nameClass = 'col-lg-5 col-md-5 col-sm-5 col-xs-5';
+        if (!isWhatsAppNotification){
+            label = 'Correo electrónico:';
+            id = 'inputNotificationEmail';
+            placeholder = 'Email del cliente';
+            type = 'email';
+            maxlength = 40;
+            onKeyPress = '';
+            destClass = 'col-lg-5 col-md-5 col-sm-5 col-xs-5';
+            nameClass = 'col-lg-4 col-md-4 col-sm-4 col-xs-4';
+        }
+
+        return `
+            <div class='row' style='background-color: #dadada'>
+                <div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>
+                    <p style='color: black'>Por favor ingresa los siguientes datos del cliente para poder enviar la notificación.</p>
+                    <form novalidate>
+                        <div class='control-group form-group ${destClass}'>
+                            <div class='controls'>
+                                <label style='color: #337ab7; text-align:center; width:100%'>${label}</label>
+                                <input align='middle' style='text-align:center; width: 100%;' type='text' id='${id}' placeholder='${placeholder}' maxlength='${maxlength}' onkeypress='${onKeyPress}'>
+                            </div>
+                        </div>
+                        <div class='control-group form-group col-lg-3 col-md-3 col-sm-3 col-xs-3'>
+                            <div class='controls'>
+                                <label style='color: #337ab7; text-align:center; width:100%'>Tarifa (Q):</label>
+                                <input align='middle' style='text-align:center; width: 100%;' type='number' min='1' id='inputNotificationRate' placeholder='Tarifa a aplicar' maxlength='3' onkeypress='return integersonly(this, event)'>
+                            </div>
+                        </div>
+                        <div class='control-group form-group ${nameClass}'>
+                            <div class='controls'>
+                                <label style='color: #337ab7; text-align:center; width:100%'>Nombre y apellido:</label>
+                                <input align='middle' style='text-align:center; width: 100%;' type='text' id='inputNotificationClientName' placeholder='Nombre y apellido del cliente'>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>`;
+    };
+
+    function getWhatsAppNotificationUrl(notificationData){
+        let paquetes = notificationData.paquetes;
+        let pesoTotal = paquetes.reduce((total, paquete) => { return total + paquete.libras; }, 0);
+        let costoTotal = pesoTotal * notificationData.rate;
+        let message = getNotificationMessage(notificationData.clientName, paquetes, pesoTotal, costoTotal);
+        message = message.replaceAll('<ENTER>', '%0A').replace(" ", "%20").replace("Ã¡", "á").replace("Ã©", "é").replace("Ã³", "ó").replace("Ãº", "ú").replace("Ã¼", "ü").replace("Ã±", "ñ").replace("Ã", "í");
+        return "https://web.whatsapp.com/send?phone="+notificationData.phoneNumber+"&text="+message;
+    }
+
+    function getEmailNotificationMessage(notificationData){
+        let paquetes = notificationData.paquetes;
+        let pesoTotal = paquetes.reduce((total, paquete) => { return total + paquete.libras; }, 0);
+        let costoTotal = pesoTotal * notificationData.rate;
+        let message = getNotificationMessage(notificationData.clientName, paquetes, pesoTotal, costoTotal);
+        message = message.replace('<ENTER>', '<br>').replace("*efectivo*", '<b>efectivo</b>');
+        return message
+    }
+
+    function sendNotificationToClient(notificationData, searchAskedClientData, searchByClientUid, isWhatsAppNotification = true){
+        if (searchAskedClientData){
+            let dest = isWhatsAppNotification ?
+                document.getElementById("inputNotificationPhoneNumber").value :
+                document.getElementById("inputNotificationEmail").value;
+            let nombre = document.getElementById("inputNotificationClientName").value;
+            let tarifa = document.getElementById("inputNotificationRate").value;
+            if (dest.length === 0 || nombre.length === 0 || tarifa.length === 0){
+                bootbox.alert("Por favor llena correctamente los campos.");
+                return false;
             }
 
-            var querysita = "SELECT celular, tarifa, CONCAT(nombre, ' ', apellido) AS usuario FROM cliente WHERE ";
-            for (let i = 0; i < nombres.length; i++)
-                querysita = querysita + "CONCAT(nombre, ' ', apellido) = '" + nombres[i] + "' OR ";
-            querysita = querysita.substring(0, querysita.length-3);
+            if (isWhatsAppNotification)
+                notificationData.phoneNumber = "502"+dest;
+            else
+                notificationData.email = dest;
 
-            $.ajax({
-                url: "db/DBexecQuery.php",
-                type: "POST",
-                data:{
-                    query: querysita
-                },
-                cache: false,
-                success: function(arr){
-                    var rows = JSON.parse(arr);
-                    var encontrados = rows.length;
+            notificationData.clientName = nombre;
+            notificationData.rate = Number(tarifa);
+        }
 
-                    var msg = "";
-                    if (encontrados == 0){
-                        msg = "<div class='row' style='background-color: #dadada'>"+
-                            "<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>"+
-                                "<p style='color: black'>Por favor ingresa los siguientes datos del cliente para poder enviar la notificación.</p>"+
-                                "<form novalidate>"+
-                                    "<div class='control-group form-group col-lg-6 col-md-6 col-sm-6 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Número de Celular:</label><input align='middle' style='text-align:center; width: 100%;' type='text' id='inputNotifWhatsNumero' placeholder='Número de Celular del Cliente' maxlength='8' onkeypress='return integersonly(this, event)'></div></div>"+
-                                    "<div class='control-group form-group col-lg-6 col-md-6 col-sm-6 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Nombre y Apellido:</label><input align='middle' style='text-align:center; width: 100%;' type='text' id='inputNotifWhatsCliente' placeholder='Nombre y Apellido del cliente'></div></div>"+
-                                "</form>"+
-                            "</div>"+
-                        "</div>";
+        if (isWhatsAppNotification)
+        {
+            let notificationUrl = getWhatsAppNotificationUrl(notificationData);
+
+            console.log(notificationUrl);
+            if (whatsWebWindow != null && !whatsWebWindow.closed){
+                whatsWebWindow.location.replace(notificationUrl);
+                whatsWebWindow.focus();
+            }
+            else{
+                whatsWebWindow = window.open(notificationUrl);
+            }
+
+            bootbox.confirm({
+                size: "small",
+                title: "La página de Whatsapp Web ha sido cargada",
+                message: "¿Ha concluido la notificación del cliente?",
+                buttons: {
+                    cancel: {
+                        label: "No",
+                        className: "btn btn-md btn-warning alinear-izquierda"
+                    },
+                    confirm: {
+                        label: "Si",
+                        className: "btn btn-md btn-success alinear-derecha"
                     }
-                    else if (encontrados == 1){
-                        msg = "Los paquetes poseen un ID de Cliente auxiliar. Por medio de uno de los nombres de clientes que figuran en los registro de los paquetes, se encontró el siguiente número de celular en la base de datos:<br><div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><label class='col-lg-4 col-md-4 col-sm-4 col-xs-4' align='middle' style='font-size: 20px; background-color: #dadada; text-align: center; color: #349b25; border-radius: 7px'>"+rows[0]["celular"]+"</label></div><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' align='middle' style='text-align: center; color: black;'>¿Enviar notificación por whatsaap a este número?</label></div>";
+                },
+                callback: res => {
+                    if (res){
+                        let t = $("#inventario").DataTable();
+                        t.rows(".selected").nodes().to$().removeClass("selected");
+                        t.draw(false);
+
+                        // TODO: Adjust paquetes plan to WhatsApp Notificated
                     }
                     else{
-                        bootbox.alert("Se detectaron nombres de cliente diferentes entre los paquetes seleccionados, y estos están asociados a diferentes números de celular. Por favor cerciorate de seleccionar los paquetes de un solo cliente a la vez.");
-                        return;
-                    }
-                    bootbox.dialog({
-                        size: 'medium',
-                        closeButton: false,
-                        title: (encontrados == 0 ? "¡No se encontró un número de celular asociado!" : "Confirmar número de celular"),
-                        message: msg,
-                        buttons: {
-                            regresar: {
-                                label: 'Regresar',
-                                className: "btn-default alinear-izquierda",
-                                callback: function(){
+                        bootbox.confirm({
+                            message: "En caso de que whatsapp no haya reconocido el número del cliente, recuerda que puedes notificarle por correo electrónico",
+                            buttons: {
+                                cancel: {
+                                    label: "OK, regresar",
+                                    className: "btn btn-md btn-default alinear-izquierda"
+                                },
+                                confirm: {
+                                    label: "Si, enviar por correo electrónico",
+                                    className: "btn btn-md btn-success alinear-derecha"
+                                }
+                            },
+                            callback: function(res){
+                                if (res){
+                                    notificarViaEmail(searchByClientUid);
+                                }
+                                else{
                                     document.getElementById("divBotones").style.visibility = "visible";
                                 }
-                            },
-                            ingresar: {
-                                label: "Ingresar número manualmente",
-                                className: (encontrados == 0 ? "gone" : "btn-primary alinear-izquierda"),
-                                callback: function(){
-                                    msg = "<div class='row' style='background-color: #dadada'>"+
-                                            "<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>"+
-                                                "<p style='color: black'>Por favor ingresa los siguientes datos del cliente para poder enviar la notificación.</p>"+
-                                                "<form novalidate>"+
-                                                    "<div class='control-group form-group col-lg-6 col-md-6 col-sm-6 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Número de celular:</label><input align='middle' style='text-align:center; width: 100%;' type='text' id='inputNotifWhatsNumero' placeholder='Número de celular del cliente' maxlength='8' onkeypress='return integersonly(this, event)'></div></div>"+
-                                                    "<div class='control-group form-group col-lg-6 col-md-6 col-sm-6 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Nombre y apellido:</label><input align='middle' style='text-align:center; width: 100%;' type='text' id='inputNotifWhatsCliente' placeholder='Nombre y apellido del cliente'></div></div>"+
-                                                "</form>"+
-                                            "</div>"+
-                                        "</div>";
-                                    bootbox.dialog({
-                                        size: 'medium',
-                                        closeButton: false,
-                                        title: "Ingreso de número de celular",
-                                        message: msg,
-                                        buttons: {
-                                            regresar: {
-                                                label: 'Regresar',
-                                                className: "btn-default alinear-izquierda",
-                                                callback: function(){
-                                                    document.getElementById("divBotones").style.visibility = "visible";
-                                                }
-                                            },
-                                            confirm: {
-                                                label: 'Listo, continuar',
-                                                className: "btn-success alinear-derecha",
-                                                callback: function(){
-                                                    var urlmensaje = "";
-                                                    var whatsNumber = document.getElementById("inputNotifWhatsNumero").value;
-                                                    var nombre = document.getElementById("inputNotifWhatsCliente").value;
-                                                    if (whatsNumber.length == 0 || nombre.length == 0){
-                                                        bootbox.alert("Por favor llena correctamente los campos.");
-                                                        return false;
-                                                    }
-                                                    whatsNumber = "502"+whatsNumber;
-
-                                                    urlmensaje = "Buen día " + nombre + ", de parte de Chispudito Express te informamos que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:%0A%0A";
-
-                                                    var strPaquetes = "", pesoTotal = 0;
-                                                    for (var i = 0; i < data.length; i++){
-                                                        strPaquetes += "*  Tracking: " + data[i][2].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][5].split(">")[1].split("<")[0] + " lb.%0A";
-                                                        pesoTotal += Number(data[i][5].split(">")[1].split("<")[0]);
-                                                    }
-                                                    var totales = "%0A - Paquetes: "+data.length+"%0A - Peso total: "+pesoTotal+" lb.%0A - Total a pagar: Q"+(pesoTotal*60)+" (tarifa aplica en *efectivo*)%0A";
-                                                    urlmensaje += strPaquetes + totales + "%0APor favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina (recuerda que si solicitas servicio ruta, debes agregar al total el costo del envío).%0AGracias por preferirnos. Chispudito Express";
-                                                    urlmensaje = urlmensaje.replace(" ", "%20");
-
-                                                    if (whatsWebWindow != null && !whatsWebWindow.closed){
-                                                        whatsWebWindow.location.replace("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
-                                                        whatsWebWindow.focus();
-                                                    }
-                                                    else
-                                                        whatsWebWindow = window.open("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
-
-                                                    bootbox.confirm({
-                                                        size: "small",
-                                                        title: "La página de Whatsapp Web ha sido cargada",
-                                                        message: "¿Ha concluido la notificación del cliente?",
-                                                        buttons: {
-                                                          cancel: {
-                                                            label: "No",
-                                                            className: "btn btn-md btn-warning alinear-izquierda"
-                                                          },
-                                                          confirm: {
-                                                              label: "Si",
-                                                              className: "btn btn-md btn-success alinear-derecha"
-                                                          }
-                                                        },
-                                                        callback: function(res){
-                                                            if (res){
-                                                                var t = $("#inventario").DataTable();
-                                                                t.rows(".selected").nodes().to$().removeClass("selected");
-                                                                t.draw(false);
-                                                            }
-                                                            else{
-                                                                bootbox.confirm({
-                                                                    message: "En caso de que whatsapp no haya reconocido el número del cliente, recuerda que puedes notificarle por correo electrónico",
-                                                                    buttons: {
-                                                                      cancel: {
-                                                                        label: "OK, regresar",
-                                                                        className: "btn btn-md btn-default alinear-izquierda"
-                                                                      },
-                                                                      confirm: {
-                                                                          label: "Si, enviar por correo electrónico",
-                                                                          className: "btn btn-md btn-success alinear-derecha"
-                                                                      }
-                                                                    },
-                                                                    callback: function(res){
-                                                                        if (res){
-                                                                            notificarViaEmail(uidCliente);
-                                                                        }
-                                                                        else{
-                                                                            document.getElementById("divBotones").style.visibility = "visible";
-                                                                        }
-                                                                    }
-                                                                });
-                                                            }
-                                                        }
-                                                    });
-                                                }
-                                            }
-                                        }
-                                    });
-                                }
-                            },
-                            confirm: {
-                                label: (encontrados == 0 ? 'Listo, continuar' : "Si, continuar"),
-                                className: (encontrados  > 1 ? "gone" : "btn-success alinear-derecha"),
-                                callback: function(){
-                                    var urlmensaje = "", whatsNumber = "", tarifa = 60;
-                                    if (encontrados == 0){
-                                        whatsNumber = document.getElementById("inputNotifWhatsNumero").value;
-                                        var nombre = document.getElementById("inputNotifWhatsCliente").value;
-                                        if (whatsNumber.length == 0 || nombre.length == 0){
-                                            bootbox.alert("Por favor llena correctamente los campos.");
-                                            return false;
-                                        }
-                                        whatsNumber = "502"+whatsNumber;
-                                        urlmensaje = "Buen día " + nombre + ", de parte de Chispudito Express te informamos que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:%0A%0A";
-                                    }
-                                    else{
-                                        whatsNumber = "502"+rows[0]["celular"];
-                                        urlmensaje = "Buen día " + rows[0]["usuario"] + ", de parte de Chispudito Express te informamos que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:%0A%0A";
-                                        tarifa = Number(rows[0]["tarifa"]);
-                                    }
-
-                                    var strPaquetes = "", pesoTotal = 0;
-                                    for (var i = 0; i < data.length; i++){
-                                        strPaquetes += "*  Tracking: " + data[i][2].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][5].split(">")[1].split("<")[0] + " lb.%0A";
-                                        pesoTotal += Number(data[i][5].split(">")[1].split("<")[0]);
-                                    }
-                                    var totales = "%0A - Paquetes: "+data.length+"%0A - Peso total: "+pesoTotal+" lb.%0A - Total a pagar: Q"+(pesoTotal*tarifa)+" (tarifa aplica en *efectivo*)%0A";
-
-                                    urlmensaje += strPaquetes + totales + "%0APor favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina (recuerda que si solicitas servicio ruta, debes agregar al total el costo del envío).%0AGracias por preferirnos. Chispudito Express";
-                                    urlmensaje = urlmensaje.replace(" ", "%20").replace("Ã¡", "á").replace("Ã©", "é").replace("Ã³", "ó").replace("Ãº", "ú").replace("Ã¼", "ü").replace("Ã±", "ñ").replace("Ã", "í");
-
-                                    if (whatsWebWindow != null && !whatsWebWindow.closed){
-                                        whatsWebWindow.location.replace("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
-                                        whatsWebWindow.focus();
-                                    }
-                                    else
-                                        whatsWebWindow = window.open("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
-
-                                    bootbox.confirm({
-                                        size: "small",
-                                        title: "La página de Whatsapp Web ha sido cargada",
-                                        message: "¿Ha concluido la notificación del cliente?",
-                                        buttons: {
-                                          cancel: {
-                                            label: "No",
-                                            className: "btn btn-md btn-warning alinear-izquierda"
-                                          },
-                                          confirm: {
-                                              label: "Si",
-                                              className: "btn btn-md btn-success alinear-derecha"
-                                          }
-                                        },
-                                        callback: function(res){
-                                            if (res){
-                                                var t = $("#inventario").DataTable();
-                                                t.rows(".selected").nodes().to$().removeClass("selected");
-                                                t.draw(false);
-                                            }
-                                            else{
-                                                bootbox.confirm({
-                                                    message: "En caso de que whatsapp no haya reconocido el número del cliente, recuerda que puedes notificarle por correo electrónico",
-                                                    buttons: {
-                                                      cancel: {
-                                                        label: "OK, regresar",
-                                                        className: "btn btn-md btn-default alinear-izquierda"
-                                                      },
-                                                      confirm: {
-                                                          label: "Si, enviar por correo electrónico",
-                                                          className: "btn btn-md btn-success alinear-derecha"
-                                                      }
-                                                    },
-                                                    callback: function(res){
-                                                        if (res){
-                                                            notificarViaEmail(uidCliente);
-                                                        }
-                                                        else{
-                                                            document.getElementById("divBotones").style.visibility = "visible";
-                                                        }
-                                                    }
-                                                });
-                                            }
-                                        }
-                                    });
-                                }
                             }
-                        }
-                    });
-                },
-                error: function() {
-                    bootbox.alert("Ocurrió un problema al intentar conectarse al servidor y no se pudo obtener el número de celular del cliente. Intentalo nuevamente luego.");
+                        });
+                    }
                 }
-
             });
         }
-        else{
-            var uid = data[0][3].split(">")[1].split("<")[0];
-            var nombreCliente = data[0][4].split(">")[1].split("<")[0];
-
-            var querysita = "SELECT celular, tarifa FROM cliente WHERE cid = '" + uid + "'";
-
+        else
+        {
+            let message = getEmailNotificationMessage(notificationData);
             $.ajax({
-                url: "db/DBexecQuery.php",
+                url: "PHPMailer/notificarViaEmail.php",
                 type: "POST",
-                data:{
-                    query: querysita
+                data: {
+                    email: notificationData.email,
+                    cliente: notificationData.clientName,
+                    mensaje: message
                 },
                 cache: false,
                 success: function(res){
+                    if (res === "Enviado"){
+                        bootbox.alert("La notificación por correo electrónico ha sido enviada exitosamente.");
+                        let t = $("#inventario").DataTable();
+                        t.rows(".selected").nodes().to$().removeClass("selected");
+                        t.draw(false);
 
-                    var whatsNumber = "502"+JSON.parse(res)[0].celular;
-                    var tarifa = JSON.parse(res)[0].tarifa;
-                    urlmensaje = "Buen día " + nombreCliente  + ", de parte de Chispudito Express te informamos que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:%0A%0A";
-
-                    var strPaquetes = "", pesoTotal = 0;
-                    for (var i = 0; i < data.length; i++){
-                        strPaquetes += "*  Tracking: " + data[i][2].replace("<br>", "").split(">")[1].split("<")[0] + "%0A    Peso: " + data[i][5].split(">")[1].split("<")[0] + " lb.%0A";
-                        pesoTotal += Number(data[i][5].split(">")[1].split("<")[0]);
+                        // TODO: Adjust paquetes plan to Email Notificated
                     }
-                    var totales = "%0A - Paquetes: "+data.length+"%0A - Peso total: "+pesoTotal+" lb.%0A - Total a pagar: Q"+(pesoTotal*tarifa)+" (tarifa aplica en *efectivo*)%0A";
-
-                    urlmensaje += strPaquetes + totales + "%0APor favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina (recuerda que si solicitas servicio ruta, debes agregar al total el costo del envío).%0AGracias por preferirnos. Chispudito Express";
-                    urlmensaje = urlmensaje.replace(" ", "%20").replace("Ã¡", "á").replace("Ã©", "é").replace("Ã³", "ó").replace("Ãº", "ú").replace("Ã¼", "ü").replace("Ã±", "ñ").replace("Ã", "í");
-
-                    if (whatsWebWindow != null && !whatsWebWindow.closed){
-                        whatsWebWindow.location.replace("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
-                        whatsWebWindow.focus();
+                    else{
+                        bootbox.alert("Hubo un problema en el servidor de envío de correo electrónico. Se obtuvo el siguiente mensaje: <br><br> \"" + res + "\"");
+                        document.getElementById("divBotones").style.visibility = "visible";
                     }
-                    else
-                        whatsWebWindow = window.open("https://web.whatsapp.com/send?phone="+whatsNumber+"&text="+urlmensaje);
+                },
+                error: function(){
+                    bootbox.alert("Ocurrió un error en la solicitud para enviar el correo electrónico. Intenta nuevamente.");
+                    document.getElementById("divBotones").style.visibility = "visible";
+                }
+            });
+        }
+    }
 
-                    bootbox.confirm({
-                        size: "small",
-                        title: "La página de Whatsapp Web ha sido cargada",
-                        message: "¿Ha concluido la notificación del cliente?",
-                        buttons: {
-                          cancel: {
-                            label: "No",
-                            className: "btn btn-md btn-warning alinear-izquierda"
-                          },
-                          confirm: {
-                              label: "Si",
-                              className: "btn btn-md btn-success alinear-derecha"
-                          }
+    function notificarViaWhatsApp(searchByClientUid = true){
+        bootbox.hideAll();
+        let selectedRows = $("#inventario").DataTable().rows(".selected").data().toArray();
+        let paquetes = [];
+        selectedRows.map(row => {
+            let paquete = $(row[dataPaqueteIndice]).data('paquete');
+            paquete.libras = Number(paquete.libras);
+            paquetes.push(paquete)
+        });
+
+        let notificationData = {
+            paquetes: paquetes
+        };
+
+        // Obtener datos del cliente por medio su id
+        if (searchByClientUid) {
+            let uid = paquetes[0].uid;
+            notificationData.clientName = paquetes[0].uname;
+
+            let querysita = `SELECT celular, tarifa FROM cliente WHERE cid = '${uid}'`;
+
+            $.ajax({
+                url: "db/DBexecQuery.php",
+                type: "POST",
+                data: { query: querysita },
+                cache: false,
+                success: function(arr){
+                    let rows = JSON.parse(arr);
+                    if (rows.length === 0){
+                        bootbox.alert("No se encontró en la base de datos los datos del cliente necesarios para enviar la notificación (celular y tarifa).");
+                        return;
+                    }
+                    let clientData = rows[0];
+                    notificationData.phoneNumber = "502"+clientData.celular;
+                    notificationData.rate = clientData.tarifa;
+
+                    sendNotificationToClient(notificationData, false, true)
+                },
+                error: () => {
+                    bootbox.alert("Ocurrió un problema al intentar conectarse al servidor y no se pudo obtener el número de celular del cliente. Intentalo nuevamente luego.");
+                    document.getElementById("divBotones").style.visibility = "visible";
+                }
+            });
+
+            return;
+        }
+
+        // Obtener datos del cliente por medio del nombre de los paquetes seleccionados
+        let nombres = [];
+        paquetes.map(p => { nombres.push(p.uname); });
+        let whereCondition = `CONCAT(nombre, ' ', apellido) IN ('${nombres.join("', '")}')`;
+        let querysita = `SELECT celular, tarifa, CONCAT(nombre, ' ', apellido) AS usuario FROM cliente WHERE ${whereCondition}`;
+
+        $.ajax({
+            url: "db/DBexecQuery.php",
+            type: "POST",
+            data: { query: querysita },
+            cache: false,
+            success: function(arr){
+                let rows = JSON.parse(arr);
+                let encontrados = rows.length;
+                if (encontrados > 1) {
+                    bootbox.alert("Se detectaron nombres de cliente diferentes entre los paquetes seleccionados, y estos están asociados a diferentes números de celular. Por favor cerciórate de seleccionar los paquetes de un solo cliente a la vez.");
+                    return;
+                }
+                let found = encontrados === 1;
+                let title = '', msg = "";
+                if (!found){
+                    title = '¡No se encontró un número de celular asociado!';
+                    msg = askForClientDataDialog();
+                }
+                else {
+                    let clientData = rows[0];
+                    title = 'Confirmar número de celular';
+                    msg = clientNotificationDestFoundDialog("+502 " + clientData.celular);
+                    notificationData.phoneNumber = "502"+clientData.celular;
+                    notificationData.clientName = clientData.usuario;
+                    notificationData.rate = Number(clientData.tarifa);
+                }
+
+                bootbox.dialog({
+                    size: 'medium',
+                    closeButton: false,
+                    title: title,
+                    message: msg,
+                    buttons: {
+                        regresar: {
+                            label: 'Regresar',
+                            className: "btn-default alinear-izquierda",
+                            callback: () => { document.getElementById("divBotones").style.visibility = "visible"; }
                         },
-                        callback: function(res){
-                            if (res){
-                                var t = $("#inventario").DataTable();
-                                t.rows(".selected").nodes().to$().removeClass("selected");
-                                t.draw(false);
-                            }
-                            else{
-                                bootbox.confirm({
-                                    message: "En caso de que whatsapp no haya reconocido el número del cliente, recuerda que puedes notificarle por correo electrónico",
+                        ingresar: {
+                            label: "Ingresar número manualmente",
+                            className: (!found ? "gone" : "btn-primary alinear-izquierda"),
+                            callback: function(){
+                                bootbox.dialog({
+                                    size: 'medium',
+                                    closeButton: false,
+                                    title: "Datos del cliente para la notificación",
+                                    message: askForClientDataDialog(),
                                     buttons: {
-                                      cancel: {
-                                        label: "OK, regresar",
-                                        className: "btn btn-md btn-default alinear-izquierda"
-                                      },
-                                      confirm: {
-                                          label: "Si, enviar por correo electrónico",
-                                          className: "btn btn-md btn-success alinear-derecha"
-                                      }
-                                    },
-                                    callback: function(res){
-                                        if (res){
-                                            notificarViaEmail(uidCliente);
-                                        }
-                                        else{
-                                            document.getElementById("divBotones").style.visibility = "visible";
+                                        regresar: {
+                                            label: 'Cancelar',
+                                            className: "btn-default alinear-izquierda",
+                                            callback: () => { document.getElementById("divBotones").style.visibility = "visible"; }
+                                        },
+                                        confirm: {
+                                            label: 'Listo, continuar',
+                                            className: "btn-success alinear-derecha",
+                                            callback: () => sendNotificationToClient(notificationData, true, false)
                                         }
                                     }
                                 });
                             }
+                        },
+                        confirm: {
+                            label: (found ? 'Si, continuar' : 'Listo, continuar'),
+                            className: "btn-success alinear-derecha",
+                            callback: () => sendNotificationToClient(notificationData, !found, false)
                         }
-                    });
-                },
-                error: function() {
-                    bootbox.alert("Ocurrió un problema al intentar conectarse al servidor y no se pudo obtener el número de celular del cliente. Intentalo nuevamente luego.");
-                }
-            });
-
-        }
+                    }
+                });
+            },
+            error: () => {
+                bootbox.alert("Ocurrió un problema al intentar conectarse al servidor y no se pudo obtener el número de celular del cliente. Intentalo nuevamente luego.");
+                document.getElementById("divBotones").style.visibility = "visible";
+            }
+        });
     }
 
-    function notificarViaEmail(uidCliente){
-
+    function notificarViaEmail(searchByClientUid = true){
         bootbox.hideAll();
-        var data = $("#inventario").DataTable().rows(".selected").data().toArray();
-        var numero = "";
-        if (uidCliente){
-            var nombres = new Array();
-            for (var i = 0; i < data.length; i++){
-                if (nombres.indexOf(data[i][4].split(">")[1].split("<")[0]) == -1) {
-                    nombres.push(data[i][4].split(">")[1].split("<")[0]);
-                }
-            }
+        let selectedRows = $("#inventario").DataTable().rows(".selected").data().toArray();
+        let paquetes = [];
+        selectedRows.map(row => {
+            let paquete = $(row[dataPaqueteIndice]).data('paquete');
+            paquete.libras = Number(paquete.libras);
+            paquetes.push(paquete)
+        });
 
-            var querysita = "SELECT email, tarifa, CONCAT(nombre, ' ', apellido) AS usuario FROM cliente WHERE ";
-            for (var i = 0; i < nombres.length; i++)
-                querysita = querysita + "CONCAT(nombre, ' ', apellido) = '" + nombres[i] + "' OR ";
-            querysita = querysita.substring(0, querysita.length-3);
+        let notificationData = {
+            paquetes: paquetes
+        };
+
+        if (searchByClientUid) {
+            let uid = paquetes[0].uid, name;
+            notificationData.clientName = name = paquetes[0].uname;
+
+            let querysita = `SELECT email, tarifa FROM cliente WHERE cid = '${uid}'`;
 
             $.ajax({
                 url: "db/DBexecQuery.php",
@@ -1243,245 +1256,111 @@
                     query: querysita
                 },
                 cache: false,
-                success: function(arr){
-                    var rows = JSON.parse(arr);
-                    var encontrados = rows.length;
-
-                    var msg = "";
-                    if (encontrados == 0){
-                        msg = "<div class='row' style='background-color: #dadada'>"+
-                            "<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>"+
-                            "<p style='color: black'>Por favor ingresa los siguientes datos del cliente para poder enviar la notificación.</p>"+
-                            "<form novalidate>"+
-                            "<div class='control-group form-group col-lg-6 col-md-6 col-sm-6 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Correo electrónico:</label><input align='middle' style='text-align:center; width: 100%;' type='email' id='inputNotifEmailCorreo' placeholder='Email del cliente'></div></div>"+
-                            "<div class='control-group form-group col-lg-6 col-md-6 col-sm-6 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Nombre y apellido:</label><input align='middle' style='text-align:center; width: 100%;' type='text' id='inputNotifEmailCliente' placeholder='Nombre y apellido del cliente'></div></div>"+
-                            "</form>"+
-                            "</div>"+
-                            "</div>";
-                    }
-                    else if (encontrados == 1){
-                        msg = "Los paquetes poseen un ID de Cliente auxiliar. Por medio de uno de los nombres de clientes que figuran en los registro de los paquetes, se encontró el siguiente correo electrónico en la base de datos:<br><br><div class='row'><div class='col-lg-2 col-md- col-sm-2 col-xs-2'></div><label class='col-lg-8 col-md-8 col-sm-8 col-xs-8' align='middle' style='font-size: 20px; background-color: #178ac4; text-align: center; color: white; border-radius: 5px'>"+rows[0]["email"]+"</label></div><br><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' align='middle' style='text-align: center; color: black;'>¿Enviar notificación al cliente usando este correo electrónico?</label></div>";
-                    }
-                    else{
-                        bootbox.alert("Se detectaron nombres de cliente diferentes entre los paquetes seleccionados, y estos están asociados a diferentes correos electrónicos. Por favor cerciorate de seleccionar los paquetes de un solo cliente a la vez.");
+                success: function(arr)
+                {
+                    let rows = JSON.parse(arr);
+                    if (rows.length === 0){
+                        bootbox.alert("No se encontró en la base de datos los datos del cliente necesarios para enviar la notificación (email y tarifa).");
                         return;
                     }
-                    bootbox.dialog({
-                        size: 'medium',
-                        closeButton: false,
-                        title: (encontrados == 0 ? "¡No se encontró un correo electrónico asociado!" : "Confirmar correo electrónico"),
-                        message: msg,
-                        buttons: {
-                            regresar: {
-                                label: 'Regresar',
-                                className: "btn-default alinear-izquierda",
-                                callback: function(){
-                                    document.getElementById("divBotones").style.visibility = "visible";
-                                }
-                            },
+                    let clientData = rows[0];
+                    notificationData.email = clientData.email;
+                    notificationData.rate = clientData.tarifa;
 
-                            ingresar: {
-                                label: "Ingresar email manualmente",
-                                className: (encontrados == 0 ? "gone" : "btn-primary alinear-izquierda"),
-                                callback: function(){
-                                    msg = "<div class='row' style='background-color: #dadada'>"+
-                                        "<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>"+
-                                        "<p style='color: black'>Por favor ingresa los siguientes datos del cliente para poder enviar la notificación.</p>"+
-                                        "<form novalidate>"+
-                                        "<div class='control-group form-group col-lg-6 col-md-6 col-sm-6 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Correo electrónico:</label><input align='middle' style='text-align:center; width: 100%;' type='email' id='inputNotifEmailCorreo' placeholder='Email del cliente'></div></div>"+
-                                        "<div class='control-group form-group col-lg-6 col-md-6 col-sm-6 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Nombre y apellido:</label><input align='middle' style='text-align:center; width: 100%;' type='text' id='inputNotifEmailCliente' placeholder='Nombre y apellido del cliente'></div></div>"+
-                                        "</form>"+
-                                        "</div>"+
-                                        "</div>";
-                                    bootbox.dialog({
-                                        size: 'medium',
-                                        closeButton: false,
-                                        title: "Ingreso de correo electrónico",
-                                        message: msg,
-                                        buttons: {
-                                            regresar: {
-                                                label: 'Regresar',
-                                                className: "btn-default alinear-izquierda",
-                                                callback: function(){
-                                                    document.getElementById("divBotones").style.visibility = "visible";
-                                                }
-                                            },
-                                            confirm: {
-                                                label: 'Listo, continuar',
-                                                className: "btn-success alinear-derecha",
-                                                callback: function(){
-                                                    var urlmensaje = "";
-                                                    var email = document.getElementById("inputNotifEmailCorreo").value;
-                                                    var cliente = document.getElementById("inputNotifEmailCliente").value;
-                                                    if (email.length == 0 || cliente.length == 0){
-                                                        bootbox.alert("Por favor llena correctamente los campos.");
-                                                        return false;
-                                                    }
-
-                                                    urlmensaje = "Buen día " + cliente + ".<br><br><strong>Chispudito Express</strong> te informa que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:<br><br>";
-
-                                                    var strPaquetes = "", pesoTotal = 0;
-                                                    for (var i = 0; i < data.length; i++){
-                                                        strPaquetes += "*  Tracking: " + data[i][2].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][5].split(">")[1].split("<")[0] + " lb.<br>";
-                                                        pesoTotal += Number(data[i][5].split(">")[1].split("<")[0]);
-                                                    }
-                                                    var totales = "<br> - Paquetes: "+data.length+"<br> - Peso total: "+pesoTotal+" lb.<br> - Total a pagar: Q"+(pesoTotal*60)+" (tarifa aplica en <b>efectivo</b>)<br>";
-                                                    urlmensaje += strPaquetes + totales + "<br>Por favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina (recuerda que si solicitas servicio ruta, debes agregar al total el costo del envío).<br><br>Gracias por preferirnos. Chispudito Express";
-
-                                                    $.ajax({
-                                                        url: "PHPMailer/notificarViaEmail.php",
-                                                        type: "POST",
-                                                        data: {
-                                                            email: email,
-                                                            cliente: cliente,
-                                                            mensaje: urlmensaje
-                                                        },
-                                                        cache: false,
-                                                        success: function(res){
-                                                            if (res == "Enviado"){
-                                                                bootbox.alert("La notificación por correo electrónico ha sido enviada exitosamente.")
-                                                                var t = $("#inventario").DataTable();
-                                                                t.rows(".selected").nodes().to$().removeClass("selected");
-                                                                t.draw(false);
-                                                            }
-                                                            else{
-                                                                bootbox.alert("Hubo un problema en el servidor de envío de correo electrónico. Se obtuvo el siguiente mensaje: <br><br> \"" + res + "\"");
-                                                            }
-                                                        },
-                                                        error: function(){
-                                                            alert("Ocurrió un problema al intentar enviar el correo electrónico. Intenta nuevamente.");
-                                                        }
-                                                    });
-                                                }
-                                            }
-                                        }
-                                    });
-                                }
-                            },
-                            confirm: {
-                                label: (encontrados === 0 ? 'Listo, enviar' : "Si, continuar"),
-                                className: (encontrados  > 1 ? "gone" : "btn-success alinear-derecha"),
-                                callback: function(){
-                                    let tarifa = 60;
-                                    if (encontrados === 0){
-                                        var email = document.getElementById("inputNotifEmailCorreo").value;
-                                        var cliente = document.getElementById("inputNotifEmailCliente").value;
-                                        if (email.length == 0 || cliente.length == 0){
-                                            bootbox.alert("Por favor llena correctamente los campos.");
-                                            return false;
-                                        }
-                                    }
-                                    else{
-                                        var email = rows[0]["email"];
-                                        var cliente = rows[0]["usuario"];
-                                        tarifa = Number(rows[0]["tarifa"]);
-                                    }
-
-                                    var urlmensaje = "";
-                                    urlmensaje = "Buen día " + cliente + ".<br><br><strong>Chispudito Express</strong> te informa que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:<br><br>";
-
-                                    var strPaquetes = "", pesoTotal = 0;
-                                    for (var i = 0; i < data.length; i++){
-                                        strPaquetes += "*  Tracking: " + data[i][2].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][5].split(">")[1].split("<")[0] + " lb.<br>";
-                                        pesoTotal += Number(data[i][5].split(">")[1].split("<")[0]);
-                                    }
-                                    var totales = "<br> - Paquetes: "+data.length+"<br> - Peso total: "+pesoTotal+" lb.<br> - Total a pagar: Q"+(pesoTotal*tarifa)+" (tarifa aplica en <b>efectivo</b>)<br>";
-
-                                    urlmensaje += strPaquetes + totales + "<br>Por favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina (recuerda que si solicitas servicio ruta, debes agregar al total el costo del envío).<br><br>Gracias por preferirnos. Chispudito Express";
-
-                                    $.ajax({
-                                        url: "PHPMailer/notificarViaEmail.php",
-                                        type: "POST",
-                                        data: {
-                                            email: email,
-                                            cliente: cliente,
-                                            mensaje: urlmensaje
-                                        },
-                                        cache: false,
-                                        success: function(res){
-                                            if (res == "Enviado"){
-                                                bootbox.alert("La notificación por correo electrónico ha sido enviada exitosamente.")
-                                                var t = $("#inventario").DataTable();
-                                                t.rows(".selected").nodes().to$().removeClass("selected");
-                                                t.draw(false);
-                                            }
-                                            else{
-                                                bootbox.alert("Hubo un problema en el servidor de envío de correo electrónico. Se obtuvo el siguiente mensaje: <br><br> \"" + res + "\"");
-                                            }
-                                        },
-                                        error: function(){
-                                            alert("Ocurrió un problema al intentar enviar el correo electrónico. Intenta nuevamente.");
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                    });
+                    sendNotificationToClient(notificationData, false, true, false);
                 },
-                error: function() {
-                    bootbox.alert("Ocurrió un problema al intentar conectarse al servidor y no se pudo obtener el email del cliente. Intentalo nuevamente luego.");
-                }
-
-            });
-        }
-        else{
-            var uid = data[0][3].split(">")[1].split("<")[0];
-            var cliente = data[0][4].split(">")[1].split("<")[0];
-
-            var querysita = "SELECT email, tarifa FROM cliente WHERE cid = '" + uid + "'";
-
-            $.ajax({
-                url: "db/DBexecQuery.php",
-                type: "POST",
-                data:{
-                    query: querysita
-                },
-                cache: false,
-                success: function(res){
-
-                    var tarifa = JSON.parse(res)[0].tarifa;
-                    var urlmensaje = "";
-                    urlmensaje = "Buen día " + cliente + ".<br><br><strong>Chispudito Express</strong> te informa que los siguientes paquetes ya están disponibles en nuestra bodega de Guatemala:<br><br>";
-
-                    var strPaquetes = "", pesoTotal = 0;
-                    for (var i = 0; i < data.length; i++){
-                        strPaquetes += "*  Tracking: " + data[i][2].replace("<br>", "").split(">")[1].split("<")[0] + " - Peso: " + data[i][5].split(">")[1].split("<")[0] + " lb.<br>";
-                        pesoTotal += Number(data[i][5].split(">")[1].split("<")[0]);
-                    }
-                    var totales = "<br> - Paquetes: "+data.length+"<br> - Peso total: "+pesoTotal+" lb.<br> - Total a pagar: Q"+(pesoTotal*tarifa)+" (tarifa aplica en <b>efectivo</b>)<br>";
-
-                    urlmensaje += strPaquetes + totales + "<br>Por favor confírmanos si te los enviamos a ruta o pasas a recogerlos a oficina (recuerda que si solicitas servicio ruta, debes agregar al total el costo del envío).<br><br>Gracias por preferirnos. Chispudito Express";
-
-                    $.ajax({
-                        url: "PHPMailer/notificarViaEmail.php",
-                        type: "POST",
-                        data: {
-                            email: JSON.parse(res)[0].email,
-                            cliente: cliente,
-                            mensaje: urlmensaje
-                        },
-                        cache: false,
-                        success: function(res){
-                            if (res == "Enviado"){
-                                bootbox.alert("La notificación por correo electrónico ha sido enviada exitosamente.")
-                                var t = $("#inventario").DataTable();
-                                t.rows(".selected").nodes().to$().removeClass("selected");
-                                t.draw(false);
-                            }
-                            else{
-                                bootbox.alert("Hubo un problema en el servidor de envío de correo electrónico. Se obtuvo el siguiente mensaje: <br><br> \"" + res + "\"");
-                            }
-                        },
-                        error: function(){
-                            alert("Ocurrió un problema al intentar enviar el correo electrónico. Intenta nuevamente.");
-                        }
-                    });
-                },
-                error: function() {
+                error: () => {
                     bootbox.alert("Ocurrió un problema al intentar conectarse al servidor y no se pudo obtener el correo electrónico del cliente. Intenta nuevamente.");
+                    document.getElementById("divBotones").style.visibility = "visible";
                 }
             });
+
+            return
         }
+
+        // Obtener datos del cliente por medio del nombre de los paquetes seleccionados
+        let nombres = [];
+        paquetes.map(p => { nombres.push(p.uname); });
+        let whereCondition = `CONCAT(nombre, ' ', apellido) IN ('${nombres.join("', '")}')`;
+        let querysita = `SELECT email, tarifa, CONCAT(nombre, ' ', apellido) AS usuario FROM cliente WHERE ${whereCondition}`;
+
+        $.ajax({
+            url: "db/DBexecQuery.php",
+            type: "POST",
+            data:{
+                query: querysita
+            },
+            cache: false,
+            success: function(arr){
+                let rows = JSON.parse(arr);
+                let encontrados = rows.length;
+                if (encontrados > 1) {
+                    bootbox.alert("Se detectaron nombres de cliente diferentes entre los paquetes seleccionados, y estos están asociados a diferentes correos electrónicos. Por favor cerciórate de seleccionar los paquetes de un solo cliente a la vez.");
+                    return;
+                }
+                let found = encontrados === 1;
+                let title = '', msg = "";
+                if (!found){
+                    title = '¡No se encontró un correo electrónico asociado!';
+                    msg = askForClientDataDialog(false);
+                }
+                else {
+                    let clientData = rows[0];
+                    title = 'Confirmar correo electrónico';
+                    msg = clientNotificationDestFoundDialog(clientData.email, false);
+                    notificationData.email = clientData.email;
+                    notificationData.clientName = clientData.usuario;
+                    notificationData.rate = Number(clientData.tarifa);
+                }
+
+                bootbox.dialog({
+                    size: 'medium',
+                    closeButton: false,
+                    title: title,
+                    message: msg,
+                    buttons: {
+                        regresar: {
+                            label: 'Regresar',
+                            className: "btn-default alinear-izquierda",
+                            callback: () => { document.getElementById("divBotones").style.visibility = "visible"; }
+                        },
+                        ingresar: {
+                            label: "Ingresar email manualmente",
+                            className: (!found ? "gone" : "btn-primary alinear-izquierda"),
+                            callback: function(){
+                                bootbox.dialog({
+                                    size: 'medium',
+                                    closeButton: false,
+                                    title: "Datos del cliente para la notificación",
+                                    message: askForClientDataDialog(false),
+                                    buttons: {
+                                        regresar: {
+                                            label: 'Cancelar',
+                                            className: "btn-default alinear-izquierda",
+                                            callback: () => { document.getElementById("divBotones").style.visibility = "visible"; }
+                                        },
+                                        confirm: {
+                                            label: 'Listo, continuar',
+                                            className: "btn-success alinear-derecha",
+                                            callback: () => sendNotificationToClient(notificationData, true, false, false)
+                                        }
+                                    }
+                                });
+                            }
+                        },
+                        confirm: {
+                            label: (found ? 'Si, continuar' : 'Listo, continuar'),
+                            className: "btn-success alinear-derecha",
+                            callback: () => sendNotificationToClient(notificationData, !found, false, false)
+                        }
+                    }
+                });
+            },
+            error: () => {
+                bootbox.alert("Ocurrió un problema al intentar conectarse al servidor y no se pudo obtener el correo electrónico del cliente. Intentalo nuevamente luego.");
+                document.getElementById("divBotones").style.visibility = "visible";
+            }
+        });
     }
 
 
