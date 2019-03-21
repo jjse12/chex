@@ -309,22 +309,8 @@
                                     else{
                                         bootbox.hideAll();
                                         if (todos){
-                                            if (isChrome)
-                                                loadInventario();
-                                            else{
-                                                table.rows().every( function(rowIdx, tableLoop, rowLoop) {
-                                                    var dataRow = String(this.data()).split(",");
-                                                    if (dataRow[3].split(">")[1].split("<")[0].toUpperCase() == uid.toUpperCase()){
-                                                        dataRow[6] = plan == "" ? "<h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>" :
-                                                        plan == "Oficina" ? "<h5 class='plan btn-sm btn-success'>En Oficina</h5>" :
-                                                        plan.includes("Guatex") ? "<h5 class='popup plan btn-sm' style='background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h5>" :
-                                                        plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
-                                                        "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h5>";
-                                                        table.row(rowIdx).data(dataRow).draw(false);
-                                                    }
-                                                });
-                                                bootbox.alert("Se actualizó el plan de entrega de todos los paquetes de " + nombre + ".");
-                                            }
+                                            loadInventario()
+                                            bootbox.alert("Se actualizó el plan de entrega de todos los paquetes de " + nombre + ".");
                                         }
                                         else{
                                             arr[0][6] = plan == "" ? "<h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>" :
@@ -1008,7 +994,6 @@
         {
             let notificationUrl = getWhatsAppNotificationUrl(notificationData);
 
-            console.log(notificationUrl);
             if (whatsWebWindow != null && !whatsWebWindow.closed){
                 whatsWebWindow.location.replace(notificationUrl);
                 whatsWebWindow.focus();
@@ -1037,7 +1022,7 @@
                         t.rows(".selected").nodes().to$().removeClass("selected");
                         t.draw(false);
 
-                        // TODO: Adjust paquetes plan to WhatsApp Notificated
+                        setPlanForNotificatedPackages(notificationData.paquetes, 'whats');
                     }
                     else{
                         bootbox.confirm({
@@ -1084,7 +1069,7 @@
                         t.rows(".selected").nodes().to$().removeClass("selected");
                         t.draw(false);
 
-                        // TODO: Adjust paquetes plan to Email Notificated
+                        setPlanForNotificatedPackages(notificationData.paquetes, 'email');
                     }
                     else{
                         bootbox.alert("Hubo un problema en el servidor de envío de correo electrónico. Se obtuvo el siguiente mensaje: <br><br> \"" + res + "\"");
@@ -1363,6 +1348,123 @@
         });
     }
 
+    function getNewPlanForNotificatedPackage(prevPlan, newPlan) {
+        switch (prevPlan) {
+            case '':
+                break;
+            case '0':
+                newPlan = '@'+newPlan;
+                break;
+            case 'whats':
+                if (newPlan === 'email')
+                    newPlan = 'whatsmail';
+                break;
+            case 'email':
+                if (newPlan === 'whats')
+                    newPlan = 'whatsmail';
+                break;
+            case 'whatsmail':
+                newPlan = 'whatsmail';
+                break;
+            case '@email':
+                if (newPlan === 'whats')
+                    newPlan = '@whatsmail';
+                break;
+            case '@whats':
+                if (newPlan === 'email')
+                    newPlan = '@whatsmail';
+                break;
+            case '@whatsemail':
+                newPlan = '@whatsmail';
+                break;
+            default:
+                newPlan = '';
+        }
+
+        console.log('prev = ' + prevPlan + ' - new = ' +newPlan );
+
+        return newPlan;
+    }
+
+    function setPlanForNotificatedPackages(paquetes, newPlan) {
+        let plan = paquetes[0].plan;
+        let trackings = [paquetes[0].tracking];
+        let samePlan = true;
+        for (let i = 1; i < paquetes.length; i++){
+            if (paquetes[i].plan !== plan){
+                samePlan = false;
+                break;
+            }
+
+            trackings.push(paquetes[i].tracking);
+        }
+
+        if (samePlan){
+
+            newPlan = getNewPlanForNotificatedPackage(plan, newPlan);
+            if (newPlan === '') return;
+            let where = 'tracking IN (\'' + trackings.join('\', \'') + '\')';
+
+            $.ajax({
+                url: "db/DBsetPaquete.php",
+                type: "POST",
+                data: {
+                    set: "plan = '"+newPlan+"'",
+                    where: where
+                },
+                cache: false,
+                success: function(res) {
+                    if (res.includes("ERROR")){
+                        bootbox.alert("Ocurrió un error al consultar la base de datos. Se recibió el siguiente mensaje: <i><br>" + res + "</i>");
+                    }
+                    else if (Number(res) < 1){
+                        bootbox.alert("No se pudo efectuar el cambio en la base de datos, intente nuevamente");
+                    }
+                    else{
+                        Swal.fire({
+                            title: 'Paquetes actualizados',
+                            type: 'success',
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            loadInventario();
+                        });
+                    }
+                },
+                error: function() {
+                    bootbox.alert("Ocurrió un problema al intentar conectarse al servidor.");
+                }
+            })
+        }
+        else {
+            paquetes.map(paquete => {
+
+                let plan = getNewPlanForNotificatedPackage(paquete.plan, newPlan);
+                if (plan === '') return;
+
+                let where = 'tracking = \'' + paquete.tracking + '\'';
+
+                $.ajax({
+                    url: "db/DBsetPaquete.php",
+                    type: "POST",
+                    data: {
+                        set: "plan = '"+plan+"'",
+                        where: where
+                    },
+                    cache: false
+                })
+            });
+
+            Swal.fire({
+                title: 'Paquetes actualizados',
+                type: 'success',
+                timer: 2000,
+                showConfirmButton: false
+            }).then(() => {
+                loadInventario();
+            });
+        }
+    }
 
     function planificarEntrega(){
         document.getElementById("divBotones").style.visibility = "hidden";
@@ -1518,43 +1620,7 @@
                                 }
                                 else{
                                     bootbox.hideAll();
-                                    var t = $("#inventario").DataTable();
-                                    if (todos){
-                                        if (isChrome)
-                                            loadInventario();
-                                        else{
-                                            t.rows().every( function(rowIdx, tableLoop, rowLoop) {
-                                                var dataRow = String(this.data()).split(",");
-                                                if (uids.toUpperCase().includes(dataRow[3].split(">")[1].split("<")[0].toUpperCase())) {
-                                                    dataRow[6] = plan == "" ? "<h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>" :
-                                                    plan == "Oficina" ? "<h5 class='plan btn-sm btn-success'>En Oficina</h5>" :
-                                                    plan.includes("Guatex") ? "<h5 class='popup plan btn-sm' style='text-align:center; background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h5>" :
-                                                    plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
-                                                    "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h5>";
-                                                    t.row(rowIdx).data(dataRow).draw(false);
-                                                }
-                                            });
-                                            t.rows(".selected").nodes().to$() .removeClass("selected");
-                                            t.draw(false);
-                                            document.getElementById("divBotones").style.visibility = "hidden";
-                                        }
-                                    }
-                                    else if (isChrome)
-                                        loadInventario();
-                                    else{
-                                        t.rows(".selected").every( function(rowIdx, tableLoop, rowLoop) {
-                                                var dataRow = String(this.data()).split(",");
-                                                dataRow[6] = plan == "" ? "<h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>" :
-                                                        plan == "Oficina" ? "<h5 class='plan btn-sm btn-success'>En Oficina</h5>" :
-                                                        plan.includes("Guatex") ? "<h5 class='popup plan btn-sm' style='text-align:center; background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h5>" :
-                                                        plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
-                                                        "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h5>";
-                                                t.row(rowIdx).data(dataRow);
-                                        });
-                                        t.rows(".selected").nodes().to$() .removeClass("selected");
-                                        t.draw(false);
-                                        document.getElementById("divBotones").style.visibility = "hidden";
-                                    }
+                                    loadInventario()
                                     bootbox.alert("Se ha actualizado la información de los paquetes seleccionados.");
                                 }
                             },
