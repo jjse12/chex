@@ -26,102 +26,6 @@ const signersSelectBox = selectedSigner => {
     return select;
 };
 
-const facturaLogistica = (logistica, factura) => {
-    let content = '';
-    if (logistica === null){
-        content = `
-            <div class="text-center">
-                <h5>Seguimiento de Paquete en Bodega</h5>
-            </div>
-            <br>
-            <div class="text-center">
-                ¡Aún no existe registro!&nbsp;&nbsp;&nbsp;&nbsp;
-                <button data-factura-id='${JSON.stringify(factura)}' class='btn btn-success btn-sm btnCreateFacturaLogistica'>Crear Registro</button></>
-            </div>
-            <br>
-        `;
-    }
-    else {
-        let received = logistica.miami_received === 1;
-        content = `
-            <div class="text-center">
-                <h5>Seguimiento de Paquete en Bodega</h5>
-            </div>
-            <div id="divFacturaLogisticaContent">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="factura-date-delivered" style='color: #696969;'>Fecha de Delivery :</label>
-                        <input type="text" data-original="${logistica.date_delivered}" id="factura-date-delivered"
-                                class="disabable form-control text-center" value="${logistica.date_delivered}">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="factura-courier" style="color: #696969">Courier :</label>
-                        ${couriersSelectBox(logistica.courier)}
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="factura-signer" style="color: #696969">Firmado por :</label>
-                        ${signersSelectBox(logistica.signer)}
-                    </div>
-                </div>
-                <div class="form-row text-center">
-                    <div class="form-group">
-                        <label class="form-check-label" for="factura-miami-received" style="color: #696969">Recibido en Miami :&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                        <input type="checkbox" class="disabable form-check-input" data-original="${received}" 
-                               id="factura-miami-received" data-toggle="collapse" data-target="#divDateReceived" 
-                               aria-expanded="false" aria-controls="divDateReceived" ${received ? 'checked' : ''}>
-                    </div>
-                </div>
-                <div id="divDateReceived" class="form-row collapse ${logistica.miami_received === 1 ? 
-                    'in" aria-expanded="true' : '" aria-expanded="false" style="height: 0px;'}">
-                    <div class="form-group">
-                        <label for="factura-date-received" style='color: #696969;'>Fecha de Recibido :</label>
-                        <input type="text" data-original="${logistica.date_received}" id="factura-date-received" 
-                                class="disabable form-control text-center" value="${logistica.date_received}">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="factura-comment" style='color: #696969;'>Comentario :</label>
-                    <textarea class="disabable form-control" id="factura-comment" 
-                            data-original="${logistica.comment}" placeholder="Ingresa un comentario">${logistica.comment}
-                    </textarea>
-                </div>
-            </div>
-            <div class="text-center">
-                <button class="btn btn-sm btn-primary" id="btnToggleLogistica" onclick="toggleLogistica()">Modificar</button>
-                <button class="btn btn-sm btn-success btnUpdateFacturaLogistica" data-factura-id='${JSON.stringify(factura)}'>Guardar</button>
-            </div>
-            <br>
-        `;
-    }
-
-    return content;
-};
-
-const facturaSeguimiento = seguimiento => {
-    let content = '';
-
-    content = `
-        <div class="text-center">
-            <h5>Seguimiento de Cliente</h5>
-        </div>
-    `;
-
-    return content;
-};
-
-const facturaDetails = (details) => {
-    let logistica = facturaLogistica(details.logistica, details.factura);
-    let seguimiento = facturaSeguimiento(details.seguimiento, details.factura);
-    let content =
-        `<div id="divFacturaDetails" class="row">
-            <div class="col-md-5" id="divFacturaLogistica">${logistica}</div>
-            <div class="col-md-7 fill" id="divFacturaSeguimiento">${seguimiento}</div>
-        </div>`;
-    return content;
-};
-
 function resetLogisticaInputsToOriginals() {
     let $dateDelivery = $('#factura-date-delivered');
     let $courier = $('#factura-courier');
@@ -185,6 +89,169 @@ function activateLogisticaDatePickers(logistica) {
         });
     }
 }
+
+const facturaLogistica = (logistica, factura) => {
+    let content = '';
+    if (logistica === null){
+        content = `
+            <div class="text-center">
+                <h5>Seguimiento de Paquete en Bodega</h5>
+            </div>
+            <br>
+            <div class="text-center">
+                ¡Aún no existe registro!&nbsp;&nbsp;&nbsp;&nbsp;
+                <button data-factura-id='${JSON.stringify(factura)}' class='btn btn-success btn-sm btnCreateFacturaLogistica'>Crear Registro</button></>
+            </div>
+            <br>
+        `;
+    }
+    else {
+        let received = logistica.miami_received === 1;
+        content = `
+            <div class="text-center">
+                <h5>Seguimiento de Paquete en Bodega</h5>
+            </div>
+            <div id="divFacturaLogisticaContent">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="factura-date-delivered" style='color: #696969;'>Fecha de Delivery :</label>
+                        <input type="text" data-original="${logistica.date_delivered}" id="factura-date-delivered"
+                                class="disabable form-control text-center" value="${logistica.date_delivered}">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="factura-courier" style="color: #696969">Courier :</label>
+                        ${couriersSelectBox(logistica.courier)}
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="factura-signer" style="color: #696969">Firmado por :</label>
+                        ${signersSelectBox(logistica.signer)}
+                    </div>
+                </div>
+                <div class="form-row text-center">
+                    <div class="form-group">
+                        <label class="form-check-label" for="factura-miami-received" style="color: #696969">Recibido en Miami :&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        <input type="checkbox" class="disabable form-check-input" data-original="${received}" 
+                               id="factura-miami-received" data-toggle="collapse" data-target="#divDateReceived" 
+                               aria-expanded="false" aria-controls="divDateReceived" ${received ? 'checked' : ''}>
+                    </div>
+                </div>
+                <div id="divDateReceived" class="form-row collapse ${logistica.miami_received === 1 ? 
+                    'in" aria-expanded="true' : '" aria-expanded="false" style="height: 0px;'}">
+                    <div class="form-group">
+                        <label for="factura-date-received" style='color: #696969;'>Fecha de Recibido :</label>
+                        <input type="text" data-original="${logistica.date_received}" id="factura-date-received" 
+                                class="disabable form-control text-center" value="${logistica.date_received}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="factura-comment" style='color: #696969;'>Comentario :</label>
+                    <textarea class="disabable form-control" id="factura-comment" maxlength="512"
+                            data-original="${logistica.comment}" placeholder="Ingresa un comentario">${logistica.comment}
+                    </textarea>
+                </div>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-sm btn-primary" id="btnToggleLogistica" onclick="toggleLogistica()">Modificar</button>
+                <button class="btn btn-sm btn-success btnUpdateFacturaLogistica" data-factura-id='${JSON.stringify(factura)}'>Guardar</button>
+            </div>
+            <br>
+        `;
+    }
+
+    return content;
+};
+
+function toggleNewSeguimiento() {
+    let $btnNewSeguimiento = $('#btnNewSeguimiento');
+    let $btnCreateSeguimiento = $('button.btnCreateSeguimiento');
+    if ($btnNewSeguimiento.hasClass('btn-success')){
+        $btnNewSeguimiento.removeClass('btn-success');
+        $btnNewSeguimiento.addClass('btn-danger');
+        $btnNewSeguimiento.text('Cancelar');
+        $btnCreateSeguimiento.show();
+    }
+    else if ($btnNewSeguimiento.hasClass('btn-danger')){
+        $btnNewSeguimiento.removeClass('btn-danger');
+        $btnNewSeguimiento.addClass('btn-success');
+        $btnNewSeguimiento.text('Nueva Nota de Seguimiento');
+        $btnCreateSeguimiento.hide();
+    }
+}
+
+const seguimientoNote = seguimiento => {
+    let date = moment(seguimiento.date_created);
+    date = date.format('[El&nbsp;&nbsp;]DD/MM/YYYY[&nbsp;&nbsp;a&nbsp;&nbsp;las&nbsp;&nbsp;]hh:mm A');
+
+    let note = `
+        <div class="seguimiento-register">
+            <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-left">
+                    &nbsp;&nbsp;&nbsp;${seguimiento.creator} :
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-right">
+                    ${date}&nbsp;&nbsp;&nbsp;
+                </div>
+            </div>
+            <div class="row" style="margin-top: 8px !important;">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <textarea class="form-control" disabled>${seguimiento.note}</textarea>
+                </div>
+            </div>
+        </div>
+    `;
+    return note;
+};
+
+const facturaSeguimiento = (seguimiento, factura) => {
+    let seguimientosContent = '<div class="text-center">- Sin notas de seguimiento de cliente -</div>';
+    if (seguimiento.length){
+        seguimientosContent = `<div class="text-center"><b>- ${seguimiento.length} ${seguimiento.length === 1 ? 'Nota' : 'Notas'} de Seguimiento -</b>`;
+        seguimiento.map(seg => {
+            seguimientosContent += seguimientoNote(seg);
+        });
+        seguimientosContent += '</div>';
+    }
+
+    let content = `
+        <div class="text-center">
+            <h5>Seguimiento de Cliente</h5>
+        </div>
+        <br>
+        <div class="text-center">
+            <button class="btn btn-sm btn-success" id="btnNewSeguimiento" onclick="toggleNewSeguimiento()" data-toggle="collapse" 
+                    data-target="#divNewSeguimiento" aria-expanded="false" aria-controls="divDateReceived">
+                Nueva Nota de Seguimiento
+            </button>
+            <button class="btn btn-sm btn-success btnCreateSeguimiento" style="display: none;" data-factura='${JSON.stringify(factura)}'>Guardar</button>
+        </div>
+        <div class="collapse" id="divNewSeguimiento">
+            <br>
+            <div class="form-group">
+                <textarea class="disabable form-control" id="txt-new-seguimiento" maxlength="512" placeholder="Ingresa la nota de seguimiento..."></textarea>
+            </div>
+        </div>
+        <hr>
+        ${seguimientosContent}
+        <br>
+    `;
+
+    return content;
+};
+
+
+
+const facturaDetails = (details) => {
+    let logistica = facturaLogistica(details.logistica, details.factura);
+    let seguimiento = facturaSeguimiento(details.seguimiento, details.factura);
+    let content =
+        `<div id="divFacturaDetails" class="row">
+            <div class="col-md-5" id="divFacturaLogistica">${logistica}</div>
+            <div class="col-md-7 fill" id="divFacturaSeguimiento">${seguimiento}</div>
+        </div>`;
+    return content;
+};
 
 function loadFacturaDetailsAndShowDialog(factura) {
     $.ajax({
@@ -795,6 +862,82 @@ $(document).ready( function () {
             }
         },
         () => bootbox.alert("Ocurrió un error al conectarse a la base de datos."));
+    });
+
+    $(document).on('click', 'button.btnCreateSeguimiento', function() {
+        var factura = $(this).data('factura');
+        var facturaId = factura.id;
+        var $noteTextArea = $('#txt-new-seguimiento');
+        var note = $noteTextArea.val();
+        var creator = $('#currentUserRealName').text();
+        if (!facturaId) {
+            bootbox.alert("No se encontró el ID de la factura para crear la nota de seguimiento.");
+            return
+        }
+        if (!note.length) {
+            bootbox.alert("¡El contenido de la nota no puede estar vacío!");
+            return
+        }
+
+        let closure = () => {
+            $.ajax({
+                url: 'db/DBserverInsertFacturaSeguimiento.php',
+                data: {
+                    facturaId: facturaId,
+                    note: note,
+                    creator: creator
+                },
+                type: "POST"
+            })
+            .then(response => {
+                if (response.success) {
+                    if (response.data === true){
+                        Swal.fire({
+                            title: 'Nota de Seguimiento Creada',
+                            type: 'success',
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            bootbox.hideAll();
+                            loadFacturaDetailsAndShowDialog(factura);
+                        });
+                    }
+                    else {
+                        Swal.fire({
+                            title: 'Nota de Seguimiento Creada',
+                            type: 'success',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        $('#divFacturaSeguimiento').html(facturaSeguimiento(response.data, factura));
+                    }
+                } else if (response.message) {
+                    bootbox.alert(response.message);
+                } else {
+                    bootbox.alert("No se pudo crear la nota de seguimiento de cliente.");
+                }
+            },
+            () => bootbox.alert("Ocurrió un error al conectarse a la base de datos."));
+        };
+
+        if (!creator.length) {
+            bootbox.prompt({
+                title: "Ingrese su nombre:",
+                size: "small",
+                inputType: 'text',
+                required: true,
+                callback: result => {
+                    if (result !== null){
+                        creator = result;
+                        closure();
+                    }
+                }
+            });
+            $('.modal-body').css({paddingTop: 0, paddingBottom: 0});
+            return;
+        }
+
+        closure();
     });
 
     $('#btnEliminarFacturas').on('click', () => {

@@ -2,7 +2,7 @@
 <div style="position: fixed; z-index: 1029; left: 0; right: 0; background-color: #fff;" class='row-same-height col-lg-12 col-md-12 col-sm-12 col-xs-12'>
   <div class="col-lg-3 col-md-3 col-sm-3">
       <br>
-      <h3 style="color: orange;"><?php echo $_SESSION['username'];?></h3>
+      <h3 id="currentUserRealName" style="color: orange;"><?php echo $_SESSION['user_real_name'];?></h3>
   </div>
   <div class='col-lg-6 col-md-6 col-sm-6 col-xs-12'>
     <section  style="background: #eaeaea;" class="tabbable"">

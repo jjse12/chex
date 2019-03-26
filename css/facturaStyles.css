@@ -14,10 +14,19 @@ span.factura-editable {
     cursor: pointer;
 }
 
+.seguimiento-register {
+    margin: 8px 5px 8px 5px;
+    padding: 5px;
+    border: 3px solid #a8cfff;
+}
+
 #divFacturaLogistica{
+    height: 441px;
     background: #fffaf7 !important;
 }
 
 #divFacturaSeguimiento{
+    height: 441px;
     background: #f4f9ff !important;
+    overflow-y: scroll;
 }
