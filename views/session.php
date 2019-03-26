@@ -10,6 +10,8 @@
 			$_SESSION["user_login_status"] = $_POST["user_login_status"];
         if (isset($_POST["username"]))
             $_SESSION["username"] = $_POST["username"];
+        if (isset($_POST["user_real_name"]))
+            $_SESSION["user_real_name"] = $_POST["user_real_name"];
 	}
 	echo "status=".$_SESSION['user_login_status']." , admin=". $_SESSION['user_admin']; 
 ?>

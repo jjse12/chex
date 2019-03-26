@@ -6,11 +6,223 @@ const facturaImage = fm => {
     return `<hr><img class="factura-image" src="data:${fm.image_type};base64, ${fm.image}" />`;
 };
 
+const couriersSelectBox = selectedCourier => {
+    let select = `<select id="factura-courier" data-original="${selectedCourier}" name="factura-courier" class="disabable form-control"><option value=""></option>`;
+    couriers.map(courier => {
+        let selected = courier === selectedCourier ? ' selected' : '';
+        select += `<option value="${courier}" ${selected}>${courier}</option>`;
+    });
+    select += '</select>';
+    return select;
+};
+
+const signersSelectBox = selectedSigner => {
+    let select = `<select id="factura-signer" data-original="${selectedSigner}" name="factura-signer" class="disabable form-control"><option value=""></option>`;
+    signers.map(signer => {
+        let selected = signer === selectedSigner ? ' selected' : '';
+        select += `<option value="${signer}" ${selected}>${signer}</option>`;
+    });
+    select += '</select>';
+    return select;
+};
+
+const facturaLogistica = (logistica, factura) => {
+    let content = '';
+    if (logistica === null){
+        content = `
+            <div class="text-center">
+                Aún no existe registro&nbsp;&nbsp;&nbsp;&nbsp;
+                <button data-factura-id='${JSON.stringify(factura)}' class='btn btn-success btn-sm btnCreateFacturaLogistica'>Crear Registro</button></>
+            </div>
+        `;
+    }
+    else {
+        let received = logistica.miami_received === 1;
+        content = `
+            <div class="text-center">
+                <button class="btn btn-sm btn-warning" id="btnToggleLogistica" onclick="toggleLogistica()">Modificar</button>
+                <button class="btn btn-sm btn-success btnUpdateFacturaLogistica" data-factura-id='${JSON.stringify(factura)}'>Guardar</button>
+            </div>
+            <br>
+            <div id="divFacturaLogisticaContent">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="factura-date-delivered" style='color: #696969;'>Fecha de Delivery :</label>
+                        <input type="text" data-original="${logistica.date_delivered}" id="factura-date-delivered"
+                                class="disabable form-control text-center" value="${logistica.date_delivered}">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="factura-courier" style="color: #696969">Courier :</label>
+                        ${couriersSelectBox(logistica.courier)}
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="factura-signer" style="color: #696969">Firmado por :</label>
+                        ${signersSelectBox(logistica.signer)}
+                    </div>
+                </div>
+                <div class="form-row text-center">
+                    <div class="form-group">
+                        <label class="form-check-label" for="factura-miami-received" style="color: #696969">Recibido en Miami :&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        <input type="checkbox" class="disabable form-check-input" data-original="${received}" 
+                               id="factura-miami-received" data-toggle="collapse" data-target="#divDateReceived" 
+                               aria-expanded="false" aria-controls="divDateReceived" ${received ? 'checked' : ''}>
+                    </div>
+                </div>
+                <div id="divDateReceived" class="form-row collapse ${logistica.miami_received === 1 ? 
+                    'in" aria-expanded="true' : '" aria-expanded="false" style="height: 0px;'}">
+                    <div class="form-group">
+                        <label for="factura-date-received" style='color: #696969;'>Fecha de Recibido :</label>
+                        <input type="text" data-original="${logistica.date_received}" id="factura-date-received" 
+                                class="disabable form-control text-center" value="${logistica.date_received}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="factura-comment" style='color: #696969;'>Comentario :</label>
+                    <textarea class="disabable form-control" id="factura-comment" 
+                            data-original="${logistica.comment}" placeholder="Ingresa un comentario">
+                        ${logistica.comment !== null ? logistica.comment : ''}
+                    </textarea>
+                </div>
+            </div>
+        `;
+    }
+
+    return content;
+};
+
+const facturaSeguimiento = seguimiento => {
+    let content = '';
+
+    content = `
+        <div class="text-center">
+            <h5>Seguimiento de Cliente</h5>
+        </div>
+    `;
+
+    return content;
+};
+
+const facturaDetails = (details) => {
+    let logistica = facturaLogistica(details.logistica, details.factura);
+    let seguimiento = facturaSeguimiento(details.seguimiento, details.factura);
+    let content =
+        `<div class="container-flex">
+            <div class="row">
+                <div class="col-md-5" id="divFacturaLogistica">${logistica}</div>
+                <div class="col-md-7" id="divFacturaSeguimiento">${seguimiento}</div>
+            </div>    
+        </div>`;
+    return content;
+};
+
+function resetLogisticaInputsToOriginals() {
+    let $dateDelivery = $('#factura-date-delivered');
+    let $courier = $('#factura-courier');
+    let $signer = $('#factura-signer');
+    let $miamiReceived = $('#factura-miami-received');
+    let $dateReceived = $('#factura-date-received');
+    let $comment = $('#factura-comment');
+
+    $dateDelivery.val($dateDelivery.data('original') === null ? '' : $dateDelivery.data('original') );
+    $courier.val($courier.data('original'));
+    $signer.val($signer.data('original'));
+    let received = $miamiReceived.data('original');
+    let $divDateReceived = $('#divDateReceived');
+    $miamiReceived.prop('checked', received);
+    if (received && !$divDateReceived.hasClass('in')){
+        $divDateReceived.addClass('in');
+    }
+    else if (!received && $divDateReceived.hasClass('in')){
+        $divDateReceived.removeClass('in');
+    }
+    $dateReceived.val($dateReceived.data('original') === null ? '' : $dateReceived.data('original'));
+    $comment.val($comment.data('original') === null ? '' : $comment.data('original'));
+}
+
+function toggleLogistica() {
+    let divLogisticaContent = $('#divFacturaLogisticaContent');
+    let btnToggleLogistica = $('#btnToggleLogistica');
+    let btnUpdateLogistica = $('.btnUpdateFacturaLogistica');
+
+    // HABILITAR FORMULARIO
+    if (divLogisticaContent.hasClass('disabled-element')){
+        $('#divFacturaLogisticaContent :input').removeAttr('disabled');
+        divLogisticaContent.removeClass('disabled-element');
+        btnToggleLogistica.removeClass('btn-warning');
+        btnToggleLogistica.addClass('btn-danger');
+        btnToggleLogistica.text('Cancelar');
+        btnUpdateLogistica.show();
+    }
+    // DESHABILITAR FORMULARIO
+    else {
+        resetLogisticaInputsToOriginals();
+        $('#divFacturaLogisticaContent :input').attr('disabled', true);
+        divLogisticaContent.addClass('disabled-element');
+        btnToggleLogistica.removeClass('btn-danger');
+        btnToggleLogistica.addClass('btn-warning');
+        btnToggleLogistica.text('Modificar');
+        btnUpdateLogistica.hide();
+    }
+}
+
+function activateLogisticaDatePickers(logistica) {
+    if (logistica !== null){
+        let dateDelivered = $("#factura-date-delivered");
+        dateDelivered.datepicker({
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            showAnim: "slideDown",
+        });
+        let dateReceived = $("#factura-date-received");
+        dateReceived.datepicker({
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            showAnim: "slideDown",
+        });
+    }
+}
+
+function loadFacturaDetailsAndShowDialog(factura) {
+    $.ajax({
+        url: 'db/DBgetFacturaDetails.php',
+        data: {
+            facturaId : factura.id
+        },
+        type: "POST",
+    })
+    .then(response => {
+        if (response.data !== null) {
+            let details = response.data;
+            details.factura = factura;
+            let content = facturaDetails(details);
+            bootbox.dialog({
+                title: `Detalles Factura tracking #${factura.tracking}`,
+                size: 'large',
+                message: `${content}`
+            });
+
+            if (details.logistica !== null){
+                toggleLogistica();
+                activateLogisticaDatePickers(details.logistica);
+            }
+        }
+        else if (response.message) {
+            bootbox.alert(response.message);
+        }
+        else {
+            bootbox.alert("No se encontraron capturas de pantalla asociadas.");
+        }
+    },
+    () => bootbox.alert("Ocurrió un error al conectarse a la base de datos."));
+}
+
 function loadFacturas(){
     let table = $('#facturas').DataTable();
     table.clear();
     $.ajax({
-        url: "db/DBgetFacturas.php",
+        url: 'db/DBgetFacturas.php',
         type: 'GET',
         dataType: 'json',
         contentType: "application/json; charset=utf-8",
@@ -29,8 +241,7 @@ function loadFacturas(){
                         icon = 'fa-clock';
                     }
 
-                    let date = moment(factura.date_created);
-                    date = date.format('DD/MM/YYYY hh:mm a');
+                    let date = factura.date_delivered ? factura.date_delivered : 'Sin Especificar';
 
                     table.row.add([
                         `<div class='seleccionado' title="${enviado}" style='color: ${color}; align-self: center; text-align: center;'><i class='fa ${icon} fa-2x fa-lg'></i><small style='display:none;'>${enviado}</small></div>`,
@@ -39,7 +250,8 @@ function loadFacturas(){
                         `<h6 class='seleccionado'>${factura.uid}</h6>`,
                         `<h6 class='seleccionado'>${factura.uname}</h6>`,
                         `<h6 class='seleccionado'>${Number(factura.amount).toMoney()}</h6>`,
-                        `<div style='cursor:pointer; text-align: center; color: darkslategray' class='factura-data' data-factura='${JSON.stringify(factura)}'><i class='fa fa-eye fa-2x fa-lg'></div>`
+                        `<div style='cursor:pointer; text-align: center; color: darkslategray' class='factura-see-image' data-factura='${JSON.stringify(factura)}'><i class='fa fa-eye fa-2x fa-lg'></div>`,
+                        `<div style='cursor:pointer; text-align: center; color: greenyellow' class='factura-see-details' data-factura='${JSON.stringify(factura)}'><i class="fas fa-address-card fa-2x fa-lg"></i></div>`
                     ]);
                 }
                 table.draw(false);
@@ -72,7 +284,7 @@ function generarPDF()
     let ids = Object.keys(facturas);
 
     $.ajax({
-        url: "db/DBgetFacturasImage.php",
+        url: 'db/DBgetFacturasImage.php',
         data: {
             facturasId : ids
         },
@@ -203,7 +415,7 @@ function eliminarFacturasConfirmado() {
     });
 
     $.ajax({
-        url: "db/DBdeleteFacturas.php",
+        url: 'db/DBdeleteFacturas.php',
         data: {
             where: `id IN (${facturas.join(', ')})`
         },
@@ -315,14 +527,6 @@ $(document).ready( function () {
             );
 
         }*/
-    });
-
-    $("#facturas tbody").on("click", ".seleccionado", function () {
-        $(this).closest('tr').toggleClass("selected");
-        table.draw(false);
-        if (table.rows('.selected').data().toArray().length === 0)
-            document.getElementById("divFacturaOpciones").style.visibility = "hidden";
-        else document.getElementById("divFacturaOpciones").style.visibility= "visible";
     });
 
     getFacturaFieldEditDialog = (value, id, field, extra) => {
@@ -451,12 +655,20 @@ $(document).ready( function () {
         });
     };
 
-    $("#facturas tbody").on("click", "div.factura-data", function () {
-        // var index = table.row($(this).closest('tr')).index();
-        let factura = $(this).data('factura');
+    let tableBody = $("#facturas tbody");
 
+    tableBody.on("click", ".seleccionado", function () {
+        $(this).closest('tr').toggleClass("selected");
+        table.draw(false);
+        if (table.rows('.selected').data().toArray().length === 0)
+            document.getElementById("divFacturaOpciones").style.visibility = "hidden";
+        else document.getElementById("divFacturaOpciones").style.visibility= "visible";
+    });
+
+    tableBody.on("click", "div.factura-see-image", function () {
+        let factura = $(this).data('factura');
         $.ajax({
-            url: "db/DBgetFacturasImage.php",
+            url: 'db/DBgetFacturasImage.php',
             data: {
                 facturasId : [factura.id]
             },
@@ -471,6 +683,112 @@ $(document).ready( function () {
             }
             else {
                 bootbox.alert("No se encontraron capturas de pantalla asociadas.");
+            }
+        },
+        () => bootbox.alert("Ocurrió un error al conectarse a la base de datos."));
+    });
+
+    tableBody.on("click", "div.factura-see-details", function () {
+        let factura = $(this).data('factura');
+        loadFacturaDetailsAndShowDialog({id: factura.id, tracking: factura.tracking});
+    });
+
+    $(document).on("click", ".btnCreateFacturaLogistica", function () {
+        let factura = $(this).data('factura-id');
+        let facturaId = factura.id;
+        if (!facturaId) {
+            bootbox.alert("No se encontró el ID de la factura para crear el registro.");
+            return
+        }
+
+        $.ajax({
+            url: 'db/DBserverInsertFacturaLogistica.php',
+            data: {
+                facturaId: facturaId
+            },
+            type: "POST"
+        })
+        .then(response => {
+            if (response.success) {
+                if (response.data === true){
+                    bootbox.hideAll();
+                    loadFacturaDetailsAndShowDialog(factura);
+                }
+                else {
+                    $('#divFacturaLogistica').html(facturaLogistica(response.data, factura));
+                    toggleLogistica();
+                    activateLogisticaDatePickers(response.data);
+                }
+            } else if (response.message) {
+                bootbox.alert(response.message);
+            } else {
+                bootbox.alert("No se pudo crear el registro para la factura.");
+            }
+        },
+        () => bootbox.alert("Ocurrió un error al conectarse a la base de datos."));
+    });
+
+    $(document).on("click", ".btnUpdateFacturaLogistica", function () {
+        let factura = $(this).data('factura-id');
+        let facturaId = factura.id;
+        if (!facturaId) {
+            bootbox.alert("No se encontró el ID de la factura para modificar el registro.");
+            return
+        }
+
+        let $dateDelivery = $('#factura-date-delivered');
+        let $courier = $('#factura-courier');
+        let $signer = $('#factura-signer');
+        let $miamiReceived = $('#factura-miami-received');
+        let received = $miamiReceived.prop('checked');
+        let $dateReceived = $('#factura-date-received');
+        if (!received){
+            $dateReceived.val('');
+        }
+        let $comment = $('#factura-comment');
+
+        let query = `
+            UPDATE factura_logistica 
+            SET
+                date_delivered = '${$dateDelivery.val()}',
+                courier = '${$courier.val()}',
+                signer = '${$signer.val()}',
+                miami_received = ${received ? 1 : 0},
+                date_received = '${$dateReceived.val()}',
+                comment = '${$comment.val()}'
+            WHERE fid = '${facturaId}';
+            `;
+
+        $.ajax({
+            url: 'db/DBserverExecQuery.php',
+            data: {
+                query: query
+            },
+            type: "POST"
+        })
+        .then(response => {
+            if (response.success && response.data === true){
+                Swal.fire({
+                    title: 'Datos de factura actualizados',
+                    type: 'success',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                if ($dateDelivery.val() !== $dateDelivery.data('original')){
+                    loadFacturas();
+                }
+                $dateDelivery.data('original', $dateDelivery.val());
+                $courier.data('original', $courier.val());
+                $signer.data('original', $signer.val());
+                $miamiReceived.data('original', received);
+                $dateReceived.data('original', $dateReceived.val());
+                $comment.data('original', $comment.val());
+                toggleLogistica();
+
+            } else if (response.message) {
+                bootbox.alert(response.message);
+            } else {
+                bootbox.alert("No se pudo crear el registro para la factura.");
             }
         },
         () => bootbox.alert("Ocurrió un error al conectarse a la base de datos."));

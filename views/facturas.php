@@ -1,4 +1,5 @@
 <script src="js/facturas.js"></script>
+<script src="factura_logistica.js"></script>
 <link href="css/facturaStyles.css" rel="stylesheet">
 
 <br><br>
@@ -9,16 +10,18 @@
         <thead>
         <tr>
             <th class="dt-head-center"><h5 style="color:black">Estado</h5></th>
-            <th class="dt-head-center"><h5 style="color:black">Fecha</h5></th>
+            <th class="dt-head-center"><h5 style="color:black">Fecha Delivery</h5></th>
             <th class="dt-head-center"><h5 style="color:black"># Tracking</h5></th>
             <th class="dt-head-center"><h5 style="color:black">ID Cliente</h5></th>
             <th class="dt-head-center"><h5 style="color:black">Nombre Cliente</h5></th>
             <th class="dt-head-center"><h5 style="color:black">Costo</h5></th>
             <th class="dt-head-center"><h5 style="color:black"></h5></th>
+            <th class="dt-head-center"><h5 style="color:black"></h5></th>
         </tr>
         </thead>
         <tfoot>
         <tr>
+            <th></th>
             <th></th>
             <th></th>
             <th></th>

@@ -22,7 +22,8 @@
                             data: {
                                 username: nombre,
                                 user_login_status: 1,
-                                user_admin: response.data
+                                user_admin: response.data.permission,
+                                user_real_name: response.data.realName
                             },
                             cache: false,
                             success: function(res){
