@@ -312,6 +312,8 @@
                 }
             });
 
+            $('.modal-body').css({paddingTop: 0, paddingBottom: 0});
+
             $("#divFechaRuta").datepicker({
                 showOtherMonths: true,
                 selectOtherMonths: true,
@@ -547,6 +549,8 @@
                     }
                 }
             });
+
+            $('.modal-body').css({paddingTop: 0, paddingBottom: 0});
 
             $("#divFechaRuta").datepicker({
                 showOtherMonths: true,
@@ -906,7 +910,9 @@
         return `
             <div class='row' style='background-color: #dadada'>
                 <div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>
+                    <br>
                     <p style='color: black'>Por favor ingresa los siguientes datos del cliente para poder enviar la notificación.</p>
+                    <br>
                     <form novalidate>
                         <div class='control-group form-group ${destClass}'>
                             <div class='controls'>
@@ -1177,6 +1183,7 @@
                                         }
                                     }
                                 });
+                                $('.modal-body').css({paddingTop: 0, paddingBottom: 0});
                             }
                         },
                         confirm: {
@@ -1311,6 +1318,7 @@
                                         }
                                     }
                                 });
+                                $('.modal-body').css({paddingTop: 0, paddingBottom: 0});
                             }
                         },
                         confirm: {
@@ -1612,6 +1620,8 @@
                 }
             }
         });
+
+        $('.modal-body').css({paddingTop: 0, paddingBottom: 0});
 
         $("#divFechaRuta").datepicker({
             showOtherMonths: true,
@@ -1999,6 +2009,7 @@
                 }
             }
         });
+        $('.modal-body').css({paddingTop: 0, paddingBottom: 0});
         calcularTotalEntrega();
     }
 

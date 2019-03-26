@@ -13,3 +13,11 @@ div.factura-content{
 span.factura-editable {
     cursor: pointer;
 }
+
+#divFacturaLogistica{
+    background: #fffaf7 !important;
+}
+
+#divFacturaSeguimiento{
+    background: #f4f9ff !important;
+}

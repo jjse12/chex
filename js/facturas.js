@@ -31,19 +31,22 @@ const facturaLogistica = (logistica, factura) => {
     if (logistica === null){
         content = `
             <div class="text-center">
-                Aún no existe registro&nbsp;&nbsp;&nbsp;&nbsp;
+                <h5>Seguimiento de Paquete en Bodega</h5>
+            </div>
+            <br>
+            <div class="text-center">
+                ¡Aún no existe registro!&nbsp;&nbsp;&nbsp;&nbsp;
                 <button data-factura-id='${JSON.stringify(factura)}' class='btn btn-success btn-sm btnCreateFacturaLogistica'>Crear Registro</button></>
             </div>
+            <br>
         `;
     }
     else {
         let received = logistica.miami_received === 1;
         content = `
             <div class="text-center">
-                <button class="btn btn-sm btn-warning" id="btnToggleLogistica" onclick="toggleLogistica()">Modificar</button>
-                <button class="btn btn-sm btn-success btnUpdateFacturaLogistica" data-factura-id='${JSON.stringify(factura)}'>Guardar</button>
+                <h5>Seguimiento de Paquete en Bodega</h5>
             </div>
-            <br>
             <div id="divFacturaLogisticaContent">
                 <div class="form-row">
                     <div class="form-group">
@@ -81,11 +84,15 @@ const facturaLogistica = (logistica, factura) => {
                 <div class="form-group">
                     <label for="factura-comment" style='color: #696969;'>Comentario :</label>
                     <textarea class="disabable form-control" id="factura-comment" 
-                            data-original="${logistica.comment}" placeholder="Ingresa un comentario">
-                        ${logistica.comment !== null ? logistica.comment : ''}
+                            data-original="${logistica.comment}" placeholder="Ingresa un comentario">${logistica.comment}
                     </textarea>
                 </div>
             </div>
+            <div class="text-center">
+                <button class="btn btn-sm btn-primary" id="btnToggleLogistica" onclick="toggleLogistica()">Modificar</button>
+                <button class="btn btn-sm btn-success btnUpdateFacturaLogistica" data-factura-id='${JSON.stringify(factura)}'>Guardar</button>
+            </div>
+            <br>
         `;
     }
 
@@ -108,11 +115,9 @@ const facturaDetails = (details) => {
     let logistica = facturaLogistica(details.logistica, details.factura);
     let seguimiento = facturaSeguimiento(details.seguimiento, details.factura);
     let content =
-        `<div class="container-flex">
-            <div class="row">
-                <div class="col-md-5" id="divFacturaLogistica">${logistica}</div>
-                <div class="col-md-7" id="divFacturaSeguimiento">${seguimiento}</div>
-            </div>    
+        `<div id="divFacturaDetails" class="row">
+            <div class="col-md-5" id="divFacturaLogistica">${logistica}</div>
+            <div class="col-md-7 fill" id="divFacturaSeguimiento">${seguimiento}</div>
         </div>`;
     return content;
 };
@@ -125,20 +130,17 @@ function resetLogisticaInputsToOriginals() {
     let $dateReceived = $('#factura-date-received');
     let $comment = $('#factura-comment');
 
-    $dateDelivery.val($dateDelivery.data('original') === null ? '' : $dateDelivery.data('original') );
+    $dateDelivery.val($dateDelivery.data('original'));
     $courier.val($courier.data('original'));
     $signer.val($signer.data('original'));
     let received = $miamiReceived.data('original');
     let $divDateReceived = $('#divDateReceived');
     $miamiReceived.prop('checked', received);
-    if (received && !$divDateReceived.hasClass('in')){
-        $divDateReceived.addClass('in');
+    $dateReceived.val($dateReceived.data('original'));
+    if (received && !$divDateReceived.hasClass('in') || !received && $divDateReceived.hasClass('in')){
+        $miamiReceived.trigger('click');
     }
-    else if (!received && $divDateReceived.hasClass('in')){
-        $divDateReceived.removeClass('in');
-    }
-    $dateReceived.val($dateReceived.data('original') === null ? '' : $dateReceived.data('original'));
-    $comment.val($comment.data('original') === null ? '' : $comment.data('original'));
+    $comment.val($comment.data('original'));
 }
 
 function toggleLogistica() {
@@ -150,7 +152,7 @@ function toggleLogistica() {
     if (divLogisticaContent.hasClass('disabled-element')){
         $('#divFacturaLogisticaContent :input').removeAttr('disabled');
         divLogisticaContent.removeClass('disabled-element');
-        btnToggleLogistica.removeClass('btn-warning');
+        btnToggleLogistica.removeClass('btn-primary');
         btnToggleLogistica.addClass('btn-danger');
         btnToggleLogistica.text('Cancelar');
         btnUpdateLogistica.show();
@@ -161,7 +163,7 @@ function toggleLogistica() {
         $('#divFacturaLogisticaContent :input').attr('disabled', true);
         divLogisticaContent.addClass('disabled-element');
         btnToggleLogistica.removeClass('btn-danger');
-        btnToggleLogistica.addClass('btn-warning');
+        btnToggleLogistica.addClass('btn-primary');
         btnToggleLogistica.text('Modificar');
         btnUpdateLogistica.hide();
     }
@@ -207,6 +209,7 @@ function loadFacturaDetailsAndShowDialog(factura) {
                 toggleLogistica();
                 activateLogisticaDatePickers(details.logistica);
             }
+            $('.modal-body').css({paddingTop: 0, paddingBottom: 0});
         }
         else if (response.message) {
             bootbox.alert(response.message);
