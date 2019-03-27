@@ -23,10 +23,12 @@ span.factura-editable {
 #divFacturaLogistica{
     height: 441px;
     background: #fffaf7 !important;
+    overflow-x: scroll;
 }
 
 #divFacturaSeguimiento{
     height: 441px;
     background: #f4f9ff !important;
     overflow-y: scroll;
+    overflow-x: scroll;
 }
