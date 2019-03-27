@@ -268,7 +268,7 @@ function loadFacturaDetailsAndShowDialog(factura) {
             details.factura = factura;
             let content = facturaDetails(details);
             bootbox.dialog({
-                title: `Detalles Factura tracking #${factura.tracking}`,
+                title: `<div class="text-center">&nbsp;CHEX ${factura.uid}&nbsp-&nbsp;${factura.uname}&nbsp-&nbsp;Tracking: ${factura.tracking}</div>`,
                 size: 'large',
                 message: `${content}`
             });
@@ -757,7 +757,7 @@ $(document).ready( function () {
 
     tableBody.on("click", "div.factura-see-details", function () {
         let factura = $(this).data('factura');
-        loadFacturaDetailsAndShowDialog({id: factura.id, tracking: factura.tracking});
+        loadFacturaDetailsAndShowDialog(factura);
     });
 
     $(document).on("click", ".btnCreateFacturaLogistica", function () {

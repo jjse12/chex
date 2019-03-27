@@ -13,7 +13,7 @@ if (isset($fid)){
             $logistica['miami_received'] = (int) $logistica['miami_received'];
         }
 
-        $query = "SELECT * FROM factura_seguimiento WHERE fid = {$fid} ORDER BY date_created ASC";
+        $query = "SELECT * FROM factura_seguimiento WHERE fid = {$fid} ORDER BY date_created DESC";
         $result = $conn->query($query);
         if (isset($result) && $result !== false) {
             $seguimiento = [];

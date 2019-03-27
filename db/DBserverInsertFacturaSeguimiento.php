@@ -13,7 +13,7 @@ if (isset($facturaId) && isset($note) && isset($creator)){
     $query = "INSERT INTO factura_seguimiento ( fid, creator, note, date_created) VALUES ( {$facturaId} , '{$creator}', '{$note}', '{$dateCreated}');";
     $result = $conn->query($query);
     if ($result === true){
-        $query = "SELECT * FROM factura_seguimiento WHERE fid = {$facturaId} ORDER BY date_created ASC";
+        $query = "SELECT * FROM factura_seguimiento WHERE fid = {$facturaId} ORDER BY date_created DESC";
         $result = $conn->query($query);
         if (isset($result) && $result !== false) {
             $seguimientos = [];
