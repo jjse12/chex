@@ -5,4 +5,3 @@
     $result = $conn->query($query);
     $row = mysqli_fetch_row($result);
     echo $row[0] . ' ' . $row[1];
-?>

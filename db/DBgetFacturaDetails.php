@@ -5,7 +5,6 @@ require_once("server_db_vars.php");
 $fid = $_POST['facturaId'];
 if (isset($fid)){
     $conn = new mysqli(SERVER_DB_HOST, SERVER_DB_USER, SERVER_DB_PASS, SERVER_DB_NAME);
-    $conn->set_charset('utf8mb4');
     $query = "SELECT * FROM factura_logistica WHERE fid = {$fid}";
     $result = $conn->query($query);
     if (isset($result) && $result !== false) {

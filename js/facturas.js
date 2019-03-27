@@ -260,6 +260,7 @@ function loadFacturaDetailsAndShowDialog(factura) {
             facturaId : factura.id
         },
         type: "POST",
+        cache: false,
     })
     .then(response => {
         if (response.data !== null) {
@@ -294,44 +295,39 @@ function loadFacturas(){
     $.ajax({
         url: 'db/DBgetFacturas.php',
         type: 'GET',
-        dataType: 'json',
-        contentType: "application/json; charset=utf-8",
         cache: false,
-        success: function(response){
-            if (response.data.length === 0){
-                bootbox.alert("No se encontraron facturas.");
-            }
-            else {
-                for (let i = 0; i < response.data.length; i++){
-                    let factura = response.data[i];
-                    let enviado = 'Enviado', color = 'lime', icon = 'fa-paper-plane';
-                    if (factura['pendiente'] === '1'){
-                        enviado = 'Pendiente';
-                        color = 'gold';
-                        icon = 'fa-clock';
-                    }
-
-                    let date = factura.date_delivered ? factura.date_delivered : 'Sin Especificar';
-
-                    table.row.add([
-                        `<div class='seleccionado' title="${enviado}" style='color: ${color}; align-self: center; text-align: center;'><i class='fa ${icon} fa-2x fa-lg'></i><small style='display:none;'>${enviado}</small></div>`,
-                        `<h6 class='seleccionado'>${date}<span style="display: none">${enviado}</span></h6>`,
-                        `<h6 class='seleccionado'>${factura.tracking}</h6>`,
-                        `<h6 class='seleccionado'>${factura.uid}</h6>`,
-                        `<h6 class='seleccionado'>${factura.uname}</h6>`,
-                        `<h6 class='seleccionado'>${Number(factura.amount).toMoney()}</h6>`,
-                        `<div style='cursor:pointer; text-align: center; color: darkslategray' class='factura-see-image' data-factura='${JSON.stringify(factura)}'><i class='fa fa-eye fa-2x fa-lg'></div>`,
-                        `<div style='cursor:pointer; text-align: center; color: greenyellow' class='factura-see-details' data-factura='${JSON.stringify(factura)}'><i class="fas fa-address-card fa-2x fa-lg"></i></div>`
-                    ]);
+    })
+    .then(response => {
+        if (response.data.length === 0) {
+            bootbox.alert("No se encontraron facturas.");
+        } else {
+            for (let i = 0; i < response.data.length; i++) {
+                let factura = response.data[i];
+                let enviado = 'Enviado', color = 'lime', icon = 'fa-paper-plane';
+                if (factura['pendiente'] === '1') {
+                    enviado = 'Pendiente';
+                    color = 'gold';
+                    icon = 'fa-clock';
                 }
-                table.draw(false);
-                table.columns.adjust().responsive.recalc();
+
+                let date = factura.date_delivered ? factura.date_delivered : 'Sin Especificar';
+
+                table.row.add([
+                    `<div class='seleccionado' title="${enviado}" style='color: ${color}; align-self: center; text-align: center;'><i class='fa ${icon} fa-2x fa-lg'></i><small style='display:none;'>${enviado}</small></div>`,
+                    `<h6 class='seleccionado'>${date}<span style="display: none">${enviado}</span></h6>`,
+                    `<h6 class='seleccionado'>${factura.tracking}</h6>`,
+                    `<h6 class='seleccionado'>${factura.uid}</h6>`,
+                    `<h6 class='seleccionado'>${factura.uname}</h6>`,
+                    `<h6 class='seleccionado'>${Number(factura.amount).toMoney()}</h6>`,
+                    `<div style='cursor:pointer; text-align: center; color: darkslategray' class='factura-see-image' data-factura='${JSON.stringify(factura)}'><i class='fa fa-eye fa-2x fa-lg'></div>`,
+                    `<div style='cursor:pointer; text-align: center; color: greenyellow' class='factura-see-details' data-factura='${JSON.stringify(factura)}'><i class="fas fa-address-card fa-2x fa-lg"></i></div>`
+                ]);
             }
-        },
-        error: function(){
-            bootbox.alert("Ocurrió un problema al intentar conectarse al servidor.");
+            table.draw(false);
+            table.columns.adjust().responsive.recalc();
         }
-    });
+    },
+    () => bootbox.alert("Ocurrió un problema al intentar conectarse al servidor."));
 }
 
 function generarPDF()
@@ -690,7 +686,7 @@ $(document).ready( function () {
                 }
             }
         });
-
+        $('.modal-body').css({paddingTop: 0, paddingBottom: 0});
     });
 
     let showFacturaDialog = factura => {
@@ -743,6 +739,7 @@ $(document).ready( function () {
                 facturasId : [factura.id]
             },
             type: "POST",
+            cache: false
         }).then(response => {
             if (response.data && response.data[factura.id]) {
                 factura.images = response.data[factura.id];
@@ -776,7 +773,8 @@ $(document).ready( function () {
             data: {
                 facturaId: facturaId
             },
-            type: "POST"
+            type: "POST",
+            cache: false
         })
         .then(response => {
             if (response.success) {
@@ -834,7 +832,8 @@ $(document).ready( function () {
             data: {
                 query: query
             },
-            type: "POST"
+            type: "POST",
+            cache: false,
         })
         .then(response => {
             if (response.success && response.data === true){
@@ -887,7 +886,8 @@ $(document).ready( function () {
                     note: note,
                     creator: creator
                 },
-                type: "POST"
+                type: "POST",
+                cache: false,
             })
             .then(response => {
                 if (response.success) {

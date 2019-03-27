@@ -136,37 +136,34 @@
         $.ajax({
             url: "db/DBgetAllClientes.php",
             cache: false,
-            success: function(res){
-                var table = $('#clientes').DataTable();
-                table.clear();
-                //console.log(res);
-                var rows = JSON.parse(res);
+        })
+        .then(res => {
+            var table = $('#clientes').DataTable();
+            table.clear();
+            var rows = res.data;
 
-                for (var i = 0; i < rows.length; i++){
-                    table.row.add([
-                        rows[i]["cid"],
-                        rows[i]["nombre"],
-                        rows[i]["apellido"],
-                        "<div style='cursor:pointer;' class='tarifa'>Q " + rows[i]["tarifa"] + "</div>",
-                        rows[i]["email"],
-                        rows[i]["celular"],
-                        rows[i]["telefono"],
-                        rows[i]["direccion"],
-                        rows[i]["genero"],
-                        rows[i]["cumple"],
-                        rows[i]["comentario"],
-                        rows[i]["fecha_registro"],
-                        "<img src='images/edit.png' onclick=\"modifyUserData('" + rows[i]["cid"]+ "')\" />",
-                        "<img src='images/mail.png' onclick=\"messageUser('" + rows[i]["cid"]+ "')\" />"
-                    ]);
-                }
-                table.draw(false);
-                table.columns.adjust().responsive.recalc();
-            },
-            error: function(){
-                bootbox.alert("Ocurrió un problema al intentar conectarse al servidor.");
+            for (var i = 0; i < rows.length; i++){
+                table.row.add([
+                    rows[i]["cid"],
+                    rows[i]["nombre"],
+                    rows[i]["apellido"],
+                    "<div style='cursor:pointer;' class='tarifa'>Q " + rows[i]["tarifa"] + "</div>",
+                    rows[i]["email"],
+                    rows[i]["celular"],
+                    rows[i]["telefono"],
+                    rows[i]["direccion"],
+                    rows[i]["genero"],
+                    rows[i]["cumple"],
+                    rows[i]["comentario"],
+                    rows[i]["fecha_registro"],
+                    "<img src='images/edit.png' onclick=\"modifyUserData('" + rows[i]["cid"]+ "')\" />",
+                    "<img src='images/mail.png' onclick=\"messageUser('" + rows[i]["cid"]+ "')\" />"
+                ]);
             }
-        });
+            table.draw(false);
+            table.columns.adjust().responsive.recalc();
+        },
+        () => bootbox.alert("Ocurrió un problema al intentar conectarse al servidor."));
     }
 
     function modifyUserData(myUserData) {

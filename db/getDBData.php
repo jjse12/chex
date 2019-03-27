@@ -72,8 +72,8 @@
         ?>
 
         <script>
-            $("#submitbutton").click(function() {
-                event.preventDefault();
+            $("#submitbutton").click(function(e) {
+                e.preventDefault();
                 var fname = $("input#form_nombre").val();
                 var lname = $("input#form_apellido").val();
                 var userid = $("input#form_cid").val();
