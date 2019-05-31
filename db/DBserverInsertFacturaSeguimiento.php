@@ -1,13 +1,12 @@
 <?php
 
 header('Content-Type: application/json;charset=utf-8');
-require_once("server_db_vars.php");
-
+require_once('factura_db_vars.php');
 $facturaId = $_POST['facturaId'];
 $note = $_POST['note'];
 $creator = $_POST['creator'];
 if (isset($facturaId) && isset($note) && isset($creator)){
-    $conn = new mysqli(SERVER_DB_HOST, SERVER_DB_USER, SERVER_DB_PASS, SERVER_DB_NAME);
+    $conn = new mysqli(FACTURA_DB_HOST, FACTURA_DB_USER, FACTURA_DB_PASS, FACTURA_DB_NAME);
     date_default_timezone_set('America/Guatemala');
     $dateCreated = date("Y-m-d H:i:s");
     $query = "INSERT INTO factura_seguimiento ( fid, creator, note, date_created) VALUES ( {$facturaId} , '{$creator}', '{$note}', '{$dateCreated}');";

@@ -1,8 +1,8 @@
 <?php
 
 header('Content-Type: application/json;charset=utf-8');
-require_once("server_db_vars.php");
-$conn = new mysqli(SERVER_DB_HOST, SERVER_DB_USER, SERVER_DB_PASS, SERVER_DB_NAME);
+require_once('factura_db_vars.php');
+$conn = new mysqli(FACTURA_DB_HOST, FACTURA_DB_USER, FACTURA_DB_PASS, FACTURA_DB_NAME);
 $query = "SELECT f.id, uid, uname, tracking, description, amount, pendiente, date_created, date_delivered FROM factura f LEFT JOIN factura_logistica fl ON f.id = fl.fid ORDER BY f.id ASC";
 $result = $conn->query($query);
 if (isset($result) && $result !== false) {

@@ -1,3 +1,10 @@
+.btn-notif-whats{
+    background: -moz-linear-gradient(-45deg, #ff3232 0%, #ff3030 50%, #282fff 51%, #005dff 100%);
+    background: -webkit-linear-gradient(-45deg, #ff3232 0%,#ff3030 50%,#282fff 51%,#005dff 100%);
+    background: linear-gradient(90deg, #ff3232 0%,#ff3030 50%,#282fff 51%,#005dff 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff3232', endColorstr='#005dff',GradientType=1 )
+}
+
 #inventario.display tbody tr.odd > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd > .sorting_1 {
     background-color: #36adec !important;
 }
@@ -42,6 +49,9 @@
     background-color: #1B64B4 !important;
 }
 
+#inventario.dataTable tbody th, #inventario.dataTable tbody td{
+    padding: 0 0 0 0 !important;
+}
 
 #facturas.display tbody tr.odd > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd > .sorting_1 {
     background-color: #36adec !important;

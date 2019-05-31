@@ -1,9 +1,9 @@
 <?php
     header('Content-Type: application/json;charset=utf-8');
-    require_once("server_db_vars.php");
+    require_once('factura_db_vars.php');
     $fids = $_POST['facturasId'];
     if (isset($fids) && is_array($fids)){
-        $conn = new mysqli(SERVER_DB_HOST, SERVER_DB_USER, SERVER_DB_PASS, SERVER_DB_NAME);
+        $conn = new mysqli(FACTURA_DB_HOST, FACTURA_DB_USER, FACTURA_DB_PASS, FACTURA_DB_NAME);
         $ids = implode(',', array_map('intval', $fids));
         $query = "SELECT fid, image, image_type FROM factura_image WHERE fid IN ($ids) ORDER BY fid";
         $result = $conn->query($query);
