@@ -255,7 +255,7 @@ const facturaDetails = (details) => {
 
 function loadFacturaDetailsAndShowDialog(factura) {
     $.ajax({
-        url: 'db/DBgetFacturaDetails.php',
+        url: 'db/factura/DBgetFacturaDetails.php',
         data: {
             facturaId : factura.id
         },
@@ -293,7 +293,7 @@ function loadFacturas(){
     let table = $('#facturas').DataTable();
     table.clear();
     $.ajax({
-        url: 'db/DBgetFacturas.php',
+        url: 'db/factura/DBgetFacturas.php',
         type: 'GET',
         cache: false,
     })
@@ -350,7 +350,7 @@ function generarPDF()
     let ids = Object.keys(facturas);
 
     $.ajax({
-        url: 'db/DBgetFacturasImage.php',
+        url: 'db/factura/DBgetFacturasImage.php',
         data: {
             facturasId : ids
         },
@@ -437,7 +437,7 @@ function setearPendientes(ids) {
     let where = ids.join(', ');
 
     $.ajax({
-        url: 'db/DBsetFactura.php',
+        url: 'db/factura/DBsetFactura.php',
         type: 'post',
         data: {
             set: 'pendiente = 0',
@@ -481,7 +481,7 @@ function eliminarFacturasConfirmado() {
     });
 
     $.ajax({
-        url: 'db/DBdeleteFacturas.php',
+        url: 'db/factura/DBdeleteFacturas.php',
         data: {
             where: `id IN (${facturas.join(', ')})`
         },
@@ -640,7 +640,7 @@ $(document).ready( function () {
                         if (newValue.length > 0 && newValue !== value) {
                             let set = column + ' = ' + (column === 'amount' ? newValue : `'${newValue}'`);
                             $.ajax({
-                                url: 'db/DBsetFactura.php',
+                                url: 'db/factura/DBsetFactura.php',
                                 type: 'post',
                                 data: {
                                     set: set,
@@ -734,7 +734,7 @@ $(document).ready( function () {
     tableBody.on("click", "div.factura-see-image", function () {
         let factura = $(this).data('factura');
         $.ajax({
-            url: 'db/DBgetFacturasImage.php',
+            url: 'db/factura/DBgetFacturasImage.php',
             data: {
                 facturasId : [factura.id]
             },
@@ -769,7 +769,7 @@ $(document).ready( function () {
         }
 
         $.ajax({
-            url: 'db/DBserverInsertFacturaLogistica.php',
+            url: 'db/factura/DBserverInsertFacturaLogistica.php',
             data: {
                 facturaId: facturaId
             },
@@ -828,7 +828,7 @@ $(document).ready( function () {
             `;
 
         $.ajax({
-            url: 'db/DBfacturaExecQuery.php',
+            url: 'db/factura/DBfacturaExecQuery.php',
             data: {
                 query: query
             },
@@ -880,7 +880,7 @@ $(document).ready( function () {
 
         let closure = () => {
             $.ajax({
-                url: 'db/DBserverInsertFacturaSeguimiento.php',
+                url: 'db/factura/DBserverInsertFacturaSeguimiento.php',
                 data: {
                     facturaId: facturaId,
                     note: note,
