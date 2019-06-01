@@ -828,7 +828,7 @@ $(document).ready( function () {
             `;
 
         $.ajax({
-            url: 'db/DBserverExecQuery.php',
+            url: 'db/DBfacturaExecQuery.php',
             data: {
                 query: query
             },
