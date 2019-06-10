@@ -37,13 +37,29 @@ function resetLogisticaInputsToOriginals() {
     $dateDelivery.val($dateDelivery.data('original'));
     $courier.val($courier.data('original'));
     $signer.val($signer.data('original'));
+
     let received = $miamiReceived.data('original');
     let $divDateReceived = $('#divDateReceived');
-    $miamiReceived.prop('checked', received);
-    $dateReceived.val($dateReceived.data('original'));
-    if (received && !$divDateReceived.hasClass('in') || !received && $divDateReceived.hasClass('in')){
-        $miamiReceived.trigger('click');
+    if (received){
+        $miamiReceived[0].checked = true;
+        if (!$divDateReceived.hasClass('in')) {
+            collapseElement($divDateReceived, 74);
+        }
     }
+    else {
+        $miamiReceived[0].checked = false;
+        if (received === null){
+            $miamiReceived[0].indeterminate = true;
+            $miamiReceived[0].readOnly = false;
+        }
+        else {
+          $miamiReceived[0].readOnly = true;
+        }
+        if ($divDateReceived.hasClass('in')){
+            collapseElement($divDateReceived);
+        }
+    }
+    $dateReceived.val($dateReceived.data('original'));
     $comment.val($comment.data('original'));
 }
 
@@ -90,6 +106,22 @@ function activateLogisticaDatePickers(logistica) {
     }
 }
 
+function handleMiamiReceivedCheckBox(cb) {
+    if (cb.checked){
+      if (cb.readOnly){
+          cb.checked=cb.readOnly=false;
+          cb.indeterminate=true;
+      }
+      else {
+        collapseElement($('#divDateReceived'), 74);
+      }
+    }
+    else {
+        collapseElement($('#divDateReceived'));
+        cb.readOnly = true;
+    }
+}
+
 const facturaLogistica = (logistica, factura) => {
     let content = '';
     if (logistica === null){
@@ -106,7 +138,9 @@ const facturaLogistica = (logistica, factura) => {
         `;
     }
     else {
-        let received = logistica.miami_received === 1;
+        let received = logistica.miami_received;
+        if (received !== null) received = logistica.miami_received === 1;
+        const checkBoxAttribute = received ? 'checked="true"' : (received === false ? 'readonly="true"' : '');
         content = `
             <div class="text-center">
                 <h5>Seguimiento de Paquete en Bodega</h5>
@@ -131,14 +165,15 @@ const facturaLogistica = (logistica, factura) => {
                 </div>
                 <div class="form-row text-center">
                     <div class="form-group">
-                        <label class="form-check-label" for="factura-miami-received" style="color: #696969">Recibido en Miami :&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        <label class="form-check-label" for="factura-miami-received" style="color: #696969">
+                            Recibido en Miami :&nbsp;&nbsp;&nbsp;&nbsp;
+                        </label>
                         <input type="checkbox" class="disabable form-check-input" data-original="${received}" 
-                               id="factura-miami-received" data-toggle="collapse" data-target="#divDateReceived" 
-                               aria-expanded="false" aria-controls="divDateReceived" ${received ? 'checked' : ''}>
+                            id="factura-miami-received" onclick="handleMiamiReceivedCheckBox(this)" ${checkBoxAttribute}>
                     </div>
                 </div>
                 <div id="divDateReceived" class="form-row collapse ${logistica.miami_received === 1 ? 
-                    'in" aria-expanded="true' : '" aria-expanded="false" style="height: 0px;'}">
+                    'in" aria-expanded="true" style="' : '" aria-expanded="false" style="height: 0px;'}">
                     <div class="form-group">
                         <label for="factura-date-received" style='color: #696969;'>Fecha de Recibido :</label>
                         <input type="text" data-original="${logistica.date_received}" id="factura-date-received" 
@@ -276,6 +311,9 @@ function loadFacturaDetailsAndShowDialog(factura) {
             if (details.logistica !== null){
                 toggleLogistica();
                 activateLogisticaDatePickers(details.logistica);
+                if (details.logistica.miami_received === null){
+                    $('#factura-miami-received')[0].indeterminate = true;
+                }
             }
             $('.modal-body').css({paddingTop: 0, paddingBottom: 0});
         }
@@ -786,6 +824,9 @@ $(document).ready( function () {
                     $('#divFacturaLogistica').html(facturaLogistica(response.data, factura));
                     toggleLogistica();
                     activateLogisticaDatePickers(response.data);
+                    if (response.data.logistica.miami_received === null){
+                        $('#factura-miami-received')[0].indeterminate = true;
+                    }
                 }
             } else if (response.message) {
                 bootbox.alert(response.message);
@@ -808,9 +849,9 @@ $(document).ready( function () {
         let $courier = $('#factura-courier');
         let $signer = $('#factura-signer');
         let $miamiReceived = $('#factura-miami-received');
-        let received = $miamiReceived.prop('checked');
+        let received = $miamiReceived[0].checked ? 1 : $miamiReceived[0].indeterminate ? null : 0;
         let $dateReceived = $('#factura-date-received');
-        if (!received){
+        if (received !== 1){
             $dateReceived.val('');
         }
         let $comment = $('#factura-comment');
@@ -821,7 +862,7 @@ $(document).ready( function () {
                 date_delivered = '${$dateDelivery.val()}',
                 courier = '${$courier.val()}',
                 signer = '${$signer.val()}',
-                miami_received = ${received ? 1 : 0},
+                miami_received = ${received},
                 date_received = '${$dateReceived.val()}',
                 comment = '${$comment.val()}'
             WHERE fid = '${facturaId}';
