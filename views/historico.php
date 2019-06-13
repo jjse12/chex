@@ -1338,6 +1338,11 @@
                         bootbox.alert("No se encontró la boleta en la base de datos. Probablemente la boleta fue eliminada por alguien más, actualice la página.");
                         return;
                     }
+                    let desc = '', comment = '';
+                    if (rows[0]["descuento"] != null) {
+                        desc = rows[0]["descuento"].split("@@@")[0];
+                        comment = rows[0]["descuento"].split("@@@")[1];
+                    }
                     bootbox.dialog({
                         backdrop: true,
                         closeButton: false,
@@ -1378,13 +1383,20 @@
                                 "</div>"+
                                 "<div class='col-lg-4 col-md-4 col-sm-4'></div>"+
                             "</div>":"")+
-                            (rows[0]["descuento"] != null ?
-                            "<div class='row'>"+
-                                "<div class='col-lg-2 col-md-2 col-sm-2'></div>"+
-                                "<div class='control-group form-group col-lg-3 col-md-3 col-sm-3'><div class='controls'><label style='color: #337ab7; text-align:center; width: 100%;'>Descuento (Q)</label><input value='Q "+rows[0]["descuento"].split("@@@")[0]+"' type='text' class='form-control' style='text-align:center;' disabled/></div></div>"+
-                                "<div class='control-group form-group col-lg-5 col-md-5 col-sm-5'><div class='controls'><label style='color: #337ab7; text-align:center; width: 100%;'>Comentario</label><input value='"+rows[0]["descuento"].split("@@@")[1]+"' type='text' class='form-control' disabled/></div></div>"+
-                                "<div class='col-lg-2 col-md-2 col-sm-2'></div>"+
-                            "</div>":"")+
+                            (desc !== '' ?
+                                "<div class='row'>"+
+                                    "<div class='col-lg-2 col-md-2 col-sm-2'></div>"+
+                                    "<div class='control-group form-group col-lg-3 col-md-3 col-sm-3'><div class='controls'><label style='color: #337ab7; text-align:center; width: 100%;'>Descuento (Q)</label><input value='Q "+desc+"' type='text' class='form-control' style='text-align:center;' disabled/></div></div>"+
+                                    "<div class='control-group form-group col-lg-5 col-md-5 col-sm-5'><div class='controls'><label style='color: #337ab7; text-align:center; width: 100%;'>Comentario</label><input value='"+comment+"' type='text' class='form-control' disabled/></div></div>"+
+                                    "<div class='col-lg-2 col-md-2 col-sm-2'></div>"+
+                                "</div>" :
+                            (comment !== '') ?
+                              "<div class='row'>"+
+                                  "<div class='col-lg-3 col-md-3 col-sm-3'></div>"+
+                                  "<div class='control-group form-group col-lg-6 col-md-6 col-sm-6'><div class='controls'><label style='color: #337ab7; text-align:center; width: 100%;'>Comentario</label><input value='"+comment+"' type='text' class='form-control' disabled/></div></div>"+
+                                  "<div class='col-lg-3 col-md-3 col-sm-3'></div>"+
+                              "</div>" :
+                              "" )+
                             "<div class='row-same-height'>"+
                                 "<div class='col-lg-2 col-md-2 col-sm-2'></div>"+
                                 (rows[0]["detalle"] != null ?
