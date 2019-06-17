@@ -1797,9 +1797,9 @@
                         "<div class='control-group form-group col-lg-2 col-md-2 col-sm-2 col-xs-2'><div class='controls'>"+
                             "<button onclick='toggleDescuento()' id='btnDescuento' style='color:#337ab7; margin-top: 2px;' type='button' class='btn btn-default'>Descuento<br>Especial</button>"+
                         "</div></div>"+
-                        "<div style='pointer-events:none; opacity:0.4;' id='divDescuentoEspecial' class='col-lg-8 col-md-8 col-sm-8 col-xs-10'>"+
-                            "<div class='control-group form-group col-lg-5 col-md-5 col-sm-5 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width: 100%;'>Descuento (Q)</label><input onfocusout='roundField(this); aplicarDescuento();' onkeypress='return numbersonly(this, event, \"-\")' onkeyup='this.value=this.value.replace(/^0+/, \"\");' id='descuentoEntrega' type='text' class='form-control' style='text-align:center;'/></div></div>"+
-                            "<div id='divComentarioDescuento' class='control-group form-group col-lg-7 col-md-7 col-sm-7 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width: 100%;'>Comentario</label><textarea id='comentarioEntrega' type='text' class='form-control'/></div></div>"+
+                        "<div class='col-lg-8 col-md-8 col-sm-8 col-xs-10'>"+
+                            "<div id='divDescuentoInput' style='pointer-events:none; opacity:0.4;' class='control-group form-group col-lg-5 col-md-5 col-sm-5 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width: 100%;'>Descuento (Q)</label><input onfocusout='roundField(this); aplicarDescuento();' onkeypress='return numbersonly(this, event, \"-\")' onkeyup='this.value=this.value.replace(/^0+/, \"\");' id='descuentoEntrega' type='text' class='form-control' style='text-align:center;'/></div></div>"+
+                            "<div id='divComentarioDescuento' class='control-group form-group col-lg-7 col-md-7 col-sm-7 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width: 100%;'>Comentario</label><input id='comentarioEntrega' type='text' class='form-control'/></div></div>"+
                         "</div>"+
                         "<div class='col-lg-1 col-md-1 col-sm-1'></div>"+
                     "</div>"+
@@ -1858,27 +1858,32 @@
                             ruta = "'"+ruta+"'";
                         }
 
-                        var pressed = document.getElementById("btnDescuento").style.color == "white";
-                        var de = "NULL", desc = "", coment = "";
-                        if (pressed){
-                            desc = document.getElementById("descuentoEntrega").value;
-                            coment = document.getElementById("comentarioEntrega").value;
+                        var pressed = document.getElementById("btnDescuento").style.color === "white";
+                        var de = "NULL";
 
-                            if (desc.replace(/\s/g,'').length === 0 && coment.replace(/\s/g,'').length === 0){
+                        let desc = document.getElementById("descuentoEntrega").value;
+                        let comment = document.getElementById("comentarioEntrega").value;
+                        if (pressed){
+
+                            if (desc.replace(/\s/g,'').length === 0 && comment.replace(/\s/g,'').length === 0){
                                 activateSpanEntrega("Por favor llene los campos correspondientes al descuento especial.");
                                 return false;
                             }
-                            else if (coment.replace(/\s/g,'').length === 0){
+
+                            else if (comment.replace(/\s/g,'').length === 0){
                                 activateSpanEntrega("Por favor ingrese el motivo del descuento en el campo 'Comentario'.");
                                 return false;
                             }
+
                             else if (desc.replace(/\s/g,'').length === 0){
                                 activateSpanEntrega("Por favor ingrese el descuento a aplicar.");
                                 return false;
                             }
-                            de = "'"+desc+"@@@"+coment+"'";
+                            de = "'"+desc+"@@@"+comment+"'";
                         }
-
+                        else if (comment.replace(/\s/g,'').length !== 0){
+                            de = "'@@@"+comment+"'";
+                        }
 
                         var trackStr = "(";
                         for (var i = 0; i < data.length; i++)
@@ -2099,7 +2104,7 @@
 
     function toggleDescuento(){
         var boton = document.getElementById("btnDescuento");
-        var div = document.getElementById("divDescuentoEspecial");
+        var div = document.getElementById("divDescuentoInput");
 
         if (boton.style.color == "white"){
             div.style.pointerEvents = "none";
