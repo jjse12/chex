@@ -32,6 +32,7 @@ function resetLogisticaInputsToOriginals() {
     let $signer = $('#factura-signer');
     let $miamiReceived = $('#factura-miami-received');
     let $dateReceived = $('#factura-date-received');
+    let $clientNotified = $('#factura-client-notified');
     let $comment = $('#factura-comment');
 
     $dateDelivery.val($dateDelivery.data('original'));
@@ -60,6 +61,7 @@ function resetLogisticaInputsToOriginals() {
         }
     }
     $dateReceived.val($dateReceived.data('original'));
+    $clientNotified.prop('checked', $clientNotified.data('original'));
     $comment.val($comment.data('original'));
 }
 
@@ -149,7 +151,8 @@ const facturaLogistica = (logistica, factura) => {
                     <div class="form-group">
                         <label for="factura-date-delivered" style='color: #696969;'>Fecha de Delivery :</label>
                         <input type="text" data-original="${logistica.date_delivered}" id="factura-date-delivered"
-                                class="disabable form-control text-center" value="${logistica.date_delivered}">
+                            placeholder="Fecha de Delivery" class="disabable form-control text-center" 
+                            value="${logistica.date_delivered}">
                     </div>
                 </div>
                 <div class="form-row">
@@ -175,12 +178,19 @@ const facturaLogistica = (logistica, factura) => {
                     'in" aria-expanded="true" style="' : '" aria-expanded="false" style="height: 0px;'}">
                     <div class="form-group">
                         <label for="factura-date-received" style='color: #696969;'>Fecha de Recibido :</label>
-                        <input type="text" data-original="${logistica.date_received}" id="factura-date-received" 
-                                class="disabable form-control text-center" value="${logistica.date_received}">
+                        <input type="text" data-original="${logistica.date_received}" id="factura-date-received"
+                            placeholder="Fecha de Recibido en Miami" class="disabable form-control text-center" 
+                            value="${logistica.date_received}">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="factura-comment" style='color: #696969;'>Comentario :</label>
+                    <div class="text-left">
+                        <label class="form-check-label" for="factura-client-notified" style="color: #696969">
+                            Cliente Notificado :&nbsp;&nbsp;&nbsp;&nbsp;
+                        </label>
+                        <input type="checkbox" class="form-check-input" data-original="${logistica.client_notified}" 
+                            id="factura-client-notified" ${logistica.client_notified ? 'checked="true"':''}>
+                    </div>
                     <textarea class="disabable form-control" id="factura-comment" maxlength="512"
                             data-original="${logistica.comment}" placeholder="Ingresa un comentario">${logistica.comment}
                     </textarea>
@@ -340,6 +350,14 @@ function loadFacturas(){
         } else {
             for (let i = 0; i < response.data.length; i++) {
                 let factura = response.data[i];
+
+                let notificado = 'Cliente aún no notificado', notifiedColor = 'red', notifiedIcon = 'fa-times';
+                if (factura['client_notified'] == 1) {
+                  notifiedColor = 'lime';
+                  notifiedIcon = 'fa-check';
+                  notificado = 'Cliente notificado';
+                }
+
                 let enviado = 'Enviado', color = 'lime', icon = 'fa-paper-plane';
                 if (factura['pendiente'] === '1') {
                     enviado = 'Pendiente';
@@ -361,6 +379,7 @@ function loadFacturas(){
                 }
 
                 table.row.add([
+                    `<div class='seleccionado' title="${notificado}" style='color: ${notifiedColor}; align-self: center; text-align: center;'><i class='fa ${notifiedIcon} fa-2x fa-lg'></i></div>`,
                     `<div class='seleccionado' title="${enviado}" style='color: ${color}; align-self: center; text-align: center;'><i class='fa ${icon} fa-2x fa-lg'></i><small style='display:none;'>${enviado}</small></div>`,
                     `<h6 class='seleccionado'>${date}<span style="display: none">${enviado}</span></h6>`,
                     `<h6 class='seleccionado'>${dateReceived}</h6>`,
@@ -374,6 +393,7 @@ function loadFacturas(){
             }
             table.columns.adjust().responsive.recalc();
             table.draw(false);
+            table.scroller.measure();
         }
     },
     () => bootbox.alert("Ocurrió un problema al intentar conectarse al servidor."));
@@ -612,10 +632,10 @@ $(document).ready( function () {
             "loadingRecords": "Cargando Facturas...",
             "processing":     "Procesando...",
         },
-        "order": [[5, 'asc']],
+        "order": [[6, 'asc']],
         "columnDefs": [
             {
-                "targets": [0, 3, 7, 8],
+                "targets": [0, 1, 4, 8, 9],
                 "orderable": false
             }
         ],
@@ -865,6 +885,8 @@ $(document).ready( function () {
         if (received !== 1){
             $dateReceived.val('');
         }
+        let $clientNotified = $('#factura-client-notified');
+        let notified = $clientNotified.prop('checked');
         let $comment = $('#factura-comment');
 
         let query = `
@@ -875,6 +897,7 @@ $(document).ready( function () {
                 signer = '${$signer.val()}',
                 miami_received = ${received},
                 date_received = '${$dateReceived.val()}',
+                client_notified = ${notified},
                 comment = '${$comment.val()}'
             WHERE fid = '${facturaId}';
             `;
@@ -895,10 +918,10 @@ $(document).ready( function () {
                     timer: 2000,
                     showConfirmButton: false
                 });
-                console.log(received !== $miamiReceived.data('original'));
                 if ($dateDelivery.val() !== $dateDelivery.data('original') ||
                     received !== $miamiReceived.data('original') ||
-                    $dateReceived.val() !== $dateReceived.data('original')){
+                    $dateReceived.val() !== $dateReceived.data('original') ||
+                    notified !== $clientNotified.data('original')) {
                     loadFacturas();
                 }
                 $dateDelivery.data('original', $dateDelivery.val());
@@ -906,6 +929,7 @@ $(document).ready( function () {
                 $signer.data('original', $signer.val());
                 $miamiReceived.data('original', received);
                 $dateReceived.data('original', $dateReceived.val());
+                $clientNotified.data('original', notified);
                 $comment.data('original', $comment.val());
                 toggleLogistica();
             } else if (response.message) {

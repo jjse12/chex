@@ -3,7 +3,13 @@
 header('Content-Type: application/json;charset=utf-8');
 require_once('factura_db_vars.php');
 $conn = new mysqli(FACTURA_DB_HOST, FACTURA_DB_USER, FACTURA_DB_PASS, FACTURA_DB_NAME);
-$query = "SELECT f.id, uid, uname, tracking, description, amount, pendiente, date_created, date_delivered, date_received, miami_received FROM factura f LEFT JOIN factura_logistica fl ON f.id = fl.fid ORDER BY f.id ASC";
+$query = "
+    SELECT f.id, uid, uname, tracking, description, amount, pendiente, date_created, 
+        date_delivered, date_received, miami_received, client_notified 
+    FROM factura f 
+    LEFT JOIN factura_logistica fl ON f.id = fl.fid 
+    ORDER BY f.id ASC";
+
 $result = $conn->query($query);
 if (isset($result) && $result !== false) {
     $data = array();

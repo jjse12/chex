@@ -9,9 +9,9 @@ if (isset($fid)){
     $result = $conn->query($query);
     if (isset($result) && $result !== false) {
         $logistica = mysqli_fetch_assoc($result);
-        if (isset($logistica)){
-            if  ($logistica['miami_received'] !== null)
-                $logistica['miami_received'] = (int) $logistica['miami_received'];
+        if (isset($logistica) && $logistica['miami_received'] !== null) {
+            $logistica['miami_received'] = (int) $logistica['miami_received'];
+            $logistica['client_notified'] = (int) $logistica['client_notified'];
         }
 
         $query = "SELECT * FROM factura_seguimiento WHERE fid = {$fid} ORDER BY date_created DESC";
