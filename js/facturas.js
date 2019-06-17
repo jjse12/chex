@@ -32,18 +32,36 @@ function resetLogisticaInputsToOriginals() {
     let $signer = $('#factura-signer');
     let $miamiReceived = $('#factura-miami-received');
     let $dateReceived = $('#factura-date-received');
+    let $clientNotified = $('#factura-client-notified');
     let $comment = $('#factura-comment');
 
     $dateDelivery.val($dateDelivery.data('original'));
     $courier.val($courier.data('original'));
     $signer.val($signer.data('original'));
+
     let received = $miamiReceived.data('original');
     let $divDateReceived = $('#divDateReceived');
-    $miamiReceived.prop('checked', received);
-    $dateReceived.val($dateReceived.data('original'));
-    if (received && !$divDateReceived.hasClass('in') || !received && $divDateReceived.hasClass('in')){
-        $miamiReceived.trigger('click');
+    if (received){
+        $miamiReceived[0].checked = true;
+        if (!$divDateReceived.hasClass('in')) {
+            collapseElement($divDateReceived, 74);
+        }
     }
+    else {
+        $miamiReceived[0].checked = false;
+        if (received === null){
+            $miamiReceived[0].indeterminate = true;
+            $miamiReceived[0].readOnly = false;
+        }
+        else {
+          $miamiReceived[0].readOnly = true;
+        }
+        if ($divDateReceived.hasClass('in')){
+            collapseElement($divDateReceived);
+        }
+    }
+    $dateReceived.val($dateReceived.data('original'));
+    $clientNotified.prop('checked', $clientNotified.data('original'));
     $comment.val($comment.data('original'));
 }
 
@@ -90,6 +108,22 @@ function activateLogisticaDatePickers(logistica) {
     }
 }
 
+function handleMiamiReceivedCheckBox(cb) {
+    if (cb.checked){
+      if (cb.readOnly){
+          cb.checked=cb.readOnly=false;
+          cb.indeterminate=true;
+      }
+      else {
+        collapseElement($('#divDateReceived'), 74);
+      }
+    }
+    else {
+        collapseElement($('#divDateReceived'));
+        cb.readOnly = true;
+    }
+}
+
 const facturaLogistica = (logistica, factura) => {
     let content = '';
     if (logistica === null){
@@ -106,7 +140,8 @@ const facturaLogistica = (logistica, factura) => {
         `;
     }
     else {
-        let received = logistica.miami_received === 1;
+        let received = logistica.miami_received;
+        const checkBoxAttribute = received ? 'checked="true"' : (received === 0 ? 'readonly="true"' : '');
         content = `
             <div class="text-center">
                 <h5>Seguimiento de Paquete en Bodega</h5>
@@ -116,7 +151,8 @@ const facturaLogistica = (logistica, factura) => {
                     <div class="form-group">
                         <label for="factura-date-delivered" style='color: #696969;'>Fecha de Delivery :</label>
                         <input type="text" data-original="${logistica.date_delivered}" id="factura-date-delivered"
-                                class="disabable form-control text-center" value="${logistica.date_delivered}">
+                            placeholder="Fecha de Delivery" class="disabable form-control text-center" 
+                            value="${logistica.date_delivered}">
                     </div>
                 </div>
                 <div class="form-row">
@@ -131,22 +167,30 @@ const facturaLogistica = (logistica, factura) => {
                 </div>
                 <div class="form-row text-center">
                     <div class="form-group">
-                        <label class="form-check-label" for="factura-miami-received" style="color: #696969">Recibido en Miami :&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        <label class="form-check-label" for="factura-miami-received" style="color: #696969">
+                            Recibido en Miami :&nbsp;&nbsp;&nbsp;&nbsp;
+                        </label>
                         <input type="checkbox" class="disabable form-check-input" data-original="${received}" 
-                               id="factura-miami-received" data-toggle="collapse" data-target="#divDateReceived" 
-                               aria-expanded="false" aria-controls="divDateReceived" ${received ? 'checked' : ''}>
+                            id="factura-miami-received" onclick="handleMiamiReceivedCheckBox(this)" ${checkBoxAttribute}>
                     </div>
                 </div>
                 <div id="divDateReceived" class="form-row collapse ${logistica.miami_received === 1 ? 
-                    'in" aria-expanded="true' : '" aria-expanded="false" style="height: 0px;'}">
+                    'in" aria-expanded="true" style="' : '" aria-expanded="false" style="height: 0px;'}">
                     <div class="form-group">
                         <label for="factura-date-received" style='color: #696969;'>Fecha de Recibido :</label>
-                        <input type="text" data-original="${logistica.date_received}" id="factura-date-received" 
-                                class="disabable form-control text-center" value="${logistica.date_received}">
+                        <input type="text" data-original="${logistica.date_received}" id="factura-date-received"
+                            placeholder="Fecha de Recibido en Miami" class="disabable form-control text-center" 
+                            value="${logistica.date_received}">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="factura-comment" style='color: #696969;'>Comentario :</label>
+                    <div class="text-left">
+                        <label class="form-check-label" for="factura-client-notified" style="color: #696969">
+                            Cliente Notificado :&nbsp;&nbsp;&nbsp;&nbsp;
+                        </label>
+                        <input type="checkbox" class="form-check-input" data-original="${logistica.client_notified}" 
+                            id="factura-client-notified" ${logistica.client_notified ? 'checked="true"':''}>
+                    </div>
                     <textarea class="disabable form-control" id="factura-comment" maxlength="512"
                             data-original="${logistica.comment}" placeholder="Ingresa un comentario">${logistica.comment}
                     </textarea>
@@ -255,7 +299,7 @@ const facturaDetails = (details) => {
 
 function loadFacturaDetailsAndShowDialog(factura) {
     $.ajax({
-        url: 'db/DBgetFacturaDetails.php',
+        url: 'db/factura/DBgetFacturaDetails.php',
         data: {
             facturaId : factura.id
         },
@@ -276,6 +320,9 @@ function loadFacturaDetailsAndShowDialog(factura) {
             if (details.logistica !== null){
                 toggleLogistica();
                 activateLogisticaDatePickers(details.logistica);
+                if (details.logistica.miami_received === null){
+                    $('#factura-miami-received')[0].indeterminate = true;
+                }
             }
             $('.modal-body').css({paddingTop: 0, paddingBottom: 0});
         }
@@ -293,7 +340,7 @@ function loadFacturas(){
     let table = $('#facturas').DataTable();
     table.clear();
     $.ajax({
-        url: 'db/DBgetFacturas.php',
+        url: 'db/factura/DBgetFacturas.php',
         type: 'GET',
         cache: false,
     })
@@ -303,6 +350,14 @@ function loadFacturas(){
         } else {
             for (let i = 0; i < response.data.length; i++) {
                 let factura = response.data[i];
+
+                let notificado = 'Cliente aún no notificado', notifiedColor = 'red', notifiedIcon = 'fa-times';
+                if (factura['client_notified'] == 1) {
+                  notifiedColor = 'lime';
+                  notifiedIcon = 'fa-check';
+                  notificado = 'Cliente notificado';
+                }
+
                 let enviado = 'Enviado', color = 'lime', icon = 'fa-paper-plane';
                 if (factura['pendiente'] === '1') {
                     enviado = 'Pendiente';
@@ -310,11 +365,24 @@ function loadFacturas(){
                     icon = 'fa-clock';
                 }
 
+                let dateReceived = 'Pendiente';
                 let date = factura.date_delivered ? factura.date_delivered : 'Sin Especificar';
 
+                let miamiReceived = factura.miami_received;
+                if (miamiReceived == 1) {
+                    dateReceived = factura.date_received ? factura.date_received : 'Sin Especificar';
+                }
+                else if (miamiReceived == 0) dateReceived = 'No Recibido';
+
+                if (factura.date_delivered === null){
+                    date = dateReceived = 'Aún sin Seguimiento'
+                }
+
                 table.row.add([
+                    `<div class='seleccionado' title="${notificado}" style='color: ${notifiedColor}; align-self: center; text-align: center;'><i class='fa ${notifiedIcon} fa-2x fa-lg'></i></div>`,
                     `<div class='seleccionado' title="${enviado}" style='color: ${color}; align-self: center; text-align: center;'><i class='fa ${icon} fa-2x fa-lg'></i><small style='display:none;'>${enviado}</small></div>`,
                     `<h6 class='seleccionado'>${date}<span style="display: none">${enviado}</span></h6>`,
+                    `<h6 class='seleccionado'>${dateReceived}</h6>`,
                     `<h6 class='seleccionado'>${factura.tracking}</h6>`,
                     `<h6 class='seleccionado'>${factura.uid}</h6>`,
                     `<h6 class='seleccionado'>${factura.uname}</h6>`,
@@ -323,8 +391,9 @@ function loadFacturas(){
                     `<div style='cursor:pointer; text-align: center; color: greenyellow' class='factura-see-details' data-factura='${JSON.stringify(factura)}'><i class="fas fa-address-card fa-2x fa-lg"></i></div>`
                 ]);
             }
-            table.draw(false);
             table.columns.adjust().responsive.recalc();
+            table.draw(false);
+            table.scroller.measure();
         }
     },
     () => bootbox.alert("Ocurrió un problema al intentar conectarse al servidor."));
@@ -350,7 +419,7 @@ function generarPDF()
     let ids = Object.keys(facturas);
 
     $.ajax({
-        url: 'db/DBgetFacturasImage.php',
+        url: 'db/factura/DBgetFacturasImage.php',
         data: {
             facturasId : ids
         },
@@ -437,7 +506,7 @@ function setearPendientes(ids) {
     let where = ids.join(', ');
 
     $.ajax({
-        url: 'db/DBsetFactura.php',
+        url: 'db/factura/DBsetFactura.php',
         type: 'post',
         data: {
             set: 'pendiente = 0',
@@ -481,7 +550,7 @@ function eliminarFacturasConfirmado() {
     });
 
     $.ajax({
-        url: 'db/DBdeleteFacturas.php',
+        url: 'db/factura/DBdeleteFacturas.php',
         data: {
             where: `id IN (${facturas.join(', ')})`
         },
@@ -563,10 +632,10 @@ $(document).ready( function () {
             "loadingRecords": "Cargando Facturas...",
             "processing":     "Procesando...",
         },
-        "order": [[4, 'asc']],
+        "order": [[6, 'asc']],
         "columnDefs": [
             {
-                "targets": [0, 2, 6],
+                "targets": [0, 1, 4, 8, 9],
                 "orderable": false
             }
         ],
@@ -640,7 +709,7 @@ $(document).ready( function () {
                         if (newValue.length > 0 && newValue !== value) {
                             let set = column + ' = ' + (column === 'amount' ? newValue : `'${newValue}'`);
                             $.ajax({
-                                url: 'db/DBsetFactura.php',
+                                url: 'db/factura/DBsetFactura.php',
                                 type: 'post',
                                 data: {
                                     set: set,
@@ -734,7 +803,7 @@ $(document).ready( function () {
     tableBody.on("click", "div.factura-see-image", function () {
         let factura = $(this).data('factura');
         $.ajax({
-            url: 'db/DBgetFacturasImage.php',
+            url: 'db/factura/DBgetFacturasImage.php',
             data: {
                 facturasId : [factura.id]
             },
@@ -769,7 +838,7 @@ $(document).ready( function () {
         }
 
         $.ajax({
-            url: 'db/DBserverInsertFacturaLogistica.php',
+            url: 'db/factura/DBserverInsertFacturaLogistica.php',
             data: {
                 facturaId: facturaId
             },
@@ -786,6 +855,9 @@ $(document).ready( function () {
                     $('#divFacturaLogistica').html(facturaLogistica(response.data, factura));
                     toggleLogistica();
                     activateLogisticaDatePickers(response.data);
+                    if (response.data.logistica.miami_received === null){
+                        $('#factura-miami-received')[0].indeterminate = true;
+                    }
                 }
             } else if (response.message) {
                 bootbox.alert(response.message);
@@ -808,11 +880,13 @@ $(document).ready( function () {
         let $courier = $('#factura-courier');
         let $signer = $('#factura-signer');
         let $miamiReceived = $('#factura-miami-received');
-        let received = $miamiReceived.prop('checked');
+        let received = $miamiReceived[0].checked ? 1 : $miamiReceived[0].indeterminate ? null : 0;
         let $dateReceived = $('#factura-date-received');
-        if (!received){
+        if (received !== 1){
             $dateReceived.val('');
         }
+        let $clientNotified = $('#factura-client-notified');
+        let notified = $clientNotified.prop('checked');
         let $comment = $('#factura-comment');
 
         let query = `
@@ -821,14 +895,15 @@ $(document).ready( function () {
                 date_delivered = '${$dateDelivery.val()}',
                 courier = '${$courier.val()}',
                 signer = '${$signer.val()}',
-                miami_received = ${received ? 1 : 0},
+                miami_received = ${received},
                 date_received = '${$dateReceived.val()}',
+                client_notified = ${notified},
                 comment = '${$comment.val()}'
             WHERE fid = '${facturaId}';
             `;
 
         $.ajax({
-            url: 'db/DBserverExecQuery.php',
+            url: 'db/factura/DBfacturaExecQuery.php',
             data: {
                 query: query
             },
@@ -843,7 +918,10 @@ $(document).ready( function () {
                     timer: 2000,
                     showConfirmButton: false
                 });
-                if ($dateDelivery.val() !== $dateDelivery.data('original')){
+                if ($dateDelivery.val() !== $dateDelivery.data('original') ||
+                    received !== $miamiReceived.data('original') ||
+                    $dateReceived.val() !== $dateReceived.data('original') ||
+                    notified !== $clientNotified.data('original')) {
                     loadFacturas();
                 }
                 $dateDelivery.data('original', $dateDelivery.val());
@@ -851,9 +929,9 @@ $(document).ready( function () {
                 $signer.data('original', $signer.val());
                 $miamiReceived.data('original', received);
                 $dateReceived.data('original', $dateReceived.val());
+                $clientNotified.data('original', notified);
                 $comment.data('original', $comment.val());
                 toggleLogistica();
-
             } else if (response.message) {
                 bootbox.alert(response.message);
             } else {
@@ -880,7 +958,7 @@ $(document).ready( function () {
 
         let closure = () => {
             $.ajax({
-                url: 'db/DBserverInsertFacturaSeguimiento.php',
+                url: 'db/factura/DBserverInsertFacturaSeguimiento.php',
                 data: {
                     facturaId: facturaId,
                     note: note,

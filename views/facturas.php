@@ -9,8 +9,10 @@
     <table id="facturas" class="display" width="100%" cellspacing="0" style="width: 100%;">
         <thead>
         <tr>
+            <th class="dt-head-center"><h5 style="color:black">Avisado</h5></th>
             <th class="dt-head-center"><h5 style="color:black">Estado</h5></th>
             <th class="dt-head-center"><h5 style="color:black">Fecha Delivery</h5></th>
+            <th class="dt-head-center"><h5 style="color:black">Fecha Miami Delivery</h5></th>
             <th class="dt-head-center"><h5 style="color:black"># Tracking</h5></th>
             <th class="dt-head-center"><h5 style="color:black">ID Cliente</h5></th>
             <th class="dt-head-center"><h5 style="color:black">Nombre Cliente</h5></th>
@@ -21,6 +23,8 @@
         </thead>
         <tfoot>
         <tr>
+            <th></th>
+            <th></th>
             <th></th>
             <th></th>
             <th></th>

@@ -1,32 +1,24 @@
 <?php
 
 header('Content-Type: application/json;charset=utf-8');
-require_once("server_db_vars.php");
-
+require_once('factura_db_vars.php');
 $facturaId = $_POST['facturaId'];
-$note = $_POST['note'];
-$creator = $_POST['creator'];
-if (isset($facturaId) && isset($note) && isset($creator)){
-    $conn = new mysqli(SERVER_DB_HOST, SERVER_DB_USER, SERVER_DB_PASS, SERVER_DB_NAME);
-    date_default_timezone_set('America/Guatemala');
-    $dateCreated = date("Y-m-d H:i:s");
-    $query = "INSERT INTO factura_seguimiento ( fid, creator, note, date_created) VALUES ( {$facturaId} , '{$creator}', '{$note}', '{$dateCreated}');";
+
+if (isset($facturaId)){
+    $conn = new mysqli(FACTURA_DB_HOST, FACTURA_DB_USER, FACTURA_DB_PASS, FACTURA_DB_NAME);
+    $query = "INSERT INTO factura_logistica ( fid ) VALUES ( {$facturaId} )";
     $result = $conn->query($query);
     if ($result === true){
-        $query = "SELECT * FROM factura_seguimiento WHERE fid = {$facturaId} ORDER BY date_created DESC";
-        $result = $conn->query($query);
+        $result = $conn->query("SELECT * FROM factura_logistica WHERE fid = {$facturaId}");
         if (isset($result) && $result !== false) {
-            $seguimientos = [];
-            while ($seguimiento = mysqli_fetch_assoc($result)){
-                $seguimientos[] = $seguimiento;
-            }
+            $data = mysqli_fetch_assoc($result);
 
             echo json_encode([
                 'success' => true,
-                'data' => $seguimientos
+                'data' => $data
             ]);
         }
-        else {
+        else{
             echo json_encode([
                 'success' => true,
                 'data' => true

@@ -1,16 +1,17 @@
 <?php
 
 header('Content-Type: application/json;charset=utf-8');
-require_once("server_db_vars.php");
+require_once('factura_db_vars.php');
 $fid = $_POST['facturaId'];
 if (isset($fid)){
-    $conn = new mysqli(SERVER_DB_HOST, SERVER_DB_USER, SERVER_DB_PASS, SERVER_DB_NAME);
+    $conn = new mysqli(FACTURA_DB_HOST, FACTURA_DB_USER, FACTURA_DB_PASS, FACTURA_DB_NAME);
     $query = "SELECT * FROM factura_logistica WHERE fid = {$fid}";
     $result = $conn->query($query);
     if (isset($result) && $result !== false) {
         $logistica = mysqli_fetch_assoc($result);
-        if (isset($logistica)){
+        if (isset($logistica) && $logistica['miami_received'] !== null) {
             $logistica['miami_received'] = (int) $logistica['miami_received'];
+            $logistica['client_notified'] = (int) $logistica['client_notified'];
         }
 
         $query = "SELECT * FROM factura_seguimiento WHERE fid = {$fid} ORDER BY date_created DESC";

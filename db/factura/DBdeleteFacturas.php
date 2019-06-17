@@ -1,9 +1,9 @@
 <?php
 
     header('Content-Type: application/json;charset=utf-8');
-    require_once("server_db_vars.php");
-    $conn = new mysqli(SERVER_DB_HOST, SERVER_DB_USER, SERVER_DB_PASS, SERVER_DB_NAME);
-    $query = "UPDATE factura SET " . $_POST["set"]." WHERE " . $_POST["where"];
+    require_once('factura_db_vars.php');
+    $conn = new mysqli(FACTURA_DB_HOST, FACTURA_DB_USER, FACTURA_DB_PASS, FACTURA_DB_NAME);
+    $query = "DELETE FROM factura WHERE {$_POST["where"]}";
     $result = $conn->query($query);
     if ($result){
         echo json_encode([
