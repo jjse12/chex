@@ -139,8 +139,7 @@ const facturaLogistica = (logistica, factura) => {
     }
     else {
         let received = logistica.miami_received;
-        if (received !== null) received = logistica.miami_received === 1;
-        const checkBoxAttribute = received ? 'checked="true"' : (received === false ? 'readonly="true"' : '');
+        const checkBoxAttribute = received ? 'checked="true"' : (received === 0 ? 'readonly="true"' : '');
         content = `
             <div class="text-center">
                 <h5>Seguimiento de Paquete en Bodega</h5>
@@ -348,11 +347,23 @@ function loadFacturas(){
                     icon = 'fa-clock';
                 }
 
+                let dateReceived = 'Pendiente';
                 let date = factura.date_delivered ? factura.date_delivered : 'Sin Especificar';
+
+                let miamiReceived = factura.miami_received;
+                if (miamiReceived == 1) {
+                    dateReceived = factura.date_received ? factura.date_received : 'Sin Especificar';
+                }
+                else if (miamiReceived == 0) dateReceived = 'No Recibido';
+
+                if (factura.date_delivered === null){
+                    date = dateReceived = 'Aún sin Seguimiento'
+                }
 
                 table.row.add([
                     `<div class='seleccionado' title="${enviado}" style='color: ${color}; align-self: center; text-align: center;'><i class='fa ${icon} fa-2x fa-lg'></i><small style='display:none;'>${enviado}</small></div>`,
                     `<h6 class='seleccionado'>${date}<span style="display: none">${enviado}</span></h6>`,
+                    `<h6 class='seleccionado'>${dateReceived}</h6>`,
                     `<h6 class='seleccionado'>${factura.tracking}</h6>`,
                     `<h6 class='seleccionado'>${factura.uid}</h6>`,
                     `<h6 class='seleccionado'>${factura.uname}</h6>`,
@@ -361,8 +372,8 @@ function loadFacturas(){
                     `<div style='cursor:pointer; text-align: center; color: greenyellow' class='factura-see-details' data-factura='${JSON.stringify(factura)}'><i class="fas fa-address-card fa-2x fa-lg"></i></div>`
                 ]);
             }
-            table.draw(false);
             table.columns.adjust().responsive.recalc();
+            table.draw(false);
         }
     },
     () => bootbox.alert("Ocurrió un problema al intentar conectarse al servidor."));
@@ -601,10 +612,10 @@ $(document).ready( function () {
             "loadingRecords": "Cargando Facturas...",
             "processing":     "Procesando...",
         },
-        "order": [[4, 'asc']],
+        "order": [[5, 'asc']],
         "columnDefs": [
             {
-                "targets": [0, 2, 6],
+                "targets": [0, 3, 7, 8],
                 "orderable": false
             }
         ],
@@ -884,7 +895,10 @@ $(document).ready( function () {
                     timer: 2000,
                     showConfirmButton: false
                 });
-                if ($dateDelivery.val() !== $dateDelivery.data('original')){
+                console.log(received !== $miamiReceived.data('original'));
+                if ($dateDelivery.val() !== $dateDelivery.data('original') ||
+                    received !== $miamiReceived.data('original') ||
+                    $dateReceived.val() !== $dateReceived.data('original')){
                     loadFacturas();
                 }
                 $dateDelivery.data('original', $dateDelivery.val());
@@ -894,7 +908,6 @@ $(document).ready( function () {
                 $dateReceived.data('original', $dateReceived.val());
                 $comment.data('original', $comment.val());
                 toggleLogistica();
-
             } else if (response.message) {
                 bootbox.alert(response.message);
             } else {

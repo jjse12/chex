@@ -1799,7 +1799,7 @@
                         "</div></div>"+
                         "<div style='pointer-events:none; opacity:0.4;' id='divDescuentoEspecial' class='col-lg-8 col-md-8 col-sm-8 col-xs-10'>"+
                             "<div class='control-group form-group col-lg-5 col-md-5 col-sm-5 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width: 100%;'>Descuento (Q)</label><input onfocusout='roundField(this); aplicarDescuento();' onkeypress='return numbersonly(this, event, \"-\")' onkeyup='this.value=this.value.replace(/^0+/, \"\");' id='descuentoEntrega' type='text' class='form-control' style='text-align:center;'/></div></div>"+
-                            "<div id='divComentarioDescuento' class='control-group form-group col-lg-7 col-md-7 col-sm-7 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width: 100%;'>Comentario</label><input id='comentarioEntrega' type='text' class='form-control'/></div></div>"+
+                            "<div id='divComentarioDescuento' class='control-group form-group col-lg-7 col-md-7 col-sm-7 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width: 100%;'>Comentario</label><textarea id='comentarioEntrega' type='text' class='form-control'/></div></div>"+
                         "</div>"+
                         "<div class='col-lg-1 col-md-1 col-sm-1'></div>"+
                     "</div>"+
