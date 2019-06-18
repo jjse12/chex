@@ -350,7 +350,7 @@ function loadFacturas(){
         } else {
             for (let i = 0; i < response.data.length; i++) {
                 let factura = response.data[i];
-                let dateCreated = (new Date(factura.date_created)).toLocaleDateString('es-GT');
+                let dateCreated = factura.date_created.split(' ')[0];
 
                 let notificado = 'Cliente aún no notificado', notifiedColor = 'red', notifiedIcon = 'fa-times';
                 if (factura['client_notified'] == 1) {
