@@ -350,6 +350,7 @@ function loadFacturas(){
         } else {
             for (let i = 0; i < response.data.length; i++) {
                 let factura = response.data[i];
+                let dateCreated = (new Date(factura.date_created)).toLocaleDateString('es-GT');
 
                 let notificado = 'Cliente aún no notificado', notifiedColor = 'red', notifiedIcon = 'fa-times';
                 if (factura['client_notified'] == 1) {
@@ -379,6 +380,7 @@ function loadFacturas(){
                 }
 
                 table.row.add([
+                    `<h6 class='seleccionado'>${dateCreated}</h6>`,
                     `<div class='seleccionado' title="${notificado}" style='color: ${notifiedColor}; align-self: center; text-align: center;'><i class='fa ${notifiedIcon} fa-2x fa-lg'></i></div>`,
                     `<div class='seleccionado' title="${enviado}" style='color: ${color}; align-self: center; text-align: center;'><i class='fa ${icon} fa-2x fa-lg'></i><small style='display:none;'>${enviado}</small></div>`,
                     `<h6 class='seleccionado'>${date}<span style="display: none">${enviado}</span></h6>`,
@@ -393,7 +395,6 @@ function loadFacturas(){
             }
             table.columns.adjust().responsive.recalc();
             table.draw(false);
-            table.scroller.measure();
         }
     },
     () => bootbox.alert("Ocurrió un problema al intentar conectarse al servidor."));
@@ -635,7 +636,7 @@ $(document).ready( function () {
         "order": [[6, 'asc']],
         "columnDefs": [
             {
-                "targets": [0, 1, 4, 8, 9],
+                "targets": [1, 2, 5, 9, 10],
                 "orderable": false
             }
         ],
