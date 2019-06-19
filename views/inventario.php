@@ -43,6 +43,9 @@
                     "orderable": false
                 }
             ],
+            "aoColumns": [
+                null, { "sType": "dd-mm-yyyy-date", "bSortable": true }, null, null, null, null, null
+            ],
             "footerCallback": function ( row, data, start, end, display ) {
                 var api = this.api(), data;
                 if (this.fnSettings().fnRecordsDisplay() == 0){
@@ -66,6 +69,9 @@
                 );
             }
         });
+
+        $.fn.dataTableExt.oSort['dd-mm-yyyy-date-asc'] = (a,b) => sortddmmyyyyDate(false, a, b);
+        $.fn.dataTableExt.oSort['dd-mm-yyyy-date-desc'] = (a,b) => sortddmmyyyyDate(true, a, b);
 
         $(".buscarIngreso").keyup(function () {
             let val = $(this).val();
@@ -763,7 +769,7 @@
                             trackingsito.substr(trackingsito.length/2, trackingsito.length);
                     table.row.add([
                         `<h5 class='seleccionado' data-celulares=${celulares} data-cobro-extra=${extras} >${especial ? "<span title='Celulares: "+ celulares + ", Cobro Extra: Q"+ numberWithCommas(extras) +"' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display:none;'>Especial</small></span>" : ""}</h5>`,
-                        `<h5 data-paquete='${JSON.stringify(paquete)}' title='Registro de Carga #${paquete.rcid}' class='seleccionado'>${fechaIngreso}</h5>`,
+                        `<h5 data-paquete='${JSON.stringify(paquete)}' title='Registro de Carga #${paquete.rcid}' class='seleccionado' data-sorting-date="${fechaIngreso}">${fechaIngreso}</h5>`,
                         "<h5 class='seleccionado'>"+trackingsito+"</h5>",
                         "<h5 class='seleccionado'>"+paquete.uid+"</h5>",
                         "<h5 class='seleccionado'>"+paquete.uname+"</h5>",

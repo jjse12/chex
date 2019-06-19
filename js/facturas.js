@@ -1,6 +1,5 @@
-Number.prototype.toMoney = function toMoney() {
-    return "US$ " + this.toFixed(2);
-};
+
+const dataFacturaIndex = 10;
 
 const facturaImage = fm => {
     return `<hr><img class="factura-image" src="data:${fm.image_type};base64, ${fm.image}" />`;
@@ -379,12 +378,13 @@ function loadFacturas(){
                     date = dateReceived = 'Aún sin Seguimiento'
                 }
 
+                // Anytime the cant of columns is changed, please update variable `dataFacturaIndex`
                 table.row.add([
                     `<h6 class='seleccionado'>${dateCreated}</h6>`,
                     `<div class='seleccionado' title="${notificado}" style='color: ${notifiedColor}; align-self: center; text-align: center;'><i class='fa ${notifiedIcon} fa-2x fa-lg'></i></div>`,
                     `<div class='seleccionado' title="${enviado}" style='color: ${color}; align-self: center; text-align: center;'><i class='fa ${icon} fa-2x fa-lg'></i><small style='display:none;'>${enviado}</small></div>`,
-                    `<h6 class='seleccionado'>${date}<span style="display: none">${enviado}</span></h6>`,
-                    `<h6 class='seleccionado'>${dateReceived}</h6>`,
+                    `<h6 class='seleccionado' data-sorting-date="${date}">${date}<span style="display: none">${enviado}</span></h6>`,
+                    `<h6 class='seleccionado' data-sorting-date="${date}">${dateReceived}</h6>`,
                     `<h6 class='seleccionado'>${factura.tracking}</h6>`,
                     `<h6 class='seleccionado'>${factura.uid}</h6>`,
                     `<h6 class='seleccionado'>${factura.uname}</h6>`,
@@ -406,7 +406,7 @@ function generarPDF()
     let selectedRows = table.rows(".selected").data().toArray();
     let facturas = {};
     selectedRows.map(row => {
-        let factura = $(row[6]).data('factura');
+        let factura = $(row[dataFacturaIndex]).data('factura');
         facturas[factura.id] = {
             date_created: factura.date_created,
             clientId: factura.uid,
@@ -546,7 +546,7 @@ function eliminarFacturasConfirmado() {
     let selectedRows = table.rows(".selected").data().toArray();
     let facturas = [];
     selectedRows.map(row => {
-        let factura = $(row[6]).data('factura');
+        let factura = $(row[dataFacturaIndex]).data('factura');
         facturas.push(factura.id);
     });
 
@@ -640,6 +640,12 @@ $(document).ready( function () {
                 "orderable": false
             }
         ],
+        "aoColumns": [
+          null, null, null,
+          { "sType": "dd-mm-yyyy-date", "bSortable": true },
+          { "sType": "dd-mm-yyyy-date", "bSortable": true },
+          null, null, null, null, null, null
+          ],
         /*"footerCallback": function ( row, data, start, end, display ) {
             var api = this.api(), data;
             if (this.fnSettings().fnRecordsDisplay() == 0){
@@ -664,6 +670,9 @@ $(document).ready( function () {
 
         }*/
     });
+
+    $.fn.dataTableExt.oSort['dd-mm-yyyy-date-asc'] = (a,b) => sortddmmyyyyDate(false, a, b);
+    $.fn.dataTableExt.oSort['dd-mm-yyyy-date-desc'] = (a,b) => sortddmmyyyyDate(true, a, b);
 
     getFacturaFieldEditDialog = (value, id, field, extra) => {
         return `
