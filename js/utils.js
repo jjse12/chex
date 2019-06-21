@@ -67,8 +67,8 @@ function sortddmmyyyyDate(desc, a, b){
 }
 
 function sortDateTime(desc, a, b){
-  const dateA = new Date(a);
-  const dateB = new Date(b);
+  const dateA = new Date($(a).data('sorting-date'));
+  const dateB = new Date($(b).data('sorting-date'));
   if (desc){
     return dateA > dateB ? -1 : 1;
   }

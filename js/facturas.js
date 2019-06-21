@@ -349,7 +349,8 @@ function loadFacturas(){
         } else {
             for (let i = 0; i < response.data.length; i++) {
                 let factura = response.data[i];
-                let dateCreated = factura.date_created.split(' ')[0];
+                let momentDateCreated = moment(factura.date_created);
+                let dateCreated = momentDateCreated.format('DD/MM/YYYY[&nbsp-&nbsp;]HH:mm');
 
                 let notificado = 'Cliente aún no notificado', notifiedColor = 'red', notifiedIcon = 'fa-times';
                 if (factura['client_notified'] == 1) {
@@ -380,11 +381,11 @@ function loadFacturas(){
 
                 // Anytime the cant of columns is changed, please update variable `dataFacturaIndex`
                 table.row.add([
-                    `<h6 class='seleccionado'>${dateCreated}</h6>`,
+                    `<h6 class='seleccionado' data-sorting-date="${factura.date_created}">${dateCreated}<span style="display: none">-${dateCreated}-</span></h6>`,
                     `<div class='seleccionado' title="${notificado}" style='color: ${notifiedColor}; align-self: center; text-align: center;'><i class='fa ${notifiedIcon} fa-2x fa-lg'></i></div>`,
                     `<div class='seleccionado' title="${enviado}" style='color: ${color}; align-self: center; text-align: center;'><i class='fa ${icon} fa-2x fa-lg'></i><small style='display:none;'>${enviado}</small></div>`,
                     `<h6 class='seleccionado' data-sorting-date="${date}">${date}<span style="display: none">${enviado}</span></h6>`,
-                    `<h6 class='seleccionado' data-sorting-date="${date}">${dateReceived}</h6>`,
+                    `<h6 class='seleccionado' data-sorting-date="${dateReceived}">${dateReceived}</h6>`,
                     `<h6 class='seleccionado'>${factura.tracking}</h6>`,
                     `<h6 class='seleccionado'>${factura.uid}</h6>`,
                     `<h6 class='seleccionado'>${factura.uname}</h6>`,
@@ -641,7 +642,7 @@ $(document).ready( function () {
             }
         ],
         "aoColumns": [
-          null, null, null,
+          { "sType": "date-time", "bSortable": true }, null, null,
           { "sType": "dd-mm-yyyy-date", "bSortable": true },
           { "sType": "dd-mm-yyyy-date", "bSortable": true },
           null, null, null, null, null, null
@@ -673,6 +674,8 @@ $(document).ready( function () {
 
     $.fn.dataTableExt.oSort['dd-mm-yyyy-date-asc'] = (a,b) => sortddmmyyyyDate(false, a, b);
     $.fn.dataTableExt.oSort['dd-mm-yyyy-date-desc'] = (a,b) => sortddmmyyyyDate(true, a, b);
+    $.fn.dataTableExt.oSort['date-time-asc'] = (a,b) => sortddmmyyyyDate(false, a, b);
+    $.fn.dataTableExt.oSort['date-time-desc'] = (a,b) => sortDateTime(true, a, b);
 
     getFacturaFieldEditDialog = (value, id, field, extra) => {
         return `

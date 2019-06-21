@@ -44,7 +44,7 @@
                 }
             ],
             "aoColumns": [
-                null, { "sType": "dd-mm-yyyy-date", "bSortable": true }, null, null, null, null, null
+                null, { "sType": "date-time", "bSortable": true }, null, null, null, null, null
             ],
             "footerCallback": function ( row, data, start, end, display ) {
                 var api = this.api(), data;
@@ -70,8 +70,8 @@
             }
         });
 
-        $.fn.dataTableExt.oSort['dd-mm-yyyy-date-asc'] = (a,b) => sortddmmyyyyDate(false, a, b);
-        $.fn.dataTableExt.oSort['dd-mm-yyyy-date-desc'] = (a,b) => sortddmmyyyyDate(true, a, b);
+        $.fn.dataTableExt.oSort['date-time-asc'] = (a,b) => sortDateTime(false, a, b);
+        $.fn.dataTableExt.oSort['date-time-desc'] = (a,b) => sortDateTime(true, a, b);
 
         $(".buscarIngreso").keyup(function () {
             let val = $(this).val();
@@ -719,8 +719,7 @@
                 var paquetes = JSON.parse(arr);
                 
                 paquetes.map(paquete => {
-                    var f = paquete.fecha.split(" ")[0].split("-");
-                    var fechaIngreso = f[2] +"/" +f[1] +"/"+f[0];
+                    let fechaIngreso = moment(paquete.fecha).format('DD/MM/YYYY');
                     var plansito = "";
                     switch (paquete.plan){
                         case "":
@@ -769,7 +768,7 @@
                             trackingsito.substr(trackingsito.length/2, trackingsito.length);
                     table.row.add([
                         `<h5 class='seleccionado' data-celulares=${celulares} data-cobro-extra=${extras} >${especial ? "<span title='Celulares: "+ celulares + ", Cobro Extra: Q"+ numberWithCommas(extras) +"' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display:none;'>Especial</small></span>" : ""}</h5>`,
-                        `<h5 data-paquete='${JSON.stringify(paquete)}' title='Registro de Carga #${paquete.rcid}' class='seleccionado' data-sorting-date="${fechaIngreso}">${fechaIngreso}</h5>`,
+                        `<h5 data-paquete='${JSON.stringify(paquete)}' title='Registro de Carga #${paquete.rcid}' class='seleccionado' data-sorting-date="${paquete.fecha}">${fechaIngreso}</h5>`,
                         "<h5 class='seleccionado'>"+trackingsito+"</h5>",
                         "<h5 class='seleccionado'>"+paquete.uid+"</h5>",
                         "<h5 class='seleccionado'>"+paquete.uname+"</h5>",
