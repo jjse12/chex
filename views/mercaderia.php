@@ -23,7 +23,9 @@
 }
 
 .plan{
-    font-size: 14px;
+    font-size: 12px;
+    padding: 0;
+    margin: 0;
 }
 
 .plan, .icon-update, .seleccionado{

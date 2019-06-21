@@ -63,9 +63,9 @@
                 };
 
                 $(api.column(4).footer() ).html(
-                    "<h5>Total: " + numberWithCommasNoFixed(api.column(5, { page: 'current'} ).data().reduce( function (a, b) {
+                    "<h6>Total: " + numberWithCommasNoFixed(api.column(5, { page: 'current'} ).data().reduce( function (a, b) {
                                         return intVal(a) + intVal(b.split(">")[1].split("<")[0]);
-                                        }, 0)) + " Libras</h5>"
+                                        }, 0)) + " Libras</h6>"
                 );
             }
         });
@@ -82,7 +82,7 @@
             table.column(6).search(val).draw(false);
         });
 
-        $("#inventario tbody").on("click", "h5.seleccionado", function () {
+        $("#inventario tbody").on("click", "h6.seleccionado", function () {
             $(this).closest('tr').toggleClass("selected");
             table.draw(false);
             if (table.rows('.selected').data().toArray().length == 0)
@@ -90,19 +90,19 @@
             else document.getElementById("divBotones").style.visibility= "visible";
         });
 
-        $("#inventario tbody").on("mouseover", "h5.popup", function () {
+        $("#inventario tbody").on("mouseover", "h6.popup", function () {
             $(this).children("span").stop(true, true).delay(200).fadeIn(500);
         });
 
-        $("#inventario tbody").on("mouseout", "h5.popup", function () {
+        $("#inventario tbody").on("mouseout", "h6.popup", function () {
             $(this).children("span").stop(true, true).delay(200).fadeOut(500);
         });
 
-        $("#inventario tbody").on("mouseover", "h5.popup-notif", function () {
+        $("#inventario tbody").on("mouseover", "h6.popup-notif", function () {
             $(this).children("div").stop(true, true).delay(200).fadeIn(500);
         });
 
-        $("#inventario tbody").on("mouseout", "h5.popup-notif", function () {
+        $("#inventario tbody").on("mouseout", "h6.popup-notif", function () {
             $(this).children("div").stop(true, true).delay(200).fadeOut(500);
         });
 
@@ -130,12 +130,12 @@
                         bootbox.alert("No se pudo efectuar el cambio en la base de datos, intente nuevamente");
                     }
                     else{
-                        arr[0][6] = sinNotificar ? (!avisando ? "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>":
+                        arr[0][6] = sinNotificar ? (!avisando ? "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/></div><h6 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h6>":
 
-                            "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>"
+                            "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/></div><h6 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h6>"
                          ):
-                        (!avisando ? "<div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/><div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h5 class='sin-plan plan btn-sm btn-danger'>Sin Especificar</h5>":
-                            "<div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/><div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar"
+                        (!avisando ? "<div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/><div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h6 class='sin-plan plan btn-sm btn-danger'>Sin Especificar</h6>":
+                            "<div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/><div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h6 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar"
                         );
                         table.row(index).data(arr[0]).draw(false);
                     }
@@ -171,11 +171,11 @@
                         bootbox.alert("No se pudo efectuar el cambio en la base de datos, intente nuevamente");
                     }
                     else{
-                        arr[0][6] = sinNotificar ? (!avisando ? "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/></div></div></h5>" :
-                            "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/></div></div></h5>"
+                        arr[0][6] = sinNotificar ? (!avisando ? "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h6 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/></div></div></h6>" :
+                            "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h6 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/></div></div></h6>"
                         ) :
-                        (!avisando ? "<div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/><div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h5 class='sin-plan plan btn-sm btn-danger'>Sin Especificar</h5>" :
-                            "<div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/><div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar"
+                        (!avisando ? "<div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/><div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h6 class='sin-plan plan btn-sm btn-danger'>Sin Especificar</h6>" :
+                            "<div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/><div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h6 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar"
                         );
                         table.row(index).data(arr[0]).draw(false);
                     }
@@ -186,7 +186,7 @@
             });
         });
 
-        $("#inventario tbody").on("click", "h5.plan", function () {
+        $("#inventario tbody").on("click", "h6.plan", function () {
             var index = table.row($(this).closest('tr')).index();
             var arr = table.rows(index).data().toArray();
             var nombre = arr[0][4].split(">")[1].split("<")[0];
@@ -299,11 +299,11 @@
                                             bootbox.alert("Se actualizó el plan de entrega de todos los paquetes de " + nombre + ".");
                                         }
                                         else{
-                                            arr[0][6] = plan == "" ? "<h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>" :
-                                                        plan == "Oficina" ? "<h5 class='plan btn-sm btn-success'>En Oficina</h5>" :
-                                                        plan.includes("Guatex") ? "<h5 class='popup plan btn-sm' style='background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h5>" :
-                                                        plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
-                                                        "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h5>";
+                                            arr[0][6] = plan == "" ? "<h6 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h6>" :
+                                                        plan == "Oficina" ? "<h6 class='plan btn-sm btn-success'>En Oficina</h6>" :
+                                                        plan.includes("Guatex") ? "<h6 class='popup plan btn-sm' style='background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h6>" :
+                                                        plan.length < 3 ? "<h6 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h6>":
+                                                        "<h6 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h6>";
                                             table.row(index).data(arr[0]).draw(false);
                                             bootbox.alert("Se actualizó la información del paquete exitosamente.");
                                         }
@@ -509,15 +509,15 @@
                                                     else{
                                                         bootbox.alert("La información del paquete ha sido actualizada. El total de libras del registro de carga asociado también ha sido actualizado.");
                                                         var table = $('#inventario').DataTable();
-                                                        arr[0][0] = `<h5 class='seleccionado' data-celulares=${celularesN} data-cobro-extra=${extrasN} >${especial ? "<span title='Celulares: "+ celularesN + ", Cobro Extra: Q"+ numberWithCommas(extrasN) +"' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display: none;'>Especial</small></span>" : ""}</h5>`,
-                                                        arr[0][3] = "<h5 class='seleccionado'>"+uid+"</h5>";
-                                                        arr[0][4] = "<h5 class='seleccionado'>"+uname+"</h5>";
-                                                        arr[0][5] = "<h5 class='seleccionado'>"+pesito+"</h5>";
-                                                        arr[0][6] = plan == "" ? "<h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>" :
-                                                                    plan == "Oficina" ? "<h5 class='plan btn-sm btn-success'>En Oficina</h5>" :
-                                                                    plan.includes("Guatex") ? "<h5 class='popup plan btn-sm' style='background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h5>" :
-                                                                    plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
-                                                                    "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h5>";
+                                                        arr[0][0] = `<h6 class='seleccionado' data-celulares=${celularesN} data-cobro-extra=${extrasN} >${especial ? "<span title='Celulares: "+ celularesN + ", Cobro Extra: Q"+ numberWithCommas(extrasN) +"' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display: none;'>Especial</small></span>" : ""}</h6>`,
+                                                        arr[0][3] = "<h6 class='seleccionado'>"+uid+"</h6>";
+                                                        arr[0][4] = "<h6 class='seleccionado'>"+uname+"</h6>";
+                                                        arr[0][5] = "<h6 class='seleccionado'>"+pesito+"</h6>";
+                                                        arr[0][6] = plan == "" ? "<h6 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h6>" :
+                                                                    plan == "Oficina" ? "<h6 class='plan btn-sm btn-success'>En Oficina</h6>" :
+                                                                    plan.includes("Guatex") ? "<h6 class='popup plan btn-sm' style='background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h6>" :
+                                                                    plan.length < 3 ? "<h6 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h6>":
+                                                                    "<h6 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h6>";
                                                         table.row(index).data(arr[0]);
                                                         table.order([4, "asc"]);
                                                         table.draw(false);
@@ -532,15 +532,15 @@
                                         else{
                                             bootbox.alert("Se actualizó la información del paquete exitosamente.");
                                             var table = $('#inventario').DataTable();
-                                            arr[0][0] = `<h5 class='seleccionado' data-celulares=${celularesN} data-cobro-extra=${extrasN} >${especial ? "<span title='Celulares: "+ celularesN + ", Cobro Extra: Q"+ numberWithCommas(extrasN) +"' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display: none;'>Especial</small></span>" : ""}</h5>`,
-                                            arr[0][3] = "<h5 class='seleccionado'>"+uid+"</h5>";
-                                            arr[0][4] = "<h5 class='seleccionado'>"+uname+"</h5>";
-                                            arr[0][5] = "<h5 class='seleccionado'>"+pesito+"</h5>";
-                                            arr[0][6] = plan == "" ? "<h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>" :
-                                                        plan == "Oficina" ? "<h5 class='plan btn-sm btn-success'>En Oficina</h5>" :
-                                                        plan.includes("Guatex") ? "<h5 class='popup plan btn-sm' style='background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h5>" :
-                                                        plan.length < 3 ? "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h5>":
-                                                        "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h5>";
+                                            arr[0][0] = `<h6 class='seleccionado' data-celulares=${celularesN} data-cobro-extra=${extrasN} >${especial ? "<span title='Celulares: "+ celularesN + ", Cobro Extra: Q"+ numberWithCommas(extrasN) +"' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display: none;'>Especial</small></span>" : ""}</h6>`,
+                                            arr[0][3] = "<h6 class='seleccionado'>"+uid+"</h6>";
+                                            arr[0][4] = "<h6 class='seleccionado'>"+uname+"</h6>";
+                                            arr[0][5] = "<h6 class='seleccionado'>"+pesito+"</h6>";
+                                            arr[0][6] = plan == "" ? "<h6 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h6>" :
+                                                        plan == "Oficina" ? "<h6 class='plan btn-sm btn-success'>En Oficina</h6>" :
+                                                        plan.includes("Guatex") ? "<h6 class='popup plan btn-sm' style='background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h6>" :
+                                                        plan.length < 3 ? "<h6 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+plan+" Paquetes</span></h6>":
+                                                        "<h6 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+plan+"-</span></h6>";
                                             table.row(index).data(arr[0]);
                                             table.order([4, "asc"]);
                                             table.draw(false);
@@ -668,12 +668,12 @@
         <thead>
             <tr>
                 <th class="dt-head-center"><span style="color: transparent; -webkit-text-stroke-width: 2px; -webkit-text-stroke-color: gold"><i class="fa fa-star fa-2x"></i></span></th>
-                <th class="dt-head-center"><h5 style="color:black">Fecha de Ingreso</h5></th>
-                <th class="dt-head-center"><h5 style="color:black"># Tracking</h5></th>
-                <th class="dt-head-center"><h5 style="color:black">ID Cliente</h5></th>
-                <th class="dt-head-center"><h5 style="color:black">Nombre Cliente</h5></th>
-                <th class="dt-head-center"><h5 style="color:black">Peso</h5></th>
-                <th class="dt-head-center"><h5 style="color:black">Plan de Entrega</h5></th>
+                <th class="dt-head-center"><h6 style="color:black">Fecha de Ingreso</h6></th>
+                <th class="dt-head-center"><h6 style="color:black"># Tracking</h6></th>
+                <th class="dt-head-center"><h6 style="color:black">ID Cliente</h6></th>
+                <th class="dt-head-center"><h6 style="color:black">Nombre Cliente</h6></th>
+                <th class="dt-head-center"><h6 style="color:black">Peso</h6></th>
+                <th class="dt-head-center"><h6 style="color:black">Plan de Entrega</h6></th>
                 <th></th>
             </tr>
         </thead>
@@ -717,46 +717,46 @@
             cache: false,
             success: function(arr) {
                 var paquetes = JSON.parse(arr);
-                
+
                 paquetes.map(paquete => {
                     let fechaIngreso = moment(paquete.fecha).format('DD/MM/YYYY');
                     var plansito = "";
                     switch (paquete.plan){
                         case "":
-                            plansito = "<h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>";
+                            plansito = "<h6 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h6>";
                             break;
                         case "whats":
-                            plansito = "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/></div></div></h5>";
+                            plansito = "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4 plan-img' src='images/whatsapp20px.png'/></div><h6 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/></div></div></h6>";
                             break;
                         case "email":
-                            plansito = "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>";
+                            plansito = "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4 plan-img' src='images/email20px.png'/></div><h6 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h6>";
                             break;
                         case "whatsmail":
-                            plansito = "<div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/><div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h5 class='sin-plan plan btn-sm btn-danger'>Sin Especificar</h5>";
+                            plansito = "<div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4 plan-img' src='images/email20px.png'/><div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4 plan-img' src='images/whatsapp20px.png'/></div><h6 class='sin-plan plan btn-sm btn-danger'>Sin Especificar</h6>";
                             break;
                         case "@whats":
-                            plansito = "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/></div></div></h5>";
+                            plansito = "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4 plan-img' src='images/whatsapp20px.png'/></div><h6 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/></div></div></h6>";
                             break;
                         case "@email":
-                            plansito = "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>";
+                            plansito = "<div class='row'><div class='col-lg-4 col-md-4 col-sm-4 col-xs-4'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4 plan-img' src='images/email20px.png'/></div><h6 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h6>";
                             break;
                         case "@whatsmail":
-                            plansito = "<div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/email20px.png'/><div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4' src='images/whatsapp20px.png'/></div><h5 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar";
+                            plansito = "<div class='row'><div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div><img title='Notificado por Email' class='col-lg-4 col-md-4 col-sm-4 col-xs-4 plan-img' src='images/email20px.png'/><div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></div><img title='Notificado por Whatsapp' class='col-lg-4 col-md-4 col-sm-4 col-xs-4 plan-img' src='images/whatsapp20px.png'/></div><h6 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar";
                             break;
                         case "Oficina":
-                            plansito = "<h5 class='plan btn-sm btn-success'>En Oficina</h5>";
+                            plansito = "<h6 class='plan btn-sm btn-success'>En Oficina</h6>";
                             break;
                         default:
                             if (paquete.plan.includes("/")){
                                 if (paquete.plan.includes("Guatex"))
-                                    plansito = "<h5 class='popup plan btn-sm' style='text-align:center; background-color: #f4cb38'>Guatex<span class='popuptext'>"+paquete.plan.split(":")[1]+"</span></h5>";
+                                    plansito = "<h6 class='popup plan btn-sm' style='text-align:center; background-color: #f4cb38'>Guatex<span class='popuptext'>"+paquete.plan.split(":")[1]+"</span></h6>";
                                 else
-                                    plansito = "<h5 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+paquete.plan+"-</span></h5>";
+                                    plansito = "<h6 class='popup plan btn-sm btn-primary' style='text-align:center'>En Ruta<span class='popuptext'>-"+paquete.plan+"-</span></h6>";
                             }
                             else if (paquete.plan < 1){
-                                plansito = "<h5 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h5>";
+                                plansito = "<h6 class='popup-notif sin-plan plan btn-sm' style='background-color: #eaeaea; color: #444'>Avisar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h6>";
                             }
-                            else plansito = "<h5 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+paquete.paquete+" Paquetes</span></h5>";
+                            else plansito = "<h6 class='popup plan btn-sm' style='background-color: #ff8605'>Esperando<span class='popuptext'>"+paquete.paquete+" Paquetes</span></h6>";
                             break;
                     }
                     var celulares = paquete.celulares;
@@ -767,12 +767,12 @@
                         trackingsito = trackingsito.substr(0, trackingsito.length/2) + "<br>" +
                             trackingsito.substr(trackingsito.length/2, trackingsito.length);
                     table.row.add([
-                        `<h5 class='seleccionado' data-celulares=${celulares} data-cobro-extra=${extras} >${especial ? "<span title='Celulares: "+ celulares + ", Cobro Extra: Q"+ numberWithCommas(extras) +"' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display:none;'>Especial</small></span>" : ""}</h5>`,
-                        `<h5 data-paquete='${JSON.stringify(paquete)}' title='Registro de Carga #${paquete.rcid}' class='seleccionado' data-sorting-date="${paquete.fecha}">${fechaIngreso}</h5>`,
-                        "<h5 class='seleccionado'>"+trackingsito+"</h5>",
-                        "<h5 class='seleccionado'>"+paquete.uid+"</h5>",
-                        "<h5 class='seleccionado'>"+paquete.uname+"</h5>",
-                        "<h5 class='seleccionado'>"+paquete.libras+"</h5>",
+                        `<h6 class='seleccionado' data-celulares=${celulares} data-cobro-extra=${extras} >${especial ? "<span title='Celulares: "+ celulares + ", Cobro Extra: Q"+ numberWithCommas(extras) +"' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display:none;'>Especial</small></span>" : ""}</h6>`,
+                        `<h6 data-paquete='${JSON.stringify(paquete)}' title='Registro de Carga #${paquete.rcid}' class='seleccionado' data-sorting-date="${paquete.fecha}">${fechaIngreso}</h6>`,
+                        "<h6 class='seleccionado'>"+trackingsito+"</h6>",
+                        "<h6 class='seleccionado'>"+paquete.uid+"</h6>",
+                        "<h6 class='seleccionado'>"+paquete.uname+"</h6>",
+                        "<h6 class='seleccionado'>"+paquete.libras+"</h6>",
                         plansito,
                         "<img class='icon-update' src='images/edit.png'/>"
                     ]);

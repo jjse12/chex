@@ -49,6 +49,15 @@
     background-color: #1B64B4 !important;
 }
 
+#inventario.dataTable h6 {
+    padding: 0 0 0 0 !important;
+}
+
+.plan-img {
+    max-width: 25%;
+    height:auto;
+}
+
 #inventario.dataTable tbody th, #inventario.dataTable tbody td{
     padding: 0 0 0 0 !important;
 }
