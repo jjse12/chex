@@ -1,6 +1,6 @@
-<script src="js/facturas.js"></script>
-<script src="factura_logistica.js"></script>
-<link href="css/facturaStyles.css" rel="stylesheet">
+<script src="js/facturas.js?rnd=1"></script>
+<script src="factura_logistica.js?rnd=1"></script>
+<link href="css/facturaStyles.css?rnd=1" rel="stylesheet">
 
 <br><br>
 <br><br>
@@ -9,6 +9,7 @@
     <table id="facturas" class="display" width="100%" cellspacing="0" style="width: 100%;">
         <thead>
         <tr>
+            <th class="dt-head-center"><h5 style="color:black">Tipo de Servicio</h5></th>
             <th class="dt-head-center"><h5 style="color:black">Fecha de Creación</h5></th>
             <th class="dt-head-center"><h5 style="color:black">Avisado</h5></th>
             <th class="dt-head-center"><h5 style="color:black">Estado</h5></th>
@@ -24,6 +25,7 @@
         </thead>
         <tfoot>
         <tr>
+            <th></th>
             <th></th>
             <th></th>
             <th></th>

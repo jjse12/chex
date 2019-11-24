@@ -3,10 +3,16 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv="cache-control" content="max-age=0" />
+        <meta http-equiv="cache-control" content="no-cache" />
+        <meta http-equiv="expires" content="0" />
+        <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+        <meta http-equiv="pragma" content="no-cache" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="msapplication-TileColor" content="#2d89ef">
         <meta name="msapplication-TileImage" content="/mstile-144x144.png">
         <meta name="theme-color" content="#ffffff">
+
 
         <title>Chispudito Express - Administración</title>
 
@@ -76,20 +82,20 @@
             function notAllow(myfield, e, restringidos){
                 var key;
                 var keychar;
-                  
+
                 if (window.event)
-                    key = window.event.keyCode; 
+                    key = window.event.keyCode;
                 else if (e)
                     key = e.which;
                 else
                     return true;
                 keychar = String.fromCharCode(key);
-                  
+
                 // control keys
-                if ((key==null) || (key==0) || (key==8) || 
+                if ((key==null) || (key==0) || (key==8) ||
                     (key==9) || (key==13) || (key==27) )
                     return true;
-                  
+
                 // numbers
                 else if ((""+restringidos).indexOf(keychar) > -1)
                     return false;
@@ -99,20 +105,20 @@
             function numbersonly(myfield, e, extras){
                 var key;
                 var keychar;
-                  
+
                 if (window.event)
-                    key = window.event.keyCode; 
+                    key = window.event.keyCode;
                 else if (e)
                     key = e.which;
                 else
                     return true;
                 keychar = String.fromCharCode(key);
-                  
+
                 // control keys
-                if ((key==null) || (key==0) || (key==8) || 
+                if ((key==null) || (key==0) || (key==8) ||
                     (key==9) || (key==13) || (key==27) )
                     return true;
-                  
+
                 // numbers
                 else if ((("0123456789."+extras).indexOf(keychar) > -1))
                     return true;
@@ -122,48 +128,48 @@
             function onlyLettersAndNumbers(myfield, e, dec){
                 var key;
                 var keychar;
-                  
+
                 if (window.event)
-                    key = window.event.keyCode; 
+                    key = window.event.keyCode;
                 else if (e)
                     key = e.which;
                 else
                     return true;
                 keychar = String.fromCharCode(key);
-                  
+
                 // control keys
-                if ((key==null) || (key==0) || (key==8) || 
+                if ((key==null) || (key==0) || (key==8) ||
                     (key==9) || (key==13) || (key==27) )
                     return true;
-                  
+
                 // numbers
                 else if ((("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ").indexOf(keychar) > -1))
                     return true;
-                
+
                 return false;
             }
 
             function integersonly(myfield, e, dec){
                 var key;
                 var keychar;
-                  
+
                 if (window.event)
-                    key = window.event.keyCode; 
+                    key = window.event.keyCode;
                 else if (e)
                     key = e.which;
                 else
                     return true;
                 keychar = String.fromCharCode(key);
-                  
+
                 // control keys
-                if ((key==null) || (key==0) || (key==8) || 
+                if ((key==null) || (key==0) || (key==8) ||
                     (key==9) || (key==13) || (key==27) )
                     return true;
-                  
+
                 // numbers
                 else if ((("0123456789").indexOf(keychar) > -1))
                     return true;
-                
+
                 return false;
             }
 
