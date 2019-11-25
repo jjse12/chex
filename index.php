@@ -56,17 +56,18 @@
                 if (isset($_GET["logout"]))
                 echo "<script type='text/javascript'>$(document).ready(function (){ bootbox.alert('La sesión ha sido cerrada exitosamente.'); }); </script>";
 
+                $isAdmin = 0;
                 if (isset($_SESSION["user_login_status"]) AND ($_SESSION["user_login_status"] == 1)) {
-                    define("ADMIN", (isset($_SESSION["user_admin"]) AND ($_SESSION["user_admin"] == 1)));
+                    $isAdmin = isset($_SESSION["user_admin"]) && intval($_SESSION["user_admin"]) === 1 ? 1 : 0;
                     include("views/adminTabSelector.php");
                 }
-                else
-                    include("views/not_logged_in.php");
+                else include("views/not_logged_in.php");
             ?>
         </div>
 
         <script type="text/javascript">
             moment.locale('es');
+            var isAdmin = <?php echo $isAdmin ?>;
 
             $(document).ajaxStart(function() {
                 Pace.restart();

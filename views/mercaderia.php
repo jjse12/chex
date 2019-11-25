@@ -106,8 +106,7 @@
 
 <script>
     $(document).ready( function () {
-        if (!'<?php echo ADMIN; ?>')
-            document.getElementById("liBtnBoletas").style.display = "none";
+        if (!isAdmin) document.getElementById("liBtnBoletas").style.display = "none";
 
         $("#divBtnHist").hover(function() {
           $(this).find('#dropmenusito').stop(true, true).delay(200).fadeIn(500);

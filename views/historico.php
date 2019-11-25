@@ -1888,8 +1888,6 @@
 
 <script type="text/javascript">
 
-    var isAdmin = '<?php echo ADMIN; ?>';
-
     function historicoPaquetesFecha(){
 
         document.getElementById("divHistoricoPaquetes").style.display = "block";
