@@ -715,7 +715,14 @@ $(document).ready( function () {
     };
 
     var onlyAdminEditableFields = [
-      'service_id'
+        'service_id'
+    ];
+
+    var unquotedColumns = [
+        'amount',
+        'item_count',
+        'service_id',
+        'guide_number',
     ];
 
     $(document).on('click', 'span.factura-editable', ev => {
@@ -744,8 +751,7 @@ $(document).ready( function () {
                             let newValue = input.val();
                             if (newValue.length > 0 && newValue !== value) {
                                 let set = column + ' = ' +
-                                  (column === 'amount' || column === 'service_id' || column === 'item_count' ?
-                                    newValue : `'${newValue}'`);
+                                  (unquotedColumns.includes(column) ? newValue : `'${newValue}'`);
                                 $.ajax({
                                     url: 'db/factura/DBsetFactura.php',
                                     type: 'post',
@@ -802,9 +808,9 @@ $(document).ready( function () {
 
         if (column === 'service_id'){
             $.ajax({
-              url: 'db/factura/DBgetServices.php',
-              type: 'get',
-              cache: false,
+                url: 'db/factura/DBgetServices.php',
+                type: 'get',
+                cache: false,
             })
             .then(result => {
                 dialogContent = getFacturaServiceEditDialog(value, column+'-'+id, field, result.data || {});
@@ -819,6 +825,9 @@ $(document).ready( function () {
             }
             else if (column === 'item_count') {
                 extra = 'type="number" step="1" onKeyPress="return integersonly(this, event)"';
+            }
+            else if (column === 'guide_number') {
+                extra = 'type="number" step="0" onKeyPress="return integersonly(this, event)"';
             }
             dialogContent = getFacturaFieldEditDialog(value, column+'-'+id, field, extra);
             showEditionDialog(dialogContent);
@@ -846,6 +855,7 @@ $(document).ready( function () {
                     <b>Fecha de Creación: </b><span /*class="factura-editable" data-column="date_created" data-id="${factura.id}" data-field="Fecha de Creación"*/>${date}</span><br>
                     <b>Id Cliente:</b> <span /*class="factura-editable" data-column="uid" data-id="${factura.id}" data-field="Id Cliente"*/>${factura.uid}</span><br>
                     <b>Tipo de Servicio:</b> <span class="${isAdmin ? 'factura-editable' : ''}" data-column="service_id" data-id="${factura.id}" data-field="Tipo de Servicio">${factura.service}</span><br>
+                    <b>No. Guía:</b> <span class="factura-editable" data-column="guide_number" data-id="${factura.id}" data-field="Número de Guía">${factura.guide_number}</span><br>
                     <b>Tracking:</b> <span class="factura-editable" data-column="tracking" data-id="${factura.id}" data-field="Tracking">${factura.tracking}</span><br>
                     <b>Cantidad de Artículos:</b> <span class="factura-editable" data-column="item_count" data-id="${factura.id}" data-field="Artículos">${factura.item_count}</span><br>
                     <b>Monto:</b> <span class="factura-editable" data-column="amount" data-id="${factura.id}" data-field="Monto">US$ ${factura.amount}</span><br>
