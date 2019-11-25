@@ -416,6 +416,8 @@ function generarPDF()
             description: factura.description,
             amount: factura.amount,
             itemCount: factura.item_count,
+            service: factura.service,
+            guideNumber: factura.guide_number,
             images: []
         };
     });
@@ -855,11 +857,11 @@ $(document).ready( function () {
                     <b>Fecha de Creación: </b><span /*class="factura-editable" data-column="date_created" data-id="${factura.id}" data-field="Fecha de Creación"*/>${date}</span><br>
                     <b>Id Cliente:</b> <span /*class="factura-editable" data-column="uid" data-id="${factura.id}" data-field="Id Cliente"*/>${factura.uid}</span><br>
                     <b>Tipo de Servicio:</b> <span class="${isAdmin ? 'factura-editable' : ''}" data-column="service_id" data-id="${factura.id}" data-field="Tipo de Servicio">${factura.service}</span><br>
-                    <b>No. Guía:</b> <span class="factura-editable" data-column="guide_number" data-id="${factura.id}" data-field="Número de Guía">${factura.guide_number}</span><br>
                     <b>Tracking:</b> <span class="factura-editable" data-column="tracking" data-id="${factura.id}" data-field="Tracking">${factura.tracking}</span><br>
-                    <b>Cantidad de Artículos:</b> <span class="factura-editable" data-column="item_count" data-id="${factura.id}" data-field="Artículos">${factura.item_count}</span><br>
+                    <b>Cantidad de Artículos:</b> <span class="factura-editable" data-column="item_count" data-id="${factura.id}" data-field="Artículos">${factura.item_count || 'N/A'}</span><br>
                     <b>Monto:</b> <span class="factura-editable" data-column="amount" data-id="${factura.id}" data-field="Monto">US$ ${factura.amount}</span><br>
-                    <b>Descripción:</b> <span class="factura-editable" data-column="description" data-id="${factura.id}" data-field="Descripción">${factura.description}</span>
+                    <b>Descripción:</b> <span class="factura-editable" data-column="description" data-id="${factura.id}" data-field="Descripción">${factura.description}</span><br>
+                    <b>No. Guía:</b> <span class="factura-editable" data-column="guide_number" data-id="${factura.id}" data-field="Número de Guía">${factura.guide_number || 'N/A'}</span>
                 </div>
                 <div class="factura-content">${images}</div>
             </div>`;
