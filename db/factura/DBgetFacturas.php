@@ -4,7 +4,7 @@ header('Content-Type: application/json;charset=utf-8');
 require_once('factura_db_vars.php');
 $conn = new mysqli(FACTURA_DB_HOST, FACTURA_DB_USER, FACTURA_DB_PASS, FACTURA_DB_NAME);
 $query = "
-    SELECT f.id, uid, uname, tracking, description, amount, item_count, guide_number, pendiente, date_created, 
+    SELECT f.id, uid, uname, tracking, description, amount, item_count, guide_number, fob_price, pendiente, date_created, 
         date_delivered, date_received, miami_received, client_notified, s.nombre AS service
     FROM factura f 
     LEFT JOIN factura_logistica fl ON f.id = fl.fid 

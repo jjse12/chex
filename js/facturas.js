@@ -418,6 +418,7 @@ function generarPDF()
             itemCount: factura.item_count,
             service: factura.service,
             guideNumber: factura.guide_number,
+            fobPrice: factura.fob_price,
             images: []
         };
     });
@@ -725,6 +726,7 @@ $(document).ready( function () {
         'item_count',
         'service_id',
         'guide_number',
+        'fob_price',
     ];
 
     $(document).on('click', 'span.factura-editable', ev => {
@@ -764,7 +766,7 @@ $(document).ready( function () {
                                     cache: false,
                                     success: function (res) {
                                         if (res.success){
-                                            if (column === 'amount'){
+                                            if (column === 'amount' || column === 'fob_price'){
                                                 span.text(Number(newValue).toMoney());
                                             }
                                             else if (column === 'service_id'){
@@ -821,8 +823,8 @@ $(document).ready( function () {
         }
         else {
             let extra = '';
-            if (column === 'amount'){
-                extra = 'type="number" step="0.01" onKeyPress="return integersonly(this, event)"';
+            if (column === 'amount' || column === 'fob_price'){
+                extra = 'type="number" step="0.01" onKeyPress="return numbersonly(this, event, \'\')"';
                 value = value.replace('US$ ', '');
             }
             else if (column === 'item_count') {
@@ -860,6 +862,7 @@ $(document).ready( function () {
                     <b>Tracking:</b> <span class="factura-editable" data-column="tracking" data-id="${factura.id}" data-field="Tracking">${factura.tracking}</span><br>
                     <b>Cantidad de Artículos:</b> <span class="factura-editable" data-column="item_count" data-id="${factura.id}" data-field="Artículos">${factura.item_count || 'N/A'}</span><br>
                     <b>Monto:</b> <span class="factura-editable" data-column="amount" data-id="${factura.id}" data-field="Monto">US$ ${factura.amount}</span><br>
+                    <b>Precio FOB:</b> <span class="factura-editable" data-column="fob_price" data-id="${factura.id}" data-field="Precio FOB">${factura.fob_price !== null ? `US$ ${factura.fob_price}` : 'N/A'}</span><br>
                     <b>Descripción:</b> <span class="factura-editable" data-column="description" data-id="${factura.id}" data-field="Descripción">${factura.description}</span><br>
                     <b>No. Guía:</b> <span class="factura-editable" data-column="guide_number" data-id="${factura.id}" data-field="Número de Guía">${factura.guide_number || 'N/A'}</span>
                 </div>

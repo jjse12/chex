@@ -94,6 +94,7 @@ class ChexFacturasPDF extends TCPDF {
         foreach ($this->facturas as $factura){
             $this->AddPage();
             $formatedDateCreated = (new DateTime($factura['date_created']))->format('d/m/Y h:i A');
+            $precioFOB = empty($factura['fobPrice']) ? $factura['amount'] : $factura['fobPrice'];
             $this->Cell(0, 0, "Servicio: {$factura['service']}", '', 0, 'L', 0);
             $this->Ln();
             $this->Cell(0, 0, "Fecha de registro: {$formatedDateCreated}", '', 0, 'L', 0);
@@ -102,7 +103,7 @@ class ChexFacturasPDF extends TCPDF {
             $this->Ln();
             $this->Cell(0, 0, "Id del cliente: {$factura['clientId']}", '', 0, 'L', 0);
             $this->Ln();
-            $this->Cell(0, 0, "Monto: \${$factura['amount']}", '', 0, 'L', 0);
+            $this->Cell(0, 0, "Precio FOB: \${$precioFOB}", '', 0, 'L', 0);
             $this->Ln();
             $this->Cell(0, 0, "Número de artículos en el paquete: {$factura['itemCount']}", '', 0, 'L', 0);
             $this->Ln();
