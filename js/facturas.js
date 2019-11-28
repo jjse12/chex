@@ -2,7 +2,7 @@
 const dataFacturaIndex = 11;
 
 const facturaImage = fm => {
-    return `<hr><img class="factura-image" src="data:${fm.image_type};base64, ${fm.image}" />`;
+    return `<hr><img data-id="${fm.id}" class="factura-image" src="data:${fm.image_type};base64, ${fm.image}" />`;
 };
 
 const couriersSelectBox = selectedCourier => {
@@ -433,7 +433,7 @@ function generarPDF()
         type: "POST",
         cache: false,
         success: function(response){
-            if (response.data){
+            if (response.data) {
                 let images = response.data;
                 if (images.length !== ids.length){
                     // TODO: Show alert for missing factura images
@@ -845,7 +845,7 @@ $(document).ready( function () {
         let statusColor = factura.pendiente === '1' ? 'orange' : 'lime';
 
         let images = '';
-        factura.images.map(img => {
+        factura.images.forEach(img => {
             images += facturaImage(img);
         });
 
@@ -866,7 +866,18 @@ $(document).ready( function () {
                     <b>Descripción:</b> <span class="factura-editable" data-column="description" data-id="${factura.id}" data-field="Descripción">${factura.description}</span><br>
                     <b>No. Guía:</b> <span class="factura-editable" data-column="guide_number" data-id="${factura.id}" data-field="Número de Guía">${factura.guide_number || 'N/A'}</span>
                 </div>
-                <div class="factura-content">${images}</div>
+                <hr>
+                ${factura.images.length > 0
+                  ? 
+                    `<button id="confirmDeleteFacturaImages" style="display: none" class="btn btn-sm btn-danger" disabled>Eliminar Seleccionadas</button>
+                    <button id="deleteFacturaImages" class="btn btn-sm btn-danger">Eliminar Imágenes</button>`
+                  : ''
+                }
+<!--                <button id="addFacturaImages" class="btn btn-sm btn-success">Agregar Imágenes</button>-->
+                <div id="divInstructions" style="display:none;"><br><small id="instructions"></small></div>
+                <div class="factura-content">
+                    ${factura.images.length > 0 ? images : '<hr><h5>¡No hay imágenes asociadas a esta factura!</h5>'}
+                  </div>
             </div>`;
 
         bootbox.dialog({
@@ -895,8 +906,8 @@ $(document).ready( function () {
             type: "POST",
             cache: false
         }).then(response => {
-            if (response.data && response.data[factura.id]) {
-                factura.images = response.data[factura.id];
+            if (response.data) {
+                factura.images = response.data[factura.id] || [];
                 showFacturaDialog(factura);
             }
             else if (response.message) {
@@ -1105,5 +1116,97 @@ $(document).ready( function () {
 
     $('#btnEliminarFacturas').on('click', () => {
         eliminarFacturas();
+    });
+
+    function cancelFacturaImagesDeletion() {
+        $deleteButton = $('#deleteFacturaImages');
+        $deleteButton.addClass('btn-danger');
+        $deleteButton.removeClass('btn-default');
+        $deleteButton.text('Eliminar Imágenes');
+        $confirmDeleteButton = $('#confirmDeleteFacturaImages');
+        $confirmDeleteButton.attr('disabled', 'disabled');
+        $confirmDeleteButton.hide();
+        $('#divInstructions').hide();
+        $('.selected-factura-image').removeClass('selected-factura-image');
+        // $('#addFacturaImages').removeAttr('disabled');
+    }
+
+    function initFacturaImagesDeletion() {
+        $deleteButton = $('#deleteFacturaImages');
+        $deleteButton.removeClass('btn-danger');
+        $deleteButton.addClass('btn-default');
+        $deleteButton.text('Cancelar');
+        $('#confirmDeleteFacturaImages').show();
+        $('#divInstructions').show();
+        $('#instructions').text('Seleccione las imágenes que desea eliminar, y luego presione el botón "Eliminar Seleccionadas".');
+        // $('#addFacturaImages').attr('disabled', 'disabled');
+    }
+
+    $(document).on('click', '#deleteFacturaImages', function() {
+        if ($(this).hasClass('btn-default')) {
+            cancelFacturaImagesDeletion();
+        }
+        else {
+            initFacturaImagesDeletion();
+        }
+    });
+
+    $(document).on('click', '.factura-image', function() {
+        if ($('#deleteFacturaImages').hasClass('btn-danger')) return;
+
+        if ($(this).hasClass('selected-factura-image'))
+            $(this).removeClass('selected-factura-image');
+        else $(this).addClass('selected-factura-image');
+
+        if ($('.selected-factura-image').length > 0)
+            $('#confirmDeleteFacturaImages').removeAttr('disabled');
+        else $('#confirmDeleteFacturaImages').attr('disabled', 'disabled');
+    });
+
+    $(document).on('click', '#confirmDeleteFacturaImages', function() {
+        $selectedImages = $('.selected-factura-image');
+        if ($selectedImages.length < 1) return;
+        let facturaImagesIds = [];
+        for (let i = 0; i < $selectedImages.length; i++) {
+            facturaImagesIds.push($($selectedImages[i]).data('id'));
+        }
+        $.ajax({
+            url: 'db/factura/DBdeleteFacturasImages.php',
+            data: {
+              where: `id IN (${facturaImagesIds.join(', ')})`
+            },
+            type: "POST",
+            cache: false,
+            success: function (res) {
+                if (res.success) {
+                    Swal.fire({
+                      title: 'Imágenes eliminadas',
+                      text: 'Las imágenes seleccionadas han sido eliminadas',
+                      type: 'success',
+                      focusConfirm: true,
+                      confirmButtonText: 'Ok',
+                      confirmButtonClass: 'btn-success'
+                    });
+                    cancelFacturaImagesDeletion();
+                    $selectedImages.fadeOut('1200');
+                    $selectedImages.remove();
+                    if ($('.factura-image').length === 0) {
+                        $('#deleteFacturaImages').remove();
+                        $('#confirmDeleteFacturaImages').remove();
+                    }
+                }
+                else {
+                    Swal.fire({
+                      title: 'Error',
+                      text: 'Ocurrió un error, no se pudieron eliminar las imágenes seleccionadas facturas',
+                      type: 'error',
+                      focusConfirm: true,
+                      confirmButtonText: 'Ok',
+                      confirmButtonClass: 'btn-success'
+                    });
+                }
+            },
+            error: () => bootbox.alert("Ocurrió un error al conectarse a la base de datos.")
+        });
     });
 });

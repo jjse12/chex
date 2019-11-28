@@ -10,6 +10,11 @@ div.factura-content{
     margin-right: auto;
 }
 
+.selected-factura-image {
+    border: 4px solid #e50000 !important;
+    border-radius: 1rem;
+}
+
 span.factura-editable {
     cursor: pointer;
 }
