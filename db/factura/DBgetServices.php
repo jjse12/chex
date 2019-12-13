@@ -6,7 +6,6 @@ $conn = new mysqli(FACTURA_DB_HOST, FACTURA_DB_USER, FACTURA_DB_PASS, FACTURA_DB
 $query = "
     SELECT *
     FROM servicio
-    WHERE activo = 1
     ";
 
 $result = $conn->query($query);
