@@ -101,6 +101,8 @@ class ChexFacturasPDF extends TCPDF {
             $this->Ln();
             $this->Cell(0, 0, "Tracking: {$factura['tracking']}", '', 0, 'L', 0);
             $this->Ln();
+            $this->Cell(0, 0, "Nombre del cliente: {$factura['clientName']}", '', 0, 'L', 0);
+            $this->Ln();
             $this->Cell(0, 0, "Id del cliente: {$factura['clientId']}", '', 0, 'L', 0);
             $this->Ln();
             $this->Cell(0, 0, "Precio FOB: \${$precioFOB}", '', 0, 'L', 0);

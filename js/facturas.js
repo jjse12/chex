@@ -411,8 +411,9 @@ function generarPDF()
         let factura = $(row[dataFacturaIndex]).data('factura');
         facturas[factura.id] = {
             date_created: factura.date_created,
-            clientId: factura.uid,
             tracking: factura.tracking,
+            clientName: factura.uname,
+            clientId: factura.uid,
             description: factura.description,
             amount: factura.amount,
             itemCount: factura.item_count,
