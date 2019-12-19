@@ -1,0 +1,1 @@
+alter table paquete add guide_number int null;

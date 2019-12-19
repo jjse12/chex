@@ -262,7 +262,7 @@
             divIngreso.style.display = "block";
             ingreso.style.background = "#5cb85c";
             ingreso.style.color = "white";
-            document.getElementById("tracking").focus();
+            document.getElementById("servicio").focus();
             initTablaIngresoCarga();
         }
         else {

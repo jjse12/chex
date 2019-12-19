@@ -813,7 +813,7 @@ $(document).ready( function () {
 
         if (column === 'service_id'){
             $.ajax({
-                url: 'db/factura/DBgetServices.php',
+                url: 'db/servicio/DBgetServices.php',
                 type: 'get',
                 cache: false,
             })
