@@ -1,9 +1,4 @@
-
 const dataFacturaIndex = 11;
-
-const facturaImage = fm => {
-    return `<hr><img data-id="${fm.id}" class="factura-image" src="data:${fm.image_type};base64, ${fm.image}" />`;
-};
 
 const couriersSelectBox = selectedCourier => {
     let select = `<select id="factura-courier" data-original="${selectedCourier}" name="factura-courier" class="disabable form-control"><option value=""></option>`;
@@ -124,86 +119,10 @@ function handleMiamiReceivedCheckBox(cb) {
 }
 
 const facturaLogistica = (logistica, factura) => {
-    let content = '';
     if (logistica === null){
-        content = `
-            <div class="text-center">
-                <h5>Seguimiento de Paquete en Bodega</h5>
-            </div>
-            <br>
-            <div class="text-center">
-                ¡Aún no existe registro!&nbsp;&nbsp;&nbsp;&nbsp;
-                <button data-factura-id='${JSON.stringify(factura)}' class='btn btn-success btn-sm btnCreateFacturaLogistica'>Crear Registro</button></>
-            </div>
-            <br>
-        `;
+        return renderFacturaLogisticaEmpty(factura);
     }
-    else {
-        let received = logistica.miami_received;
-        const checkBoxAttribute = received ? 'checked="true"' : (received === 0 ? 'readonly="true"' : '');
-        content = `
-            <div class="text-center">
-                <h5>Seguimiento de Paquete en Bodega</h5>
-            </div>
-            <div id="divFacturaLogisticaContent">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="factura-date-delivered" style='color: #696969;'>Fecha de Delivery :</label>
-                        <input type="text" data-original="${logistica.date_delivered}" id="factura-date-delivered"
-                            placeholder="Fecha de Delivery" class="disabable form-control text-center" 
-                            value="${logistica.date_delivered}">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="factura-courier" style="color: #696969">Courier :</label>
-                        ${couriersSelectBox(logistica.courier)}
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="factura-signer" style="color: #696969">Firmado por :</label>
-                        ${signersSelectBox(logistica.signer)}
-                    </div>
-                </div>
-                <div class="form-row text-center">
-                    <div class="form-group">
-                        <label class="form-check-label" for="factura-miami-received" style="color: #696969">
-                            Recibido en Miami :&nbsp;&nbsp;&nbsp;&nbsp;
-                        </label>
-                        <input type="checkbox" class="disabable form-check-input" data-original="${received}" 
-                            id="factura-miami-received" onclick="handleMiamiReceivedCheckBox(this)" ${checkBoxAttribute}>
-                    </div>
-                </div>
-                <div id="divDateReceived" class="form-row collapse ${logistica.miami_received === 1 ? 
-                    'in" aria-expanded="true" style="' : '" aria-expanded="false" style="height: 0px;'}">
-                    <div class="form-group">
-                        <label for="factura-date-received" style='color: #696969;'>Fecha de Recibido :</label>
-                        <input type="text" data-original="${logistica.date_received}" id="factura-date-received"
-                            placeholder="Fecha de Recibido en Miami" class="disabable form-control text-center" 
-                            value="${logistica.date_received}">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="text-left">
-                        <label class="form-check-label" for="factura-client-notified" style="color: #696969">
-                            Cliente Notificado :&nbsp;&nbsp;&nbsp;&nbsp;
-                        </label>
-                        <input type="checkbox" class="form-check-input" data-original="${logistica.client_notified}" 
-                            id="factura-client-notified" ${logistica.client_notified ? 'checked="true"':''}>
-                    </div>
-                    <textarea class="disabable form-control" id="factura-comment" maxlength="512"
-                            data-original="${logistica.comment}" placeholder="Ingresa un comentario">${logistica.comment}
-                    </textarea>
-                </div>
-            </div>
-            <div class="text-center">
-                <button class="btn btn-sm btn-primary" id="btnToggleLogistica" onclick="toggleLogistica()">Modificar</button>
-                <button class="btn btn-sm btn-success btnUpdateFacturaLogistica" data-factura-id='${JSON.stringify(factura)}'>Guardar</button>
-            </div>
-            <br>
-        `;
-    }
-
-    return content;
+    return renderFacturaLogistica(logistica, factura);
 };
 
 function toggleNewSeguimiento() {
@@ -223,77 +142,15 @@ function toggleNewSeguimiento() {
     }
 }
 
-const seguimientoNote = seguimiento => {
-    let date = moment(seguimiento.date_created);
-    date = date.format('[El&nbsp;&nbsp;]DD/MM/YYYY[&nbsp;&nbsp;a&nbsp;&nbsp;las&nbsp;&nbsp;]hh:mm A');
-
-    let note = `
-        <div class="seguimiento-register">
-            <div class="row">
-                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-left">
-                    &nbsp;&nbsp;&nbsp;${seguimiento.creator} :
-                </div>
-                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-right">
-                    ${date}&nbsp;&nbsp;&nbsp;
-                </div>
-            </div>
-            <div class="row" style="margin-top: 8px !important;">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <textarea class="form-control" disabled>${seguimiento.note}</textarea>
-                </div>
-            </div>
-        </div>
-    `;
-    return note;
-};
-
-const facturaSeguimiento = (seguimiento, factura) => {
-    let seguimientosContent = '<div class="text-center">- Sin notas de seguimiento de cliente -</div>';
-    if (seguimiento.length){
-        seguimientosContent = `<div class="text-center"><b>- ${seguimiento.length} ${seguimiento.length === 1 ? 'Nota' : 'Notas'} de Seguimiento -</b>`;
-        seguimiento.map(seg => {
-            seguimientosContent += seguimientoNote(seg);
-        });
-        seguimientosContent += '</div>';
-    }
-
-    let content = `
-        <div class="text-center">
-            <h5>Seguimiento de Cliente</h5>
-        </div>
-        <br>
-        <div class="text-center">
-            <button class="btn btn-sm btn-success" id="btnNewSeguimiento" onclick="toggleNewSeguimiento()" data-toggle="collapse" 
-                    data-target="#divNewSeguimiento" aria-expanded="false" aria-controls="divDateReceived">
-                Nueva Nota de Seguimiento
-            </button>
-            <button class="btn btn-sm btn-success btnCreateSeguimiento" style="display: none;" data-factura='${JSON.stringify(factura)}'>Guardar</button>
-        </div>
-        <div class="collapse" id="divNewSeguimiento">
-            <br>
-            <div class="form-group">
-                <textarea class="disabable form-control" id="txt-new-seguimiento" maxlength="512" placeholder="Ingresa la nota de seguimiento..."></textarea>
-            </div>
-        </div>
-        <hr>
-        ${seguimientosContent}
-        <br>
-    `;
-
-    return content;
-};
-
-
-
 const facturaDetails = (details) => {
     let logistica = facturaLogistica(details.logistica, details.factura);
-    let seguimiento = facturaSeguimiento(details.seguimiento, details.factura);
-    let content =
-        `<div id="divFacturaDetails" class="row">
+    let seguimiento = renderFacturaSeguimiento(details.seguimiento, details.factura);
+
+    return `
+        <div id="divFacturaDetails" class="row">
             <div class="col-md-5" id="divFacturaLogistica">${logistica}</div>
             <div class="col-md-7 fill" id="divFacturaSeguimiento">${seguimiento}</div>
         </div>`;
-    return content;
 };
 
 function loadFacturaDetailsAndShowDialog(factura) {
@@ -648,6 +505,7 @@ $(document).ready( function () {
             }
         ],
         "aoColumns": [
+          null,
           { "sType": "date-time", "bSortable": true }, null, null,
           { "sType": "dd-mm-yyyy-date", "bSortable": true },
           { "sType": "dd-mm-yyyy-date", "bSortable": true },
@@ -682,41 +540,6 @@ $(document).ready( function () {
     $.fn.dataTableExt.oSort['dd-mm-yyyy-date-desc'] = (a,b) => sortddmmyyyyDate(true, a, b);
     $.fn.dataTableExt.oSort['date-time-asc'] = (a,b) => sortddmmyyyyDate(false, a, b);
     $.fn.dataTableExt.oSort['date-time-desc'] = (a,b) => sortDateTime(true, a, b);
-
-    getFacturaFieldEditDialog = (value, inputId, field, extra) => {
-        return `
-            <div class='row' style='background-color: #dadada'>
-                <div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>
-                    <p style='color: black'>Ingresa el nuevo valor para el campo <b>${field}</b>.</p>
-                    <div class='control-group form-group col-sm-offset-3 col-md-offset-3 col-lg-offset-3 col-sm-6 col-md-6 col-lg-6 col-xs-12'>
-                        <div class='controls'>
-                            <input align='middle' style='text-align:center; width: 100%;' 
-                                    placeholder="Nuevo valor" id='${inputId}' value="${value}" ${extra}>
-                        </div>
-                    </div>
-                </div>
-            </div>`;
-    };
-
-    getFacturaServiceEditDialog = (value, inputId, field, services) => {
-        let options = '';
-        Object.values(services).forEach(({ id, nombre }) => {
-            options += `<option data-nombre="${nombre}" value="${id}" ${value === nombre ? 'selected' : ''}>${nombre}</option>`;
-        });
-        return `
-            <div class='row' style='background-color: #dadada'>
-                <div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>
-                    <p style='color: black'>Ingresa el nuevo valor para el campo <b>${field}</b>.</p>
-                    <div class='control-group form-group col-sm-offset-3 col-md-offset-3 col-lg-offset-3 col-sm-6 col-md-6 col-lg-6 col-xs-12'>
-                        <div class='controls'>
-                            <select id='${inputId}' style='text-align:center; width: 100%;'>
-                                ${options}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>`;
-    };
 
     var onlyAdminEditableFields = [
         'service_id'
@@ -818,7 +641,7 @@ $(document).ready( function () {
                 cache: false,
             })
             .then(result => {
-                dialogContent = getFacturaServiceEditDialog(value, column+'-'+id, field, result.data || {});
+                dialogContent = renderFacturaServiceEditDialog(value, column+'-'+id, field, result.data || {});
                 showEditionDialog(dialogContent);
             });
         }
@@ -834,77 +657,16 @@ $(document).ready( function () {
             else if (column === 'guide_number') {
                 extra = 'type="number" step="0" onKeyPress="return integersonly(this, event)"';
             }
-            dialogContent = getFacturaFieldEditDialog(value, column+'-'+id, field, extra);
+            dialogContent = renderFacturaFieldEditDialog(value, column+'-'+id, field, extra);
             showEditionDialog(dialogContent);
         }
 
     });
 
     let showFacturaDialog = factura => {
-
-        let status = factura.pendiente === '1' ? 'fa fa-times fa-1x fa-lg' : 'fa fa-check fa-1x fa-lg';
-        let statusColor = factura.pendiente === '1' ? 'orange' : 'lime';
-
-        let images = '';
-        factura.images.forEach(img => {
-            images += facturaImage(img);
-        });
-
-        let date = moment(factura.date_created);
-        date = date.format('LLL');
-
-        let content =
-            `<div class="container-flex">
-                <div>
-                    <b>Enviada: </b><i style="color: ${statusColor}" class='${status}'></i><br>
-                    <b>Fecha de Creación: </b><span /*class="factura-editable" data-column="date_created" data-id="${factura.id}" data-field="Fecha de Creación"*/>${date}</span><br>
-                    <b>Id Cliente:</b> <span /*class="factura-editable" data-column="uid" data-id="${factura.id}" data-field="Id Cliente"*/>${factura.uid}</span><br>
-                    <b>Tipo de Servicio:</b> <span class="${isAdmin ? 'factura-editable' : ''}" data-column="service_id" data-id="${factura.id}" data-field="Tipo de Servicio">${factura.service}</span><br>
-                    <b>Tracking:</b> <span class="factura-editable" data-column="tracking" data-id="${factura.id}" data-field="Tracking">${factura.tracking}</span><br>
-                    <b>Cantidad de Artículos:</b> <span class="factura-editable" data-column="item_count" data-id="${factura.id}" data-field="Artículos">${factura.item_count || 'N/A'}</span><br>
-                    <b>Monto:</b> <span class="factura-editable" data-column="amount" data-id="${factura.id}" data-field="Monto">US$ ${factura.amount}</span><br>
-                    <b>Precio FOB:</b> <span class="factura-editable" data-column="fob_price" data-id="${factura.id}" data-field="Precio FOB">${factura.fob_price !== null ? `US$ ${factura.fob_price}` : 'N/A'}</span><br>
-                    <b>Descripción:</b> <span class="factura-editable" data-column="description" data-id="${factura.id}" data-field="Descripción">${factura.description}</span><br>
-                    <b>No. Guía:</b> <span class="factura-editable" data-column="guide_number" data-id="${factura.id}" data-field="Número de Guía">${factura.guide_number || 'N/A'}</span>
-                </div>
-                <div id="divImageActions">
-                    <hr>
-                    ${factura.images.length > 0
-                      ? 
-                        `<button id="confirmDeleteFacturaImages" data-id="${factura.id}" style="display: none" class="btn btn-sm btn-danger" disabled>Eliminar Seleccionadas</button>
-                        <button id="deleteFacturaImages" class="btn btn-sm btn-danger"
-                        data-toggle="collapse" data-target="#divInstructions"
-                        aria-expanded="false" aria-controls="divInstructions">Eliminar Imágenes</button>`
-                      : ''
-                    }
-                    <button id="confirmAddFacturaImages" data-id="${factura.id}" style="display: none" class="btn btn-sm btn-success" disabled>Subir Imágenes</button>
-                    <button id="addFacturaImages" data-id="${factura.id}" data-toggle="collapse" 
-                        data-target="#divAddImages" aria-expanded="false" aria-controls="divAddImages"
-                        class="btn btn-sm btn-success"
-                      >Agregar Imágenes</button>
-                    <div id="divAddImages" class="collapse">
-                        <br>
-                        <small class="mt-3">Busca y selecciona las imágenes que deseas agregar, luego presiona el botón "Subir Imágenes".</small>
-                        <div class="row">
-                          <form id="addImagesForm">
-                              <input type="hidden" name="factura_id" value="${factura.id}"/>
-                              <input class="col-sm-offset-3 col-sm-6 mt-3" type="file" id="imgs" name="imgs[]" accept="image/jpeg,image/png" multiple>
-                          </form>
-                        </div>
-                    </div>
-                    <div id="divInstructions" class="collapse"
-                        <br><br>
-                        <small class="mt-3">Selecciona las imágenes que deseas eliminar haciendo click sobre ellas, luego presiona el botón "Eliminar Seleccionadas".</small>
-                    </div>
-                </div>
-                <div class="factura-content">
-                    ${factura.images.length > 0 ? images : '<hr><h5>¡No hay imágenes asociadas a esta factura!</h5>'}
-                </div>
-            </div>`;
-
         bootbox.dialog({
             title: `Detalles de factura de ${factura.uname}`,
-            message: `${content}`
+            message: `${renderFacturaDetails(factura)}`
         });
     };
 
@@ -1093,7 +855,7 @@ $(document).ready( function () {
                             timer: 2000,
                             showConfirmButton: false
                         });
-                        $('#divFacturaSeguimiento').html(facturaSeguimiento(response.data, factura));
+                        $('#divFacturaSeguimiento').html(renderFacturaSeguimiento(response.data, factura));
                     }
                 } else if (response.message) {
                     bootbox.alert(response.message);
