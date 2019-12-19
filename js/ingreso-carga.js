@@ -1,9 +1,6 @@
-const indexServicio = 0;
-const indexGuideNumber = 1;
-const indexTracking = 2;
-const indexUId = 3;
-const indexUName = 4;
-const indexPeso = 5;
+const ingresoCargaIndexes = {
+  servicio: 0, guideNumber: 1, tracking: 2, uid: 3, uname: 4, peso: 5
+};
 
 $(document).ready( function () {
   var tablilla = $('#tablaNuevaCarga').DataTable({
@@ -73,7 +70,7 @@ $(document).ready( function () {
   $('#tablaNuevaCarga tbody').on("click", "h5.ingCargaGuideNumber", function () {
     var index = tablilla.row($(this).closest('tr')).index();
     var arr = tablilla.rows(index).data().toArray();
-    var currentGuideNumber = arr[0][indexGuideNumber].split(">")[1].split("<")[0];
+    var currentGuideNumber = arr[0][ingresoCargaIndexes.guideNumber].split(">")[1].split("<")[0];
     bootbox.prompt({
       title: "Ingrese el número de guía para el paquete.",
       size: "small",
@@ -120,7 +117,7 @@ $(document).ready( function () {
               else {
                 addedGuideNumbers = addedGuideNumbers.filter(guideNumber => guideNumber != currentGuideNumber);
                 addedGuideNumbers.push(result.toUpperCase());
-                arr[0][indexGuideNumber] = "<h5 class='seleccionado ingCargaGuideNumber'>"+result+"</h5>";
+                arr[0][ingresoCargaIndexes.guideNumber] = "<h5 class='seleccionado ingCargaGuideNumber'>"+result+"</h5>";
                 tablilla.row(index).data(arr[0]).draw(false);
                 bootbox.hideAll();
               }
@@ -139,7 +136,7 @@ $(document).ready( function () {
   $('#tablaNuevaCarga tbody').on("click", "h5.ingCargaTracking", function () {
     var index = tablilla.row($(this).closest('tr')).index();
     var arr = tablilla.rows(index).data().toArray();
-    var currentTracking = arr[0][indexTracking].split(">")[1].split("<")[0];
+    var currentTracking = arr[0][ingresoCargaIndexes.tracking].split(">")[1].split("<")[0];
     bootbox.prompt({
       title: "Ingrese el tracking para el paquete.",
       size: "small",
@@ -186,7 +183,7 @@ $(document).ready( function () {
               else {
                 addedTrackings = addedTrackings.filter(tracking =>  tracking != currentTracking);
                 addedTrackings.push(result.toUpperCase());
-                arr[0][indexTracking] = "<h5 class='seleccionado ingCargaTracking'>"+result.toUpperCase()+"</h5>";
+                arr[0][ingresoCargaIndexes.tracking] = "<h5 class='seleccionado ingCargaTracking'>"+result.toUpperCase()+"</h5>";
                 tablilla.row(index).data(arr[0]).draw(false);
                 bootbox.hideAll();
               }
@@ -224,7 +221,7 @@ $(document).ready( function () {
         else if (result.length > 7)
           bootbox.alert("El ID no puede exceder los 7 caracteres.");
         else {
-          arr[0][indexUId] = "<h5 class='seleccionado ingCargaUid'>"+result.toUpperCase()+"</h5>";
+          arr[0][ingresoCargaIndexes.uid] = "<h5 class='seleccionado ingCargaUid'>"+result.toUpperCase()+"</h5>";
           $.ajax({
             url: "db/DBgetUserNamePostUid.php",
             type: "POST",
@@ -244,7 +241,7 @@ $(document).ready( function () {
                   message: "El ID ingresado está asociado al cliente '" + name + "', ¿desea actualizar también el nombre de cliente del paquete?",
                   callback: function(resito){
                     if (resito){
-                      arr[0][indexUName] = "<h5 class='seleccionado ingCargaUname'>"+name+"</h5>";
+                      arr[0][ingresoCargaIndexes.uname] = "<h5 class='seleccionado ingCargaUname'>"+name+"</h5>";
                       tablilla.row(index).data(arr[0]).draw(false);
                     }
                   }
@@ -284,7 +281,7 @@ $(document).ready( function () {
         else if (result.length > 50)
           bootbox.alert("El nombre de cliente no puede exceder los 50 caracteres.");
         else {
-          arr[0][indexUName] = "<h5 class='seleccionado ingCargaUname'>"+result+"</h5>";
+          arr[0][ingresoCargaIndexes.uname] = "<h5 class='seleccionado ingCargaUname'>"+result+"</h5>";
           tablilla.row(index).data(arr[0]).draw(false);
           return true;
         }
@@ -312,7 +309,7 @@ $(document).ready( function () {
         else if (result.includes("-"))
           bootbox.alert("El peso no puede ser negativo.");
         else {
-          arr[0][indexPeso] = "<h5 class='seleccionado ingCargaPeso'>"+result+"</h5>";
+          arr[0][ingresoCargaIndexes.peso] = "<h5 class='seleccionado ingCargaPeso'>"+result+"</h5>";
           tablilla.row(index).data(arr[0]).draw(false);
           document.getElementById("libras").innerHTML = "Libras: " + calcularLibras();
           return true;
@@ -495,7 +492,7 @@ function calcularLibras(){
   var total = 0;
   var str = "";
   for (var i = 0; i < data.length; i++){
-    str = data[i][indexPeso].split(">")[1].split("<")[0];
+    str = data[i][ingresoCargaIndexes.peso].split(">")[1].split("<")[0];
     total = total + Number(str);
   }
   return total;
@@ -588,7 +585,7 @@ function agregarRegistro(){
                         label: "Si",
                         className: "btn btn-md btn-success alinear-derecha",
                         callback: function(){
-                          var trackingsin = tdata[0][indexTracking];
+                          var trackingsin = tdata[0][ingresoCargaIndexes.tracking];
                           t.row(0).remove().draw(false);
                           document.getElementById("libras").innerHTML = "Libras: " + calcularLibras();
                           document.getElementById("paquetes").innerHTML = "Paquetes: " + t.rows().data().length;
@@ -649,7 +646,7 @@ function agregarRegistro(){
                               query: "DELETE FROM paquete WHERE rcid = "+rcid+"; DELETE FROM carga WHERE rcid = " + rcid
                             }
                           });
-                          var trackingsin = tdata[cant][indexTracking];
+                          var trackingsin = tdata[cant][ingresoCargaIndexes.tracking];
                           t.row(cant).remove().draw(false);
                           document.getElementById("libras").innerHTML = "Libras: " + calcularLibras();
                           document.getElementById("paquetes").innerHTML = "Paquetes: " + t.rows().data().length;
@@ -668,7 +665,7 @@ function agregarRegistro(){
               if (uids.length !== 0){
                 var arreglo = [];
                 for (var j = 0; j < tdata.length; j++){
-                  var uidisito = tdata[j][indexUId].toUpperCase();
+                  var uidisito = tdata[j][ingresoCargaIndexes.uid].toUpperCase();
                   if (uids.indexOf(uidisito) != -1) {
                     if (uidisito in arreglo)
                       arreglo[uidisito] += 1;
