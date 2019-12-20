@@ -538,8 +538,8 @@ function agregarRegistro(){
         invent.search("Esperando");
         var arr = invent.rows({search:'applied'}).data().toArray();
         var uids = "";
-        for (var i = 0; i < arr.length; i++){
-          var id = arr[i][indexPeso].split(">")[1].split("<")[0].toUpperCase();
+        for (var i = 0; i < arr.length; i++) {
+          var id = arr[i][inventarioIndexes.uid].split(">")[1].split("<")[0].toUpperCase();
           if ((arreglo.indexOf(id) == -1) && (uids.split(",").indexOf(id) == -1))
             uids += id+",";
         }
