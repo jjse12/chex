@@ -25,10 +25,10 @@
         <!-- Custom Fonts -->
         <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
         <!-- jQuery -->
-        <link href="./css/custom.css?rnd=1" rel="stylesheet">
-        <link href="./css/tableStyles.css" rel="stylesheet">
-        <link href="./css/general.css" rel="stylesheet">
-        <link href="./css/loader.css" rel="stylesheet">
+        <link href="css/custom.css?rnd=1" rel="stylesheet">
+        <link href="css/tableStyles.css" rel="stylesheet">
+        <link href="css/general.css" rel="stylesheet">
+        <link href="css/loader.css" rel="stylesheet">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
         <script type="text/javascript" src="js/jquery.js"></script>
         <script type="text/javascript" src="js/jquery.session.js"></script>

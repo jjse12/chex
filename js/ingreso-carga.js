@@ -52,7 +52,7 @@ $(document).ready( function () {
     }
   });
 
-  $("#divServices").load('/db/servicio/DBgetIngresoCargaServices.php', {}, () => {});
+  $("#divServices").load('db/servicio/DBgetIngresoCargaServices.php', {}, () => {});
 
   $('#tablaNuevaCarga tbody').on("click", "img.icon-delete", function () {
     tablilla.row( $(this).parents('tr'))

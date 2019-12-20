@@ -108,4 +108,4 @@
     </div>
 </div>
 
-<script src="/js/ingreso-carga.js"></script>
+<script src="js/ingreso-carga.js"></script>
