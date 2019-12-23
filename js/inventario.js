@@ -676,13 +676,14 @@ function loadInventario(){
           `<h6 data-paquete='${JSON.stringify(paquete)}' title='Registro de Carga #${paquete.rcid}' class='seleccionado' data-sorting-date="${paquete.fecha}">${fechaIngreso}</h6>`,
           "<h6 class='seleccionado'>"+servicio+"</h6>",
           "<h6 class='seleccionado'>"+guideNumber+"</h6>",
-          "<h6 class='seleccionado'>"+trackingsito+"</h6>",
+          `<h6 class='seleccionado' data-tracking="${paquete.tracking}">${trackingsito}</h6>`,
           "<h6 class='seleccionado'>"+paquete.uid+"</h6>",
           "<h6 class='seleccionado'>"+paquete.uname+"</h6>",
           "<h6 class='seleccionado'>"+paquete.libras+"</h6>",
           plansito,
           "<img class='icon-update' src='images/edit.png'/>"
         ]);
+
       });
 
       table.order([inventarioIndexes.uname, "asc"]);
@@ -1585,7 +1586,7 @@ async function showEntregaMercaderiaDialog(data, titulo) {
 
   var trackings = [];
   for (var i = 0; i < data.length; i++) {
-    trackings.push(data[i][inventarioIndexes.tracking].split(">")[1].split("<")[0]);
+    trackings.push($(data[i][inventarioIndexes.tracking]).data('tracking'));
     libras += Number(data[i][inventarioIndexes.peso].split(">")[1].split("<")[0]);
   }
 

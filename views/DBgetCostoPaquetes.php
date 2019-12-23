@@ -115,7 +115,7 @@ foreach ($infoPaquetes as &$infoPaquete) {
             $infoPaquete['arancel'] = (100*floatval($infoPaquete['arancel'])) . '%';
         }
     }
-    else if ($infoPaquete['servicio'] === 'Estándar') {
+    else if ($infoPaquete['servicio'] === 'Estándar' || $infoPaquete['servicio'] === 'EstÃ¡ndar') {
         $infoPaquete['precio_fob'] = null;
         $infoPaquete['arancel'] = null;
         $infoPaquete['impuestos'] = null;
