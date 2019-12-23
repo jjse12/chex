@@ -7,8 +7,8 @@
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-<script src="js/inventario.js?rnd=1"></script>
-<script src="js/templates/inventario-templates.js?rnd=1"></script>
+<script src="js/inventario.js?v=1.0"></script>
+<script src="js/templates/inventario-templates.js?v=1.0"></script>
 
 <div class="container" style="padding-top: 4.5cm">
     <table id="inventario" class="display compact" width="100%" cellspacing="0">
