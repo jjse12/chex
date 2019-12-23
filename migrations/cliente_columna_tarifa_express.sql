@@ -1,0 +1,1 @@
+alter table cliente add tarifa_express tinyint default 25 not null;

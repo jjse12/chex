@@ -150,7 +150,7 @@
             var span = $(this).children("span").toggleClass("show", false);
         });
 
-        
+
         $("#historicoPaquetes tbody").on("click", "img.info_pqt", function (){
 
             var tablaPaquetes = $('#historicoPaquetes').DataTable();
@@ -498,7 +498,7 @@
             },
             "footerCallback": function ( row, data, start, end, display ) {
                 var api = this.api(), data;
-                
+
                 if (this.fnSettings().fnRecordsDisplay() == 0){
                     api.column(2).footer().style.visibility = "hidden";
                     api.column(3).footer().style.visibility = "hidden";
@@ -545,8 +545,8 @@
             var arr = tabCargas.rows(index).data().toArray();
             var rcid = arr[0][0].split(">")[1].split("<")[0];
             var fechilla = arr[0][1].split("title='")[1].split("'")[0];
-            var paquetitos = arr[0][2].split(">")[1].split("<")[0]; 
-            var libritas = arr[0][3].split(">")[1].split("<")[0]; 
+            var paquetitos = arr[0][2].split(">")[1].split("<")[0];
+            var libritas = arr[0][3].split(">")[1].split("<")[0];
 
             $.ajax({
                 url: "db/DBexecQuery.php",
@@ -578,7 +578,7 @@
                         backdrop: true,
                         size: "large",
                         title: "Mercadería ingresada el " + fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + " " + apm,
-                        message: 
+                        message:
                         "<div class='row' style='background-color: #eaeaea'>"+
                             "<div class='row' style='margin-bottom: 1cm;'>"+
                                 "<div class='col-lg-1 col-md-1 col-sm-1'></div>"+
@@ -646,7 +646,7 @@
                                                                     }
                                                                     else
                                                                         bootbox.alert("No se pudo eliminar el paquete debido a un problema con la consulta a la base de datos. Intente nuevamente");
-                                                                }, 
+                                                                },
                                                                 error: function(){
                                                                     bootbox.alert("Ocurrió un problema al intentar conectarse al servidor. Intente nuevamente");
                                                                 }
@@ -764,7 +764,7 @@
                             var fechaEntrega = "";
                             if (estado == "Entregado")
                                 fechaEntrega = arre[0][4].split(">")[2].split("<")[0];
-                            
+
 
                             // DESPLIEGUE DE INFORMACIÓN DE UN PAQUETE AUN EN INVENTARIO (Sin Entregar)
                             if (fechaEntrega == ""){
@@ -811,7 +811,7 @@
                                             backdrop: true,
                                             closeButton: false,
                                             title: "Paquete de " + uname,
-                                            message: 
+                                            message:
                                             //TODO: agregar campos de nombre y id de cliente y trasladar el campo peso a la misma fila (implementar opción para modificar estos 3 campos)
                                             "<div class='row' style='background-color: #dadada'>"+
                                                 "<div class='row'>"+
@@ -921,7 +921,7 @@
                                             apm = "AM";
                                         }
                                         fechaIngreso = fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + " " + apm
-                                        
+
                                         var plan = data["plan"];
                                         var cobroRuta = "";
                                         var titlePaquetes = "";
@@ -960,7 +960,7 @@
                                             backdrop: true,
                                             closeButton: false,
                                             title: "Paquete de " + uname,
-                                            message: 
+                                            message:
                                             //TODO: agregar campos de nombre y id de cliente y trasladar el campo peso a la misma fila (implementar opción para modificar estos 3 campos)
                                             "<div class='row' style='background-color: #dadada'>"+
                                                 "<div class='row'>"+
@@ -1083,7 +1083,7 @@
                 }
             });
         });
-        
+
         var tabBoletas = $('#tablaBoletas').DataTable({
             "bSort" : false,
             "retrieve": true,
@@ -1153,7 +1153,7 @@
                     }, 0)
                     ) + " Libras</h5>"
                 );
-     
+
                 $(api.column(7).footer() ).html(
                     "<h5>Total Página: <br>Q " + numberWithCommas(
                                         api.column(7, { page: 'current'} ).data().reduce( function (a, b) {
@@ -1183,7 +1183,7 @@
                 bootbox.alert("No se pueden seleccionar boletas pendientes de pago. Estas deben ser liquidadas individualmente.");
                 return;
             }
-            
+
             $(this).closest('tr').toggleClass("selected");
             tabBoletas.draw(false);
             if (tabBoletas.rows('.selected').data().toArray().length == 0)
@@ -1193,7 +1193,7 @@
 
         $("#tablaBoletas tbody").on("click", "h5.boleta-paquetes", function (){
             var porLiq = document.getElementById("btnBoletasPorLiquidar").style.color == "white";
-            
+
             var index = tabBoletas.row($(this).closest('tr')).index();
             var arr = tabBoletas.rows(index).data().toArray();
             var fecha = arr[0][0].split("title='")[1].split("'")[0];
@@ -1217,7 +1217,7 @@
                         backdrop: true,
                         closeButton: false,
                         title: "Mercadería de " + uname,
-                        message: 
+                        message:
                         "<div class='row' style='background-color: #eaeaea'>"+
                             "<div class='row' style='margin-bottom: 1cm;'>"+
                                 "<div class='col-lg-1 col-md-1 col-sm-1'></div>"+
@@ -1322,14 +1322,14 @@
                         h = 12;
                     apm = "AM";
                 }
-                liquidado = fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + ":" + s + " " + apm;    
+                liquidado = fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + ":" + s + " " + apm;
             }
 
             $.ajax({
                 url: "db/DBexecQuery.php",
                 type: "POST",
                 data:{
-                    query: "SELECT tarifa, subtotal, ruta, descuento, detalle, plan FROM entrega WHERE fecha = '" + fecha + "'"
+                    query: "SELECT tarifa, subtotal, ruta, descuento, detalle, plan, tabla_mercaderia FROM entrega WHERE fecha = '" + fecha + "'"
                 },
                 cache: false,
                 success: function(res){
@@ -1343,13 +1343,16 @@
                         desc = rows[0]["descuento"].split("@@@")[0];
                         comment = rows[0]["descuento"].split("@@@")[1];
                     }
+                    let tableMercaderia = rows[0]['tabla_mercaderia'];
                     bootbox.dialog({
                         backdrop: true,
                         closeButton: false,
+                        size: tableMercaderia === null ? 'medium' : 'large',
                         title: "Boleta de mercadería entregada a " + uname,
-                        message: 
-                        "<div class='row' style='background-color: #e3e3e3'>"+
-                            (!porLiq ? 
+                        message:
+                        "<div class='container-flex'>"+
+                            "<div class='row'>"+
+                            (!porLiq ?
                             "<div class='row'>"+
                                 "<div class='col-lg-3 col-md-3 col-sm-3'></div>"+
                                 "<div class='col-lg-6 col-md-6 col-sm-6'>"+
@@ -1357,14 +1360,16 @@
                                 "</div>"+
                                 "<div class='col-lg-3 col-md-3 col-sm-3'></div>"+
                             "</div>":"")+
-                            "<div class='row'>"+
+                            (tableMercaderia !== null ? `<div class="mb-3">${tableMercaderia}</div>` :
+                                "<div class='row'>"+
                                 "<div class='col-lg-1 col-md-1 col-sm-1'></div>"+
                                 "<div class='control-group form-group col-lg-2 col-md-2 col-sm-2'><div class='controls'><label align='center'  style='color: #337ab7; text-align:center; width:100%'>Paquetes</label><input style='text-align:center;' value='"+paquetes+"' type='text' class='form-control' disabled/></div></div>"+
                                 "<div class='control-group form-group col-lg-2 col-md-2 col-sm-2'><div class='controls'><label align='center'  style='color: #337ab7; text-align:center; width:100%'>Libras</label><input style='text-align:center;' value='"+libras+"' type='text' class='form-control' disabled/></div></div>"+
                                 "<div class='control-group form-group col-lg-2 col-md-2 col-sm-2'><div class='controls'><label align='center'  style='color: #337ab7; text-align:center; width:100%'>Tarifa</label><input value='"+rows[0]["tarifa"]+"' type='text' class='form-control' style='text-align:center;' disabled/></div></div>"+
                                 "<div class='control-group form-group col-lg-4 col-md-4 col-sm-4'><div class='controls'><label align='center' style='color: #337ab7; text-align:center; width:100%'>Subtotal</label><input type='text' class='form-control' style='text-align:center' value='"+rows[0]["subtotal"]+"' disabled/></div></div>"+
                                 "<div class='col-lg-1 col-md-1 col-sm-1'></div>"+
-                            "</div>"+
+                                "</div>"
+                            ) +
                             "<div class='row'>"+
                                 "<div class='col-lg-2 col-md-2 col-sm-2'></div>"+
                                 "<div class='col-lg-4 col-md-4 col-sm-4'>"+
@@ -1401,9 +1406,10 @@
                                 "<div class='col-lg-2 col-md-2 col-sm-2'></div>"+
                                 (rows[0]["detalle"] != null ?
                                 "<div class='col-lg-4 col-md-4 col-sm-4'><div class='controls'><label align='center' style='color: #337ab7; text-align:center; width:100%'>Detalle</label><label style='color: gray; font-size: 11px;'>"+rows[0]["detalle"]+"</label>"+
-                                "</div></div>": 
+                                "</div></div>":
                                 "<div class='col-lg-2 col-md-2 col-sm-2'></div>")+
                                 "<div class='control-group form-group col-lg-4 col-md-4 col-sm-4'><div class='controls'><label align='center' style='color: #337ab7; text-align:center; width:100%'>Total</label><input type='text' style='text-align:center' class='form-control' value='"+total+"' disabled/></div></div>"+
+                            "</div>"+
                             "</div>"+
                         "</div>",
                         buttons: {
@@ -1526,7 +1532,7 @@
                                     var fechita = hoy.getFullYear() + "-" + (hoy.getMonth()+1) + "-" + hoy.getDate() + " " + hoy.getHours() + ":" + hoy.getMinutes() + ":" + hoy.getSeconds();
 
                                     if (metodo == "Pendiente"){
-                                        
+
                                         var nuevoSubtotal = Number(libras)*64*1.065;
                                         var agregado = nuevoSubtotal - Number(rows[0]["tarifa"].replace(/[Q,\s]/g, ""))*Number(libras);
                                         //alert("Agregado: " + agregado);
@@ -1606,10 +1612,10 @@
                                                                     }
 
 
-                                                                    bootbox.alert("La boleta ha sido marcada como liquidada.\nFecha de liquidación: " + fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + ":" + s + " " + apm);    
+                                                                    bootbox.alert("La boleta ha sido marcada como liquidada.\nFecha de liquidación: " + fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + ":" + s + " " + apm);
                                                                 }
                                                                 else{
-                                                                    bootbox.alert("Ocurrió un problema al intentar ejecutar la consulta a la base de datos. Intentelo luego.");    
+                                                                    bootbox.alert("Ocurrió un problema al intentar ejecutar la consulta a la base de datos. Intentelo luego.");
                                                                 }
                                                             },
                                                             error: function() {
@@ -1656,10 +1662,10 @@
                                                         h = 12;
                                                     apm = "AM";
                                                 }
-                                                bootbox.alert("La boleta ha sido marcada como liquidada.\nFecha de liquidación: " + fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + ":" + s + " " + apm);    
+                                                bootbox.alert("La boleta ha sido marcada como liquidada.\nFecha de liquidación: " + fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + ":" + s + " " + apm);
                                             }
                                             else{
-                                                bootbox.alert("Ocurrió un problema al intentar ejecutar la consulta a la base de datos. Intentelo luego.");    
+                                                bootbox.alert("Ocurrió un problema al intentar ejecutar la consulta a la base de datos. Intentelo luego.");
                                             }
                                         },
                                         error: function() {
@@ -1690,7 +1696,7 @@
                                                 backdrop: true,
                                                 closeButton: false,
                                                 title: "Mercadería de " + uname,
-                                                message: 
+                                                message:
                                                 "<div class='row' style='background-color: #eaeaea'>"+
                                                     "<div class='row' style='margin-bottom: 1cm;'>"+
                                                         "<div class='col-lg-1 col-md-1 col-sm-1'></div>"+
@@ -2303,7 +2309,7 @@
         document.getElementById("divBoletas").style.display = "none";
         document.getElementById("divHistoricoPaquetes").style.display = "none";
         document.getElementById("divHistoricoCargas").style.display = "block";
-        var t = $("#historicoCargas").DataTable();        
+        var t = $("#historicoCargas").DataTable();
         t.clear();
         $.ajax({
             url: "db/DBexecQuery.php",
@@ -2379,7 +2385,7 @@
                     var plansito = rows[i]["plan"];
                     var plansin = plansito == "Oficina" ? "<h5 class='seleccionado btn-sm btn-success'>En Oficina</h5>" :
                         plansito.includes("Guatex") ? "<h5 class='popup btn-sm' style='text-align:center; cursor: default; background-color: #f4cb38'>Guatex<span class='popuptext'>"+plansito.split(":")[1]+"</span></h5>" :
-                        "<h5 class='popup btn-sm btn-primary' style='text-align:center; cursor: default;'>Ruta<span class='popuptext'>"+plansito.split(":")[1]+"</span></h5>"; 
+                        "<h5 class='popup btn-sm btn-primary' style='text-align:center; cursor: default;'>Ruta<span class='popuptext'>"+plansito.split(":")[1]+"</span></h5>";
                     t.row.add([
                         "<h5 style='text-align:center;' title='"+rows[i]["fecha"]+"'>"+fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + " " + apm+"</h5>",
                         "<h5 class='boleta-paquetes' style='text-align:center; cursor:help;'>"+rows[i]["paquetes"]+"</h5>",
@@ -2434,7 +2440,7 @@
                     var plansito = rows[i]["plan"];
                     var plansin = plansito == "Oficina" ? "<h5 class='seleccionado btn-sm btn-success'>En Oficina</h5>" :
                         plansito.includes("Guatex") ? "<h5 class='popup btn-sm' style='text-align:center; cursor: default; background-color: #f4cb38'>Guatex<span class='popuptext'>"+plansito.split(":")[1]+"</span></h5>" :
-                        "<h5 class='popup btn-sm btn-primary' style='text-align:center; cursor: default;'>Ruta<span class='popuptext'>"+plansito.split(":")[1]+"</span></h5>"; 
+                        "<h5 class='popup btn-sm btn-primary' style='text-align:center; cursor: default;'>Ruta<span class='popuptext'>"+plansito.split(":")[1]+"</span></h5>";
                     t.row.add([
                         "<h5 class='seleccionado' title='"+rows[i]["fecha"]+"'>"+fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + " " + apm+"</h5>",
                         "<h5 class='boleta-paquetes' style='text-align:center; cursor:help;'>"+rows[i]["paquetes"]+"</h5>",
@@ -2519,7 +2525,7 @@
                                     bootbox.alert("Boletas liquidadas exitosamente. Fecha de liquidación: " + fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + ":" + s + " " + apm);
                                 }
                                 else
-                                    bootbox.alert("No fue posible realizar la operación. Vuelva a intentarlo luego"); 
+                                    bootbox.alert("No fue posible realizar la operación. Vuelva a intentarlo luego");
                             },
                             error: function(){
                                 document.getElementById("divBotonLiquidarBoletas").style.visibility = "visible";

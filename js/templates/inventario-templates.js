@@ -4,8 +4,8 @@ const renderPlanSelectionDialogContent = (uname, anonimo) => {
         <div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>
             <form novalidate>
                 <br>
-                <div class='control-group form-group col-lg-6 col-md-6 col-sm-6 col-xs-12'>
-                    <label style='color: #337ab7; width:100%; text-align: center'>Plan de Entrega</label>
+                <div class='control-group form-group text-center col-lg-6 col-md-6 col-sm-6 col-xs-12'>
+                    <label style='color: #337ab7; width:100%;'>Plan de Entrega</label>
                     <button onclick='toggleActivadito(this)' id='btnOficina' style='width:49%; color:#337ab7'
                         type='button' class='btn btn-default'>Oficina</button>
                     <button onclick='toggleActivadito(this)' id='btnRuta' style='width:49%; color:#337ab7'
@@ -22,7 +22,7 @@ const renderPlanSelectionDialogContent = (uname, anonimo) => {
                     </div>
                     <div id='divEsperandoCantidad' style='display:none'>
                         <label style='color: #696969; width:100%; text-align: center'>Cantidad de Paquetes Faltantes</label>
-                        <input placeholder='Paquetes Faltantes' onkeyup='this.value=this.value.replace(/^0+/, \"\");'
+                        <input placeholder='Paquetes Faltantes' onkeyup="this.value=this.value.replace(/^0+/, '');"
                             onkeypress='return integersonly(this, event);' type='text' maxlength='2' style='text-align:center;'
                             class='form-control' id='form_carga_esperando'/>
                     </div>
@@ -63,7 +63,7 @@ const renderMultiplePlanSelectionDialogContent = (checkLabel, anonimo) => {
                         </div>
                         <div id='divEsperandoCantidad' style='display:none'>
                             <label style='color: #696969; width:100%; text-align: center'>Cantidad de Paquetes Faltantes</label>
-                            <input placeholder='Paquetes Faltantes' onkeyup='this.value=this.value.replace(/^0+/, \"\");'
+                            <input placeholder='Paquetes Faltantes' onkeyup="this.value=this.value.replace(/^0+/, '');"
                                 onkeypress='return integersonly(this, event);' type='text' maxlength='2'
                                 style='text-align:center;'  class='form-control' id='form_carga_esperando'/>
                         </div>
@@ -106,7 +106,7 @@ const renderModificarPaqueteDialogContent = (paquete) => {
                 <div class='control-group form-group col-lg-3 col-md-3 col-sm-3 col-xs-3'>
                     <div class='controls'>
                         <label style='color: #337ab7; text-align:center; width:100%'>Peso</label>
-                        <input placeholder='Peso' value='${peso}' onkeyup='this.value=this.value.replace(/^0+/, \"\");' 
+                        <input placeholder='Peso' value='${peso}' onkeyup="this.value=this.value.replace(/^0+/, '');" 
                             onkeypress='return integersonly(this, event);' type='text' maxlength='3' 
                             style='text-align:center;' class='form-control' id='form_carga_libras'/>
                     </div>
@@ -133,7 +133,7 @@ const renderModificarPaqueteDialogContent = (paquete) => {
                     <div class='controls'>
                         <label style='color: #337ab7; text-align:center; width:100%'>Celulares</label>
                         <input placeholder='Cantidad' value='${celulares > 0 ? celulares : ""}'
-                            onkeyup='this.value=this.value.replace(/^0+/, \"\");' onkeypress='return integersonly(this, event);'
+                            onkeyup="this.value=this.value.replace(/^0+/, '');" onkeypress='return integersonly(this, event);'
                             type='text' maxlength='3' style='text-align:center;' class='form-control' id='form_carga_celulares'/>
                     </div>
                 </div>
@@ -141,7 +141,7 @@ const renderModificarPaqueteDialogContent = (paquete) => {
                     <div class='controls'>
                         <label style='color: #337ab7; text-align:center; width:100%'>Cobro Extra</label>
                         <input placeholder='Monto (Q)' value='${extras > 0 ? extras : ""}'
-                            onkeyup='this.value=this.value.replace(/^0+/, \"\");' onkeypress='return integersonly(this, event);'
+                            onkeyup="this.value=this.value.replace(/^0+/, '');" onkeypress='return integersonly(this, event);'
                             type='text' maxlength='5' style='text-align:center;' class='form-control' id='form_carga_cobro_extra'/>
                     </div>
                 </div>
@@ -159,7 +159,7 @@ const renderModificarPaqueteDialogContent = (paquete) => {
                     </div>
                     <div id='divEsperandoCantidad' style='display:none'>
                         <label style='color: #696969; width:100%; text-align: center'>Cantidad de Paquetes Faltantes</label>
-                        <input placeholder='Paquetes Faltantes' onkeyup='this.value=this.value.replace(/^0+/, \"\");'
+                        <input placeholder="Paquetes Faltantes" onkeyup="this.value=this.value.replace(/^0+/, '');"
                             onkeypress='return integersonly(this, event);' type='text' maxlength='2' style='text-align:center;'
                             class='form-control' id='form_carga_esperando'/>
                     </div>
@@ -187,6 +187,64 @@ const renderNotificationOptionsDialogContent = (searchByUid) => {
                     <label class='col-lg-5 col-md-5 col-sm-5 col-xs-5' style='text-align: center; color: black; cursor: pointer;' onclick='notificarViaEmail(${searchByUid})'>
                         Vía Correo Electrónico
                     </label>
+                </div>
+            </div>
+        </div>`;
+};
+
+const renderEntregaMercaderaDialog = (table, plan, trackings, uid) => {
+    return `
+        <div class="mt-3 mb-3 container-flex">
+            <div class="mb-3" id="divEntregaMercaderiaTable">${table}</div>
+            <div class="row text-center">
+                <div class="mt-3 text-center form-group-sm col-sm-4 col-sm-offset-4">
+                    <label style="color: #337ab7" for="tipo-de-pago">Tipo de pago del cliente</label>
+                    <select class="form-control text-center" id="tipo-de-pago" name="tipo-de-pago"
+                        onchange="tipoDePagoOnChange(this, ['${trackings.join("','")}'], '${uid}')">
+                        <option value="">Selecciona un tipo de pago</option>
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Tarjeta">Tarjeta de Crédito</option>
+                        <option value="Cheque">Cheque</option>
+                        <option value="Transferencia">Transferencia</option>
+                        <option value="Pendiente">Pendiente</option>
+                    </select>
+                </div>
+                ${plan.includes("/") ? `
+                <div id="divCostoRuta" class="mt-3 form-group-sm text-center col-sm-offset-4 col-sm-4">
+                    <label style="color: #337ab7; width:100%">Costo de Envío (Q)</label>
+                    <input onfocusout="roundField(this); calcularTotalEntrega()"
+                        onkeypress="return numbersonly(this, event, '')"
+                        onkeyup="this.value=this.value.replace(/^0+/, '');" id="costoRutaEntrega" type="text"
+                        class="form-control" style="width:100%; text-align:center;"/>
+                </div>` : ''
+                }
+                <div class="mt-3 col-sm-12">
+                    <div class="col-sm-2 col-sm-offset-1">
+                        <button onclick="toggleDescuento()" id="btnDescuento" style="color:#337ab7; margin-top: 2px;"
+                            type="button" class="btn btn-default">Descuento<br>Especial</button>
+                    </div>
+                    <div class="col-sm-8">
+                        <div id="divDescuentoInput" style="pointer-events:none; opacity:0.4;" class="form-group text-center col-sm-5">
+                            <label style="color: #337ab7; width: 100%;">Descuento (Q)</label>
+                            <input onfocusout="roundField(this); calcularTotalEntrega();" id="descuentoEntrega"
+                                type="text" class="form-control" style="text-align:center;"
+                                onkeypress="return numbersonly(this, event, '-')"
+                                onkeyup="this.value=this.value.replace(/^0+/, '');"/>
+                        </div>
+                        <div id="divComentarioDescuento" class="form-group col-sm-7">
+                            <label style="color: #337ab7; text-align:center; width: 100%;">Comentario</label>
+                            <textarea id="comentarioEntrega" type="text" class="form-control"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-sm-offset-4 col-sm-4">
+                    <label style="color: #337ab7; text-align:center; width:100%">Total</label>
+                    <input id="totalEntrega" type="text" class="text-center form-control" disabled/>
+                </div>
+                <div id="divSpanInputEntrega" style="display: none;">
+                    <div class="col-sm-offset-2 col-sm-8">
+                        <span id="spanInputEntrega" class="dialog-text"></span>
+                    </div>
                 </div>
             </div>
         </div>`;

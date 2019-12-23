@@ -1,0 +1,1 @@
+alter table entrega add tabla_mercaderia TEXT null;

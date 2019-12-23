@@ -1,0 +1,1 @@
+alter table entrega modify subtotal varchar(12) null;

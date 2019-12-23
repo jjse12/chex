@@ -663,7 +663,7 @@ function loadInventario(){
             break;
         }
         var servicio = paquete.servicio;
-        var guideNumber = paquete.guide_number || 'N/A';
+        var guideNumber = paquete.guide_number || 'Sin Especificar';
         var celulares = paquete.celulares;
         var extras = paquete.cobro_extra;
         var especial = celulares + extras > 0;
@@ -1409,7 +1409,7 @@ function planEntregaVarios(arr, nombre){
   }
 
   bootbox.dialog({
-    size: (isMobile ? "small" : "medium"),
+    size: 'medium',
     closeButton: false,
     title: titulo,
     message: renderMultiplePlanSelectionDialogContent(checkLabel, anonimo),
@@ -1510,7 +1510,6 @@ function entregarSeleccionados(){
   var uid = data[0][inventarioIndexes.uid].toUpperCase();
   var plan = data[0][inventarioIndexes.plan].toUpperCase();
   var continuar = true;
-  let razon = true;
   let msgError;
   for (var i = 1; i < data.length; i++){
     if (!data[i][inventarioIndexes.uid].toUpperCase().includes(uid)){
@@ -1547,27 +1546,31 @@ function entregarSeleccionados(){
     });
     return;
   }
-  $.ajax({
-    url: "db/DBgetUserTarifa.php",
-    type: "POST",
-    data: {
-      uid: data[0][inventarioIndexes.uid].split(">")[1].split("<")[0]
-    },
-    cache: false,
-    success: function(res){
-      if (res == 0)
-        res = 60;
-      cobrarEntrega(data, "Entregando mercadería a " + data[0][inventarioIndexes.uname].split(">")[1].split("<")[0], Number(res));
-    },
-    error: function() {
-      bootbox.alert("Ocurrió un problema al intentar conectarse al servidor.");
-    }
-  });
+
+  showEntregaMercaderiaDialog(data, "Entregando mercadería a " + data[0][inventarioIndexes.uname].split(">")[1].split("<")[0]);
 }
 
-function cobrarEntrega(data, titulo, tarifa) {
+var loadingEntregaMercaderiaTable = false;
+const getEntregaMercaderiaTable = async (trackings, uid, pagoTarjeta) => {
+  loadingEntregaMercaderiaTable = true;
+  const result = await $.ajax({
+    url: "views/DBgetCostoPaquetes.php",
+    type: "POST",
+    data: {
+      trackings,
+      uid,
+      pagoTarjeta,
+    },
+    cache: false,
+  });
+  loadingEntregaMercaderiaTable = false;
+  return result;
+};
+
+async function showEntregaMercaderiaDialog(data, titulo) {
+  tipoDePagoSeleccionado = '';
   var paquetes = data.length, libras = 0, celulares = 0, extras = 0;
-  var uids = data[0][inventarioIndexes.uid].split(">")[1].split("<")[0];
+  var uid = data[0][inventarioIndexes.uid].split(">")[1].split("<")[0];
   var unombre = data[0][inventarioIndexes.uname].split(">")[1].split("<")[0];
   var plan = "";
 
@@ -1580,149 +1583,60 @@ function cobrarEntrega(data, titulo, tarifa) {
   if (data[0][inventarioIndexes.plan].includes("En Ruta"))
     plan = "Por Ruta: " + data[0][inventarioIndexes.plan].split(">")[2].split("<")[0].replace("-", "").replace("-", "");
 
+  var trackings = [];
   for (var i = 0; i < data.length; i++) {
+    trackings.push(data[i][inventarioIndexes.tracking].split(">")[1].split("<")[0]);
     libras += Number(data[i][inventarioIndexes.peso].split(">")[1].split("<")[0]);
-    celulares += Number(data[i][inventarioIndexes.cobroEspecial].split('data-celulares=')[1].split(' ')[0]);
-    extras += Number(data[i][inventarioIndexes.cobroEspecial].split('data-cobro-extra=')[1].split(' ')[0]);
   }
 
-  let costoRutaClass = 'col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4 col-lg-4 col-md-4 col-sm-4 col-xs-4';
-  let celularesAddedClass = 'col-lg-4 col-md-4 col-sm-4 col-xs-4';
-  let extrasAddedClass = 'col-lg-4 col-md-4 col-sm-4 col-xs-4';
-
-  if (celulares > 0 && extras > 0) {
-    if (plan.includes("/")) {
-      costoRutaClass = 'col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1 col-lg-3 col-md-3 col-sm-3 col-xs-3';
-      extrasAddedClass = 'col-lg-3 col-md-3 col-sm-3 col-xs-3'
-    }
-    else {
-      celularesAddedClass = 'col-lg-offset-2 col-md-offset-2 col-sm-offset-2 col-xs-offset-2  col-lg-4 col-md-4 col-sm-4 col-xs-4';
-      extrasAddedClass = 'col-lg-4 col-md-4 col-sm-4 col-xs-4';
-    }
-  }
-  else if (celulares > 0) {
-    if (plan.includes("/")) {
-      costoRutaClass = 'col-lg-offset-2 col-md-offset-2 col-sm-offset-2 col-xs-offset-2 col-lg-4 col-md-4 col-sm-4 col-xs-4';
-    }
-    else {
-      celularesAddedClass = 'col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4 col-lg-4 col-md-4 col-sm-4 col-xs-4';
-    }
-  }
-  else if (extras > 0){
-    if (plan.includes("/")) {
-      costoRutaClass = 'col-lg-offset-2 col-md-offset-2 col-sm-offset-2 col-xs-offset-2 col-lg-4 col-md-4 col-sm-4 col-xs-4';
-    }
-    else {
-      extrasAddedClass = 'col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4 col-lg-4 col-md-4 col-sm-4 col-xs-4';
-    }
-  }
-
-  var tarifaTitulo = "Cliente con tarifa corriente.";
-  if (tarifa != 60)
-    tarifaTitulo = "Tarifa especial de cliente: Q " + tarifa;
-  tarifa = "Q "+tarifa;
+  const table = await getEntregaMercaderiaTable(trackings, uid, false);
 
   bootbox.dialog({
     closeButton: false,
     title: titulo,
-    message:
-        "<div class='row' style='background-color: #dadada'>"+
-        "<div class='row'>"+
-        "<div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div>"+
-        "<div class='control-group form-group col-lg-2 col-md-2 col-sm-2 col-xs-5'><div class='controls'><label align='center'  style='color: #337ab7; text-align:center; width:100%'>Paquetes</label><input style='text-align:center;' value='"+paquetes+"' type='text' class='form-control' disabled/></div></div>"+
-        "<div class='control-group form-group col-lg-2 col-md-2 col-sm-2 col-xs-5'><div class='controls'><label align='center'  style='color: #337ab7; text-align:center; width:100%'>Libras</label><input id='librasEntrega' style='text-align:center;' value='"+libras+"' type='text' class='form-control' disabled/></div></div>"+
-        (isMobile ? "<div class='col-xs-1'></div></div><div class='row'><div class='col-xs-1'></div>" : "") +
-        "<div class='control-group form-group col-lg-2 col-md-2 col-sm-2 col-xs-5'><div class='controls'><label align='center'  style='color: #337ab7; text-align:center; width:100%'>Tarifa</label><input id='tarifaEntrega' title='"+tarifaTitulo+"' value='"+tarifa+"' type='text' class='form-control' style='text-align:center;' disabled/></div></div>"+
-        "<div class='control-group form-group col-lg-4 col-md-4 col-sm-4 col-xs-5'><div class='controls'><label align='center' style='color: #337ab7; text-align:center; width:100%'>Subtotal</label><input id='subTotalEntrega' type='text' class='form-control' style='text-align:center' disabled/></div></div>"+
-        "<div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div>"+
-        "</div>"+
-        "<div class='row control-group form-group'>"+
-        "<div class='col-lg-1 col-md-1 col-sm-1 col-xs-1'></div>"+
-        "<button onclick='toggleMetodoPago(this)' id='btnEfectivo' style='color:#337ab7' type='button' class='btn btn-default col-lg-2 col-md-2 col-sm-2 col-xs-3''>Efectivo</button>"+
-        "<button onclick='toggleMetodoPago(this)' id='btnCredito' style='color:#337ab7' type='button' class='btn btn-default col-lg-2 col-md-2 col-sm-2 col-xs-4''>Tarjeta C.</button>"+
-        "<button onclick='toggleMetodoPago(this)' id='btnCheque' style='color:#337ab7' type='button' class='btn btn-default col-lg-2 col-md-2 col-sm-2 col-xs-3''>Cheque</button>"+
-        (isMobile ? "<div class='col-xs-1'></div></div><div class='row control-group form-group'><div class='col-xs-2'></div>" : "") +
-        "<button onclick='toggleMetodoPago(this)' id='btnTransferencia' style='color:#337ab7' type='button' class='btn btn-default col-lg-2 col-md-2 col-sm-2 col-xs-4''>Transferencia</button>"+
-        (isMobile ? "<div class='col-xs-1'></div><div class='col-xs-4'></div>" : "") +
-        "<button onclick='toggleMetodoPago(this)' id='btnPendiente' style='color:#337ab7' type='button' class='btn btn-default col-lg-2 col-md-2 col-sm-2 col-xs-4''>Pendiente</button>"+
-        "<div class='col-lg-1 col-md-1 col-sm-1 col-xs-2'></div>"+
-        "</div>" +
-        (plan.includes("/") || celulares > 0 || extras > 0 ? (
-            "<div class='row'>"+ (plan.includes("/") ?
-            "<div id='divCostoRuta' class='"+ costoRutaClass +"'>"+
-            "<div class='control-group form-group'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Costo de Envío (Q)</label><input onfocusout='roundField(this); calcularTotalEntrega()' onkeypress='return numbersonly(this, event, \"\")' onkeyup='this.value=this.value.replace(/^0+/, \"\");' id='costoRutaEntrega' type='text' class='form-control' style='width:100%; text-align:center;'/></div></div>"+
-            "</div>" : "" ) + (celulares > 0 ?
-            "<div id='divCostoCelulares' class='"+ celularesAddedClass +"'>" +
-            "<div class='control-group form-group'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Costo por "+celulares+" Celulares</label><input data-cantidad='"+celulares+"' disabled value='Q "+numberWithCommas(celulares*100)+"' onfocusout='roundField(this); calcularTotalEntrega()' onkeypress='return numbersonly(this, event, \"\")' onkeyup='this.value=this.value.replace(/^0+/, \"\");' id='costoCelulares' type='text' class='form-control' style='width:100%; text-align:center;'/></div></div>"+
-            "</div>" : "" ) + (extras > 0 ?
-            "<div id='divCostoExtras' class='"+ extrasAddedClass +"'>" +
-            "<div class='control-group form-group'><div class='controls'><label style='color: #337ab7; text-align:center; width:100%'>Costos Extras</label><input data-monto='"+extras+"' disabled value='Q "+numberWithCommas(extras)+"' onfocusout='roundField(this); calcularTotalEntrega()' onkeypress='return numbersonly(this, event, \"\")' onkeyup='this.value=this.value.replace(/^0+/, \"\");' id='costosExtras' type='text' class='form-control' style='width:100%; text-align:center;'/></div></div>"+
-            "</div>" : "" ) +
-            "</div>" ) : "" )+
-        "<div class='row'>"+
-        "<div class='col-lg-1 col-md-1 col-sm-1'></div>"+
-        "<div class='control-group form-group col-lg-2 col-md-2 col-sm-2 col-xs-2'><div class='controls'>"+
-        "<button onclick='toggleDescuento()' id='btnDescuento' style='color:#337ab7; margin-top: 2px;' type='button' class='btn btn-default'>Descuento<br>Especial</button>"+
-        "</div></div>"+
-        "<div class='col-lg-8 col-md-8 col-sm-8 col-xs-10'>"+
-        "<div id='divDescuentoInput' style='pointer-events:none; opacity:0.4;' class='control-group form-group col-lg-5 col-md-5 col-sm-5 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width: 100%;'>Descuento (Q)</label><input onfocusout='roundField(this); aplicarDescuento();' onkeypress='return numbersonly(this, event, \"-\")' onkeyup='this.value=this.value.replace(/^0+/, \"\");' id='descuentoEntrega' type='text' class='form-control' style='text-align:center;'/></div></div>"+
-        "<div id='divComentarioDescuento' class='control-group form-group col-lg-7 col-md-7 col-sm-7 col-xs-6'><div class='controls'><label style='color: #337ab7; text-align:center; width: 100%;'>Comentario</label><textarea id='comentarioEntrega' type='text' class='form-control'/></div></div>"+
-        "</div>"+
-        "<div class='col-lg-1 col-md-1 col-sm-1'></div>"+
-        "</div>"+
-        "<div class='row-same-height'>"+
-        "<div class='col-lg-2 col-md-2 col-sm-2 col-xs-1'></div>"+
-        "<div id='divDetalle' style='display:none' class='col-lg-4 col-md-4 col-sm-4 col-xs-5'><div class='controls'><label align='center' style='color: #337ab7; text-align:center; width:100%'>Detalle</label>"+
-        "<label style='color: gray; font-size: 11px;' id='detalleEntrega'></label>"+
-        "</div></div>"+
-        "<div id='divRelleno' class='col-lg-2 col-md-2 col-sm-2 col-xs-3'></div>"+
-        "<div class='control-group form-group col-lg-4 col-md-4 col-sm-4 col-xs-4'><div class='controls'><label align='center' style='color: #337ab7; text-align:center; width:100%'>Total</label><input id='totalEntrega' type='text' style='text-align:center' class='form-control' disabled/></div></div>"+
-        "<div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></div>"+
-        "</div>"+
-        "<div class='row' id='divSpanInputEntrega' style='display: none;'>"+
-        "<div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></div>"+
-        "<div class='row col-lg-8 col-md-8 col-sm-8 col-xs-8'>"+
-        "<span id='spanInputEntrega' class='dialog-text'></span>"+
-        "</div>"+
-        "<div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'></div>"+
-        "</div>"+
-        "</div>",
+    size: 'large',
+    message: renderEntregaMercaderaDialog(table, plan, trackings, uid),
     buttons: {
       cancel: {
         label: "Cancelar Entrega",
         className: "btn btn-md btn-danger alinear-izquierda",
-        callback: function(){
+        callback: function () {
           document.getElementById("divBotones").style.visibility = "visible";
         }
       },
       confirm: {
         label: "Terminar Entrega",
         className: "btn btn-md btn-success alinear-derecha",
-        callback: function() {
-          var metodo = "";
-          if (document.getElementById("btnEfectivo").style.color == "white")
-            metodo = "Efectivo";
-          else if (document.getElementById("btnCredito").style.color == "white")
-            metodo = "Tarjeta C.";
-          else if (document.getElementById("btnCheque").style.color == "white")
-            metodo = "Cheque";
-          else if (document.getElementById("btnTransferencia").style.color == "white")
-            metodo = "Transferencia";
-          else if (document.getElementById("btnPendiente").style.color == "white")
-            metodo = "Pendiente";
-          else {
-            activateSpanEntrega("Por favor especifique una forma de pago.");
+        callback: function () {
+          const $restringirEntrega = $('#restringir-entrega');
+          if ($restringirEntrega.length > 0) {
+            activateSpanEntrega("No se puede entregar la mercadería. Verifica los datos de los paquetes a entregar...");
             return false;
           }
 
-          var ruta = "NULL";
-          if (plan.includes("/")){
-            ruta = document.getElementById("costoRutaEntrega").value;
-            if (ruta.replace(/\s/g,'').length === 0){
-              activateSpanEntrega("Por favor ingrese el costo del envío de mercadería.");
+          if (loadingEntregaMercaderiaTable) {
+            activateSpanEntrega("Espera a que se recalculen los costos totales para los paquetes...");
+            return false;
+          }
+
+          const $tipoPagoSelect = $('#tipo-de-pago');
+          var tipoPago = $tipoPagoSelect.val();
+          if (tipoPago === '')  {
+            activateSpanEntrega("Por favor especifique una forma de pago.");
+            $tipoPagoSelect.focus();
+            return false;
+          }
+
+          var costoEnvio = "NULL";
+          if (plan.includes("/")) {
+            const $costoEnvio = $('#costoRutaEntrega');
+            costoEnvio = $costoEnvio.val();
+            if (costoEnvio.replace(/\s/g, '').length === 0) {
+              activateSpanEntrega("Por favor ingrese el costo para el envío de la mercadería.");
+              $costoEnvio.focus();
               return false;
             }
-            ruta = "'"+ruta+"'";
+            costoEnvio = "'" + costoEnvio + "'";
           }
 
           var pressed = document.getElementById("btnDescuento").style.color === "white";
@@ -1730,134 +1644,119 @@ function cobrarEntrega(data, titulo, tarifa) {
 
           let desc = document.getElementById("descuentoEntrega").value;
           let comment = document.getElementById("comentarioEntrega").value;
-          if (pressed){
+          if (pressed) {
 
-            if (desc.replace(/\s/g,'').length === 0 && comment.replace(/\s/g,'').length === 0){
+            if (desc.replace(/\s/g, '').length === 0 && comment.replace(/\s/g, '').length === 0) {
               activateSpanEntrega("Por favor llene los campos correspondientes al descuento especial.");
               return false;
-            }
-
-            else if (comment.replace(/\s/g,'').length === 0){
+            } else if (comment.replace(/\s/g, '').length === 0) {
               activateSpanEntrega("Por favor ingrese el motivo del descuento en el campo 'Comentario'.");
               return false;
-            }
-
-            else if (desc.replace(/\s/g,'').length === 0){
+            } else if (desc.replace(/\s/g, '').length === 0) {
               activateSpanEntrega("Por favor ingrese el descuento a aplicar.");
               return false;
             }
-            de = "'"+desc+"@@@"+comment+"'";
-          }
-          else if (comment.replace(/\s/g,'').length !== 0){
-            de = "'@@@"+comment+"'";
+            de = "'" + desc + "@@@" + comment + "'";
+          } else if (comment.replace(/\s/g, '').length !== 0) {
+            de = "'@@@" + comment + "'";
           }
 
-          var trackStr = "(";
-          for (var i = 0; i < data.length; i++)
-            trackStr = trackStr + (i == 0 ? "'":", '")+data[i][inventarioIndexes.tracking].replace("<br>", "").split(">")[1].split("<")[0]+"'";
-          trackStr = trackStr+")";
-          var tarif = document.getElementById("tarifaEntrega").value;
+          var trackStr = "('" + trackings.join("','") + "')";
           var total = document.getElementById("totalEntrega").value;
+          /*var tarif = document.getElementById("tarifaEntrega").value;
           var subtotal = document.getElementById("subTotalEntrega").value;
           var detalle = document.getElementById("detalleEntrega").innerHTML;
           if (detalle == "")
             detalle = "NULL";
-          else detalle = "'"+detalle+"'";
+          else detalle = "'" + detalle + "'";*/
 
           if (plan == "")
             plan = "No Especificado";
 
           var hoy = new Date();
-          var fecha = hoy.getFullYear() + "-" + (hoy.getMonth()+1) + "-" + hoy.getDate() + " " + hoy.getHours() + ":" + hoy.getMinutes() + ":" + hoy.getSeconds();
+          var fecha = hoy.getFullYear() + "-" + (hoy.getMonth() + 1) + "-" + hoy.getDate() + " " + hoy.getHours() + ":" + hoy.getMinutes() + ":" + hoy.getSeconds();
 
           $.ajax({
             url: "db/DBsetPaquete.php",
             type: "POST",
             data: {
               set: "estado = '" + fecha + "'",
-              where: "tracking IN "+trackStr
+              where: "tracking IN " + trackStr
             },
             cache: false,
-            success: function(res){
-              if (res.includes("ERROR")){
+            success: function (res) {
+              if (res.includes("ERROR")) {
                 bootbox.alert("Ocurrió un error al consultar la base de datos. Se recibió el siguiente mensaje: <i><br>" + res + "</i>");
-              }
-              else if (Number(res) < 1){
+              } else if (Number(res) < 1) {
                 bootbox.alert("No se pudo efectuar el cambio en la base de datos, intente nuevamente");
-              }
-              else if (Number(res) != data.length){
+              } else if (Number(res) != data.length) {
                 $.ajax({
                   url: "db/DBsetPaquete.php",
                   type: "POST",
                   data: {
                     set: "estado = NULL",
-                    where: "tracking IN "+trackStr
+                    where: "tracking IN " + trackStr
                   },
                   cache: false,
-                  success: function(res){
+                  success: function (res) {
 
                   }
                 });
                 bootbox.alert("Uno de los paquetes de la entrega no pudo ser marcado como entregado (verifique los trackings), por favor realize la entrega nuevamente.");
-              }
-              else{
+              } else {
                 $.ajax({
                   url: "db/DBinsertEntrega.php",
                   type: "POST",
                   data: {
                     d: fecha,
                     p: paquetes,
-                    ui: uids,
+                    ui: uid,
                     un: unombre,
                     to: total,
                     lbs: libras,
-                    tar: tarif,
-                    st: subtotal,
-                    m: metodo,
-                    r: ruta,
+                    m: tipoPago,
+                    r: costoEnvio,
                     des: de,
-                    det: detalle,
-                    pl: plan
+                    pl: plan,
+                    table: $('#table-entrega-mercaderia')[0].outerHTML,
                   },
                   cache: false,
-                  success: function(res){
-                    if (res.includes("ERROR")){
+                  success: function (res) {
+                    if (res.includes("ERROR")) {
                       $.ajax({
                         url: "db/DBsetPaquete.php",
                         type: "POST",
                         data: {
                           set: "estado = NULL",
-                          where: "tracking IN "+trackStr
+                          where: "tracking IN " + trackStr
                         }
                       });
                       bootbox.alert("Ocurrió un error al consultar la base de datos. Se recibió el siguiente mensaje: <i><br>" + res + "</i>");
-                    }
-                    else if (Number(res) < 1){
+                    } else if (Number(res) < 1) {
                       $.ajax({
                         url: "db/DBsetPaquete.php",
                         type: "POST",
                         data: {
                           set: "estado = NULL",
-                          where: "tracking IN "+trackStr
+                          where: "tracking IN " + trackStr
                         }
                       });
                       bootbox.alert("No se pudo agregar la boleta a la base de datos, intente nuevamente");
-                    }
-                    else{
+                    } else {
                       var fec = fecha.split(" ")[0].split("-");
                       var hora = fecha.split(" ")[1].split(":");
                       var h = hora[0];
                       var m = hora[1];
                       var s = hora[2];
                       if (m < 10 && m.length == 1)
-                        m = "0"+m;
+                        m = "0" + m;
                       if (s < 10 && s.length == 1)
-                        s = "0"+s;
+                        s = "0" + s;
 
                       var apm = "PM";
                       if (h > 12)
-                        h = h-12;
-                      else if (h < 12){
+                        h = h - 12;
+                      else if (h < 12) {
                         if (h == 0)
                           h = 12;
                         apm = "AM";
@@ -1867,13 +1766,13 @@ function cobrarEntrega(data, titulo, tarifa) {
                       bootbox.alert("La mercadería ha sido entregada con éxito. Se registró una nueva boleta virtual, con fecha " + fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + ":" + s + " " + apm + ".");
                     }
                   },
-                  error: function() {
+                  error: function () {
                     bootbox.alert("Ocurrió un problema al intentar conectarse al servidor.");
                   }
                 });
               }
             },
-            error: function() {
+            error: function () {
               bootbox.alert("Ocurrió un problema al intentar conectarse al servidor.");
             }
           });
@@ -1891,89 +1790,26 @@ function activateSpanEntrega(str){
   setTimeout(function() {$('#divSpanInputEntrega').fadeOut('slow');}, 3000);
 }
 
-function calcularSubTotal(){
-  var credito = document.getElementById("btnCredito").style.color == "white";
-  var tarifa = Number(document.getElementById("tarifaEntrega").value.replace(/[Q,\s]/g, ""));
-  var libras = Number(document.getElementById("librasEntrega").value);
-  if (credito)
-    document.getElementById("subTotalEntrega").value = "Q " + numberWithCommas(libras*68);
-  else
-    document.getElementById("subTotalEntrega").value = "Q " + numberWithCommas(libras*tarifa);
-}
-
 function calcularTotalEntrega(){
-  calcularSubTotal();
 
-  var total = Number(document.getElementById("subTotalEntrega").value.replace(/[Q,\s]/g, ""));
-  if (document.getElementById("btnDescuento").style.color == "white")
+  const $tableTotalCell = $('#th-total');
+  var total = Number($tableTotalCell.data('total'));
+  if (document.getElementById("btnDescuento").style.color === "white"){
     total -= Number(document.getElementById("descuentoEntrega").value);
+  }
 
   if ($("#divCostoRuta").length){
-    total += Number(document.getElementById("costoRutaEntrega").value);
-  }
-
-  if ($("#divCostoCelulares").length){
-    total += Number(document.getElementById("costoCelulares").value.replace(/[Q,\s]/g, ""));
-  }
-
-  if ($("#divCostoExtras").length){
-    total += Number(document.getElementById("costosExtras").value.replace(/[Q,\s]/g, ""));
+    total += Number($('#costoRutaEntrega').val());
   }
 
   document.getElementById("totalEntrega").value = "Q " + numberWithCommas(total);
-
-  var detalle = document.getElementById("detalleEntrega");
-  var divDetalle = document.getElementById("divDetalle");
-  var divRelleno = document.getElementById("divRelleno");
-  var tarifa = document.getElementById("tarifaEntrega");
-  var libras = Number(document.getElementById("librasEntrega").value);
-
-  var detalleStr = "";
-  if (document.getElementById("btnCredito").style.color == "white"){
-    divDetalle.style.display = "block";
-    divRelleno.style.display = "none";
-    var extra = Number(document.getElementById("subTotalEntrega").value.replace(/[Q,\s]/g, ""));
-    var tarifAumnt = numberWithCommas(4), comision = 68*libras;
-    if (tarifa.title != "Cliente con tarifa corriente."){
-      var t = Number(tarifa.title.split(": ")[1].replace(/[Q,\s]/g, ""));
-      tarifAumnt = numberWithCommas(68 - t);
-      extra -= t*libras;
-    }
-    else
-      extra -= 60*libras;
-    detalleStr = "Pago con Tarjeta de Crédito:<br> &nbsp&nbsp* Aumento de Tarifa: Q "+tarifAumnt
-        // +"<br> &nbsp&nbsp* Comisión: Q "+numberWithCommas(comision)
-        +"<br> &nbsp&nbsp* Monto total agregado:<br> &nbsp&nbsp&nbsp&nbsp&nbsp&nbspQ " + numberWithCommas(extra);
-  }
-  else if (tarifa.title == "Cliente con tarifa corriente."){
-    divDetalle.style.display = "none";
-    divRelleno.style.display = "block";
-  }
-  else{
-    divDetalle.style.display = "block";
-    divRelleno.style.display = "none";
-    var tarif = Number(tarifa.title.split(":")[1].replace(/[Q,\s]/g, ""));
-    var libras = Number(document.getElementById("librasEntrega").value);
-    detalleStr = "* El cliente posee una tarifa especial, su ahorro es de:<br> Q " + numberWithCommas((60 - tarif)*libras);
-  }
-
-  detalle.innerHTML = detalleStr;
-}
-
-function aplicarDescuento(){
-  var desc = document.getElementById("descuentoEntrega").value;
-  if (desc.replace(/\s/g,'').length === 0){
-    activateSpanEntrega("Por favor ingrese el descuento a aplicar.");
-    return false;
-  }
-  calcularTotalEntrega();
 }
 
 function toggleDescuento(){
   var boton = document.getElementById("btnDescuento");
   var div = document.getElementById("divDescuentoInput");
 
-  if (boton.style.color == "white"){
+  if (boton.style.color === "white"){
     div.style.pointerEvents = "none";
     div.style.opacity = "0.4";
     boton.style.backgroundColor = "#fff";
@@ -1989,63 +1825,22 @@ function toggleDescuento(){
   }
 }
 
-function toggleMetodoPago(boton){
-  var tarifa = document.getElementById("tarifaEntrega");
-  var costoCelulares = $('#costoCelulares');
-  var costosExtras= $('#costosExtras');
-  var cantCelulares = null;
-  var montoExtras = null;
-  if (costoCelulares.length)
-    cantCelulares = costoCelulares.data('cantidad');
-  if (costosExtras.length)
-    montoExtras = costosExtras.data('monto');
-
-  if (boton.style.color == "white"){
-    boton.style.backgroundColor = "#fff";
-    boton.style.color = "#337ab7";
-
-    if (boton.innerHTML == "Tarjeta C."){
-      if (tarifa.title == "Cliente con tarifa corriente.")
-        tarifa.value = "Q 60";
-      else
-        tarifa.value = tarifa.title.split(": ")[1];
-
-      if (cantCelulares !== null)
-        costoCelulares.val('Q ' + numberWithCommas(cantCelulares*100));
-      if (montoExtras !== null)
-        costosExtras.val('Q ' + numberWithCommas(montoExtras));
-
-      calcularTotalEntrega();
-    }
+var tipoDePagoSeleccionado = '';
+async function tipoDePagoOnChange(selectBox, trackings, uid) {
+  const $select = $(selectBox);
+  const tipoDePagoAnterior = tipoDePagoSeleccionado;
+  tipoDePagoSeleccionado = $select.val();
+  let table = '';
+  if (tipoDePagoAnterior === 'Tarjeta') {
+    table = await getEntregaMercaderiaTable(trackings, uid, false);
   }
-  else{
-    if (tarifa.title == "Cliente con tarifa corriente.")
-      tarifa.value = "Q 60";
-    else
-      tarifa.value = tarifa.title.split(": ")[1];
+  else if (tipoDePagoSeleccionado === 'Tarjeta') {
+    table = await getEntregaMercaderiaTable(trackings, uid, true);
+  }
 
-    if (boton.innerHTML == "Tarjeta C."){
-      tarifa.value = "Q 68";
-      if (cantCelulares !== null)
-        costoCelulares.val('Q ' + numberWithCommas(cantCelulares*115));
-      if (montoExtras !== null)
-        costosExtras.val('Q ' + numberWithCommas(montoExtras*1.12));
-    }
-
-    document.getElementById("btnEfectivo").style.backgroundColor = "#fff";
-    document.getElementById("btnEfectivo").style.color = "#337ab7";
-    document.getElementById("btnCredito").style.backgroundColor = "#fff";
-    document.getElementById("btnCredito").style.color = "#337ab7";
-    document.getElementById("btnCheque").style.backgroundColor = "#fff";
-    document.getElementById("btnCheque").style.color = "#337ab7";
-    document.getElementById("btnTransferencia").style.backgroundColor = "#fff";
-    document.getElementById("btnTransferencia").style.color = "#337ab7";
-    document.getElementById("btnPendiente").style.backgroundColor = "#fff";
-    document.getElementById("btnPendiente").style.color = "#337ab7";
-
-    boton.style.backgroundColor = "#337ab7";
-    boton.style.color = "white";
-
+  if (table !== ''){
+    $('#table-entrega-mercaderia').remove();
+    $('#divEntregaMercaderiaTable').append($(table));
     calcularTotalEntrega();
   }
 }

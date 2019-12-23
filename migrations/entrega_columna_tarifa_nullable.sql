@@ -1,0 +1,1 @@
+alter table entrega modify tarifa varchar(7) null;
