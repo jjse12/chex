@@ -529,16 +529,13 @@ function agregarRegistro(){
       }
     },
     callback: function (result) {
-      if (result == true){
-        var hoy = new Date();
-        var fecha = hoy.getFullYear() + "-" + (hoy.getMonth()+1) + "-" + hoy.getDate() + " " + hoy.getHours() + ":" + hoy.getMinutes() + ":" + hoy.getSeconds();
-
+      if (result) {
         var arreglo = ["Cliente", "CLIENTE", "cliente", "Anónimo", "ANÓNIMO", "anónimo", "Anonimo", "ANONIMO", "anonimo"];
         var invent = $("#inventario").DataTable();
         invent.search("Esperando");
         var arr = invent.rows({search:'applied'}).data().toArray();
         var uids = "";
-        for (var i = 0; i < arr.length; i++) {
+        for (let i = 0; i < arr.length; i++) {
           var id = arr[i][inventarioIndexes.uid].split(">")[1].split("<")[0].toUpperCase();
           if ((arreglo.indexOf(id) == -1) && (uids.split(",").indexOf(id) == -1))
             uids += id+",";
@@ -546,7 +543,7 @@ function agregarRegistro(){
 
         uids = uids.substr(0, uids.length-1).split(",");
 
-        for (var i = 0; i < tdata.length; i++){
+        for (let i = 0; i < tdata.length; i++){
           for (var j = 0; j < tdata[i].length-1; j++)
             tdata[i][j] = tdata[i][j].split(">")[1].split("<")[0];
         }
@@ -556,7 +553,6 @@ function agregarRegistro(){
           type: "POST",
           data: {
             peso: libras,
-            date: fecha,
             data: tdata
           },
           cache: false,
@@ -615,7 +611,7 @@ function agregarRegistro(){
                         label: "Si",
                         className: "btn btn-md btn-success alinear-derecha",
                         callback: function(){
-                          const fecha = getHumanDateTime(data.date);
+                          const fecha = convertToHumanDate(data.date);
                           bootbox.alert({
                             title: "¡Carga Ingresada!",
                             message: "Los primeros " + cant + " paquetes fueron ingresados al sistema de inventario bajo el registro de carga #" + rcid + " con fecha " + fecha + ".",
@@ -710,7 +706,7 @@ function agregarRegistro(){
                 }
               }
 
-              const fecha = getHumanDateTime(data.date);
+              const fecha = convertToHumanDate(data.date);
               bootbox.alert({
                 title: "¡Carga Ingresada!",
                 message: "Los paquetes fueron ingresados al sistema de inventario bajo el registro de carga #" + rcid + " con fecha " + fecha + ".",
@@ -732,24 +728,6 @@ function agregarRegistro(){
       }
     }
   });
-}
-
-function getHumanDateTime(datetime){
-  var fec = datetime.split(" ")[0].split("-");
-  var hora = datetime.split(" ")[1].split(":");
-  var h = hora[0];
-  var m = hora[1];
-  if (m < 10 && m.length === 1)
-    m = "0"+m;
-  var apm = "PM";
-  if (h > 12)
-    h = h-12;
-  else if (h < 12){
-    if (h === 0)
-      h = 12;
-    apm = "AM";
-  }
-  return fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + " " + apm;
 }
 
 function checkTrackingExists(track){

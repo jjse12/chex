@@ -1662,118 +1662,62 @@ async function showEntregaMercaderiaDialog(data, titulo) {
             de = "'@@@" + comment + "'";
           }
 
-          var trackStr = "('" + trackings.join("','") + "')";
           var total = document.getElementById("totalEntrega").value;
-          /*var tarif = document.getElementById("tarifaEntrega").value;
-          var subtotal = document.getElementById("subTotalEntrega").value;
-          var detalle = document.getElementById("detalleEntrega").innerHTML;
-          if (detalle == "")
-            detalle = "NULL";
-          else detalle = "'" + detalle + "'";*/
 
-          if (plan == "")
-            plan = "No Especificado";
-
-          var hoy = new Date();
-          var fecha = hoy.getFullYear() + "-" + (hoy.getMonth() + 1) + "-" + hoy.getDate() + " " + hoy.getHours() + ":" + hoy.getMinutes() + ":" + hoy.getSeconds();
-
+          if (plan === "") plan = "No Especificado";
+          const table = document.getElementById('table-entrega-mercaderia');
+          if (!table){
+            activateSpanEntrega('No se ha logrado obtener la información de la tabla, ' +
+                'por favor cierra este diálogo e intenta entregar la mercadería nuevamente.');
+            return false;
+          }
+          const tableMarkup = table.outerHTML;
+          if (!tableMarkup) {
+            activateSpanEntrega('No se ha logrado obtener la información de la tabla, ' +
+                'por favor cierra este diálogo e intenta entregar la mercadería nuevamente.');
+            return false;
+          }
           $.ajax({
-            url: "db/DBsetPaquete.php",
+            url: "db/DBinsertEntrega.php",
             type: "POST",
             data: {
-              set: "estado = '" + fecha + "'",
-              where: "tracking IN " + trackStr
+              trackings,
+              p: paquetes,
+              ui: uid,
+              un: unombre,
+              to: total,
+              lbs: libras,
+              m: tipoPago,
+              r: costoEnvio,
+              des: de,
+              pl: plan,
+              table: tableMarkup
             },
             cache: false,
-            success: function (res) {
-              if (res.includes("ERROR")) {
-                bootbox.alert("Ocurrió un error al consultar la base de datos. Se recibió el siguiente mensaje: <i><br>" + res + "</i>");
-              } else if (Number(res) < 1) {
-                bootbox.alert("No se pudo efectuar el cambio en la base de datos, intente nuevamente");
-              } else if (Number(res) != data.length) {
-                $.ajax({
-                  url: "db/DBsetPaquete.php",
-                  type: "POST",
-                  data: {
-                    set: "estado = NULL",
-                    where: "tracking IN " + trackStr
-                  },
-                  cache: false,
-                  success: function (res) {
-
-                  }
-                });
-                bootbox.alert("Uno de los paquetes de la entrega no pudo ser marcado como entregado (verifique los trackings), por favor realize la entrega nuevamente.");
-              } else {
-                $.ajax({
-                  url: "db/DBinsertEntrega.php",
-                  type: "POST",
-                  data: {
-                    d: fecha,
-                    p: paquetes,
-                    ui: uid,
-                    un: unombre,
-                    to: total,
-                    lbs: libras,
-                    m: tipoPago,
-                    r: costoEnvio,
-                    des: de,
-                    pl: plan,
-                    table: $('#table-entrega-mercaderia')[0].outerHTML,
-                  },
-                  cache: false,
-                  success: function (res) {
-                    if (res.includes("ERROR")) {
-                      $.ajax({
-                        url: "db/DBsetPaquete.php",
-                        type: "POST",
-                        data: {
-                          set: "estado = NULL",
-                          where: "tracking IN " + trackStr
-                        }
-                      });
-                      bootbox.alert("Ocurrió un error al consultar la base de datos. Se recibió el siguiente mensaje: <i><br>" + res + "</i>");
-                    } else if (Number(res) < 1) {
-                      $.ajax({
-                        url: "db/DBsetPaquete.php",
-                        type: "POST",
-                        data: {
-                          set: "estado = NULL",
-                          where: "tracking IN " + trackStr
-                        }
-                      });
-                      bootbox.alert("No se pudo agregar la boleta a la base de datos, intente nuevamente");
-                    } else {
-                      var fec = fecha.split(" ")[0].split("-");
-                      var hora = fecha.split(" ")[1].split(":");
-                      var h = hora[0];
-                      var m = hora[1];
-                      var s = hora[2];
-                      if (m < 10 && m.length == 1)
-                        m = "0" + m;
-                      if (s < 10 && s.length == 1)
-                        s = "0" + s;
-
-                      var apm = "PM";
-                      if (h > 12)
-                        h = h - 12;
-                      else if (h < 12) {
-                        if (h == 0)
-                          h = 12;
-                        apm = "AM";
-                      }
-                      $("#inventario").DataTable().rows('.selected').remove().draw(false);
-                      document.getElementById("divBotones").style.visibility = "hidden";
-                      bootbox.alert("La mercadería ha sido entregada con éxito. Se registró una nueva boleta virtual, con fecha " + fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + ":" + s + " " + apm + ".");
-                    }
-                  },
-                  error: function () {
-                    bootbox.alert("Ocurrió un problema al intentar conectarse al servidor.");
-                  }
-                });
+            success: function (response) {
+              const { success, message, data } = response;
+              if (success) {
+                const fecha = convertToHumanDate(data.date);
+                if (!message) {
+                  $("#inventario").DataTable().rows('.selected').remove().draw(false);
+                  document.getElementById("divBotones").style.visibility = "hidden";
+                  bootbox.alert("La mercadería ha sido entregada con éxito. Se registró una nueva boleta virtual, con fecha " + fecha + ".");
+                }
+                else {
+                  bootbox.alert('La mercadería ha sido entregada con éxito. Se registró una nueva boleta virtual, ' +
+                  `con fecha ${fecha}.<br><br>Sin embargo el servidor indicó lo siguiente: ${message}` );
+                }
+              } else if (message) {
+                document.getElementById("divBotones").style.visibility = "visible";
+                bootbox.alert(message);
+              }
+              else {
+                document.getElementById("divBotones").style.visibility = "visible";
+                bootbox.alert("Ocurrió un error inesperado al consultar la base de datos");
               }
             },
             error: function () {
+              document.getElementById("divBotones").style.visibility = "visible";
               bootbox.alert("Ocurrió un problema al intentar conectarse al servidor.");
             }
           });

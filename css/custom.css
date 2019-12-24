@@ -698,6 +698,44 @@ ul.ColVis_collection li label span {
     margin-bottom: 14px;
 }
 
+
+.ml-1 {
+    margin-left: 6px;
+}
+
+.ml-2 {
+    margin-left: 10px;
+}
+
+.ml-3 {
+    margin-left: 14px;
+}
+
+.mr-1 {
+    margin-right: 6px;
+}
+
+.mr-2 {
+    margin-right: 10px;
+}
+
+.mr-3 {
+    margin-right: 14px;
+}
+
+.m-all-1 {
+    margin: 6px !important;
+}
+
+.m-all-2 {
+    margin: 10px !important;
+}
+
+.m-all-3 {
+    margin: 14px !important;
+}
+
+
 .horizontal-borders {
     border-top: 1px solid black;
     border-bottom: 1px solid black;

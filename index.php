@@ -25,7 +25,7 @@
         <!-- Custom Fonts -->
         <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
         <!-- jQuery -->
-        <link href="css/custom.css?rnd=1" rel="stylesheet">
+        <link href="css/custom.css?v=1.0" rel="stylesheet">
         <link href="css/tableStyles.css" rel="stylesheet">
         <link href="css/general.css" rel="stylesheet">
         <link href="css/loader.css" rel="stylesheet">
@@ -37,7 +37,7 @@
 
         <script type="text/javascript" src="js/moment.min.js"></script>
         <script type="text/javascript" src="js/loader.js"></script>
-        <script type="text/javascript" src="js/utils.js"></script>
+        <script type="text/javascript" src="js/utils.js?v=1.0"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
     </head>
     <!--

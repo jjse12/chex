@@ -552,7 +552,7 @@
                 url: "db/DBexecQuery.php",
                 type: "POST",
                 data: {
-                    query: "SELECT P.tracking AS tracking, P.uid AS uid, P.uname AS uname, P.libras AS libras, P.estado AS estado, E.liquidado AS liquidado FROM paquete P LEFT JOIN entrega E ON P.estado = E.fecha WHERE P.rcid = " + rcid
+                    query: "SELECT P.tracking AS tracking, P.uid AS uid, P.uname AS uname, P.libras AS libras, P.estado AS estado, E.liquidado AS liquidado, P.servicio as servicio, P.guide_number as guide_number FROM paquete P LEFT JOIN entrega E ON P.estado = E.fecha WHERE P.rcid = " + rcid
                 },
                 cache: false,
                 success: function(res){
@@ -579,15 +579,9 @@
                         size: "large",
                         title: "Mercadería ingresada el " + fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + " " + apm,
                         message:
-                        "<div class='row' style='background-color: #eaeaea'>"+
-                            "<div class='row' style='margin-bottom: 1cm;'>"+
-                                "<div class='col-lg-1 col-md-1 col-sm-1'></div>"+
-                                "<div class='col-lg-10 col-md-10 col-sm-10'>"+
-                                    "<table id='tablaPaquetesCarga' class='display' cellspacing='0' style='width: 100%;'><thead><tr><th class='dt-head-center'><h5 style='color:black'># Tracking</h5></th><th class='dt-head-center'><h5 style='color:black'>ID Cliente</h5></th><th class='dt-head-center'><h5 style='color:black'>Nombre Cliente</h5></th><th class='dt-head-center'><h5 style='color:black'>Peso</h5></th><th class='dt-head-center'><h5 style='color:black'>Estado</h5></th><th></th></tr></thead><tfoot><tr><th></th><th></th><th></th><th class='dt-head-center'></th><th></th><th></th></tr></tfoot><tbody></tbody></table>"+
-                                "</div>"+
-                                "<div class='col-lg-1 col-md-1 col-sm-1'></div>"+
-                            "</div>"+
-                        "</div",
+                        "<div class='container-flex m-all-1'>"+
+                            "<table id='tablaPaquetesCarga' class='display' cellspacing='0' style='width: 100%;'><thead><tr><th class='dt-head-center'><h5 style='color:black'>Servicio</h5></th><th class='dt-head-center'><h5 style='color:black'>No. de Guía</h5></th><th class='dt-head-center'><h5 style='color:black'># Tracking</h5></th><th class='dt-head-center'><h5 style='color:black'>ID Cliente</h5></th><th class='dt-head-center'><h5 style='color:black'>Nombre Cliente</h5></th><th class='dt-head-center'><h5 style='color:black'>Peso</h5></th><th class='dt-head-center'><h5 style='color:black'>Estado</h5></th><th></th></tr></thead><tfoot><tr><th></th><th></th><th></th><th></th><th></th><th class='dt-head-center'></th><th></th><th></th></tr></tfoot><tbody></tbody></table>"+
+                        "</div>",
                         buttons: {
                             cancel: {
                                 label: "Regresar",
@@ -616,7 +610,7 @@
                                                 bootbox.confirm({
                                                     closeButton: false,
                                                     title: "¡¡¡ÚLTIMA ADVERTENCIA!!!",
-                                                    message: "Esta acción eliminará información tan valiosa que ni siquiera debería de ser posible llevarse a cabo, aún así... <br><br> <b>¿Desea continuar?</b>",
+                                                    message: "Esta acción eliminará información muy valiosa, aún así... <br><br> <b>¿Desea continuar?</b>",
                                                     buttons:{
                                                         cancel:{
                                                             label: "¡¡¡CANCELAR!!!",
@@ -689,11 +683,11 @@
                             "footerCallback": function ( row, data, start, end, display ) {
                                 var api = this.api(), data;
                                 if (this.fnSettings().fnRecordsDisplay() == 0){
-                                    api.column(3).footer().style.visibility = "hidden";
+                                    api.column(5).footer().style.visibility = "hidden";
                                     return;
                                 }
                                 else{
-                                    api.column(3).footer().style.visibility = "visible";
+                                    api.column(5).footer().style.visibility = "visible";
                                 }
 
                                 var intVal = function ( i ) {
@@ -703,9 +697,9 @@
                                             i : 0;
                                 };
 
-                                $(api.column(3).footer() ).html(
+                                $(api.column(5).footer() ).html(
                                     "<h5>Total: " + numberWithCommasNoFixed(
-                                                        api.column(3, { page: 'current'} ).data().reduce( function (a, b) {
+                                                        api.column(5, { page: 'current'} ).data().reduce( function (a, b) {
                                                         return intVal(a) + intVal(b.split(">")[1].split("<")[0]);
                                                         }, 0 )
                                                     ) + " Libras</h5>"
@@ -717,29 +711,18 @@
                         for (var i = 0; i < rows.length; i++){
                             var estado = "<h5 style='text-align: center;' class='btn-sm btn-warning'>En Inventario</h5>";
                             if (rows[i]["estado"] != null){
-                                var fec = rows[i]["estado"].split(" ")[0].split("-");
-                                var hora = rows[i]["estado"].split(" ")[1].split(":");
-                                var h = hora[0];
-                                var m = hora[1];
-                                var s = hora[2];
-                                var apm = "PM";
-                                if (h > 12)
-                                    h = h-12;
-                                else if (h < 12){
-                                    if (h == 0)
-                                        h = 12;
-                                    apm = "AM";
-                                }
-
+                                let fecha = convertToHumanDate(rows[i]["estado"]);
                                 var color = "#f4cb38";
                                 if (rows[i]["liquidado"] != null)
                                     color = "#4c883c";
-                                estado = "<h5 style='text-align: center; cursor: default; background-color: "+color+";' class='popup btn-sm'>Entregado<span class='popuptext'>"+fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + " " + apm+"</span></h5>";
+                                estado = "<h5 style='text-align: center; cursor: default; background-color: "+color+";' class='popup btn-sm'>Entregado<span class='popuptext'>"+fecha+"</span></h5>";
                             }
                             var trackingsito = rows[i]["tracking"];
                             if (trackingsito.length > 20)
                                 trackingsito = trackingsito.substr(0, trackingsito.length/2) + "<br>" + trackingsito.substr(trackingsito.length/2, trackingsito.length);
                             tablita.row.add([
+                                "<h5 class='seleccionado'>"+rows[i]['servicio']+"</h5>",
+                                "<h5 class='seleccionado'>"+rows[i]['guide_number']+"</h5>",
                                 "<h5 class='seleccionado'>"+trackingsito+"</h5>",
                                 "<h5 class='seleccionado'>"+rows[i]["uid"]+"</h5>",
                                 "<h5 class='seleccionado'>"+rows[i]["uname"]+"</h5>",
@@ -756,14 +739,14 @@
                             var indexito = tablita.row($(this).closest('tr')).index();
                             var arre = tablita.rows(indexito).data().toArray();
 
-                            var tracking = arre[0][0].replace("<br>", "").split(">")[1].split("<")[0];
-                            var uid = arre[0][1].split(">")[1].split("<")[0];
-                            var uname = arre[0][2].split(">")[1].split("<")[0];
-                            var peso = Number(arre[0][3].split(">")[1].split("<")[0]);
-                            var estado = arre[0][4].split(">")[1].split("<")[0];
+                            var tracking = arre[0][2].replace("<br>", "").split(">")[1].split("<")[0];
+                            var uid = arre[0][3].split(">")[1].split("<")[0];
+                            var uname = arre[0][4].split(">")[1].split("<")[0];
+                            var peso = Number(arre[0][5].split(">")[1].split("<")[0]);
+                            var estado = arre[0][6].split(">")[1].split("<")[0];
                             var fechaEntrega = "";
                             if (estado == "Entregado")
-                                fechaEntrega = arre[0][4].split(">")[2].split("<")[0];
+                                fechaEntrega = arre[0][6].split(">")[2].split("<")[0];
 
 
                             // DESPLIEGUE DE INFORMACIÓN DE UN PAQUETE AUN EN INVENTARIO (Sin Entregar)
@@ -782,21 +765,7 @@
                                         }
                                         var data = JSON.parse(res)[0];
                                         var rcid = data["rcid"];
-                                        var fechaIngreso = data["fecha"];
-                                        var fec = fechaIngreso.split(" ")[0].split("-");
-                                        var hora = fechaIngreso.split(" ")[1].split(":");
-                                        var h = hora[0];
-                                        var m = hora[1];
-                                        var apm = "PM";
-                                        if (h > 12)
-                                            h = h-12;
-                                        else if (h < 12){
-                                            if (h == 0)
-                                                h = 12;
-                                            apm = "AM";
-                                        }
-
-                                        fechaIngreso = fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + " " + apm
+                                        var fechaIngreso = convertToHumanDate(data["fecha"]);
 
                                         var plan = data["plan"];
                                         if (plan.includes("/")){
@@ -866,8 +835,8 @@
                                                                             if (resito == "1"){
                                                                                 bootbox.alert("El paquete ha sido eliminado y se ha actualizado el registro de carga correspondiente.");
                                                                                 tablita.rows(indexito).remove().draw(false);
-                                                                                arr[0][2] = "<h5 class='seleccionado'>"+(paquetitos-1)+"</h5>";
-                                                                                arr[0][3] = "<h5 class='seleccionado'>"+(libritas-peso)+"</h5>";
+                                                                                arr[0][4] = "<h5 class='seleccionado'>"+(paquetitos-1)+"</h5>";
+                                                                                arr[0][5] = "<h5 class='seleccionado'>"+(libritas-peso)+"</h5>";
                                                                                 tabCargas.row(index).data(arr[0]).draw(false);
                                                                             }
                                                                             else
@@ -907,20 +876,7 @@
                                         var data = JSON.parse(res)[0];
                                         var rcid = data["rcid"];
                                         var fechaBoleta = data["fechaEntrega"];
-                                        var fechaIngreso = data["fecha"];
-                                        var fec = fechaIngreso.split(" ")[0].split("-");
-                                        var hora = fechaIngreso.split(" ")[1].split(":");
-                                        var h = hora[0];
-                                        var m = hora[1];
-                                        var apm = "PM";
-                                        if (h > 12)
-                                            h = h-12;
-                                        else if (h < 12){
-                                            if (h == 0)
-                                                h = 12;
-                                            apm = "AM";
-                                        }
-                                        fechaIngreso = fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + " " + apm
+                                        var fechaIngreso = convertToHumanDate(data["fecha"]);
 
                                         var plan = data["plan"];
                                         var cobroRuta = "";
@@ -939,21 +895,10 @@
 
                                         var liq = data["liquidado"];
                                         var fechaLiquidacion = "";
-                                        if (liq != null){
-                                            fec = liq.split(" ")[0].split("-");
-                                            hora = liq.split(" ")[1].split(":");
-                                            h = hora[0];
-                                            m = hora[1];
-                                            apm = "PM";
-                                            if (h > 12)
-                                                h = h-12;
-                                            else if (h < 12){
-                                                if (h == 0)
-                                                    h = 12;
-                                                apm = "AM";
-                                            }
-                                            fechaLiquidacion = fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + " " + apm;
+                                        if (liq != null) {
+                                            fechaLiquidacion = convertToHumanDate(liq);
                                         }
+
                                         var tarifa = data["tarifa"];
                                         var tarif = Number(tarifa.replace(/[Q,\s]/g, ""));
                                         bootbox.dialog({
@@ -1041,8 +986,8 @@
                                                                                     if (resito == "1"){
                                                                                         bootbox.alert("El paquete ha sido eliminado y se han actualizado el registro de carga y boleta de entrega correspondientes.");
                                                                                         tablita.rows(indexito).remove().draw(false);
-                                                                                        arr[0][2] = "<h5 class='seleccionado'>"+(paquetitos-1)+"</h5>";
-                                                                                        arr[0][3] = "<h5 class='seleccionado'>"+(libritas-peso)+"</h5>";
+                                                                                        arr[0][4] = "<h5 class='seleccionado'>"+(paquetitos-1)+"</h5>";
+                                                                                        arr[0][4] = "<h5 class='seleccionado'>"+(libritas-peso)+"</h5>";
                                                                                         tabCargas.row(index).data(arr[0]).draw(false);
                                                                                     }
                                                                                     else

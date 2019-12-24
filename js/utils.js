@@ -7,6 +7,26 @@ String.prototype.replaceAll = function(search, replacement) {
     return target.replace(new RegExp(search, 'g'), replacement);
 };
 
+function convertToHumanDate(datetime) {
+    /*var datetime = isJSDate ? date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " +
+        date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() : date;*/
+    var fec = datetime.split(" ")[0].split("-");
+    var hora = datetime.split(" ")[1].split(":");
+    var h = hora[0];
+    var m = hora[1];
+    if (m < 10 && m.length === 1)
+        m = "0"+m;
+    var apm = "PM";
+    if (h > 12)
+        h = h-12;
+    else if (h < 12){
+        if (h === 0)
+            h = 12;
+        apm = "AM";
+    }
+    return fec[2] + "/" + fec[1] + "/" + fec[0] + " a las " + h + ":" + m + " " + apm;
+}
+
 function collapseElement($element, height = 0) {
     $element.attr('style', `height: ${height}px;`);
     $element.removeClass('collapse');

@@ -4,8 +4,10 @@ header('Content-Type: application/json;charset=utf-8');
 require_once("db_vars.php");
 
 $peso = $_POST["peso"];
-$date = $_POST["date"];
 $data = $_POST["data"];
+
+date_default_timezone_set('America/Guatemala');
+$date = date("Y-m-d H:i:s");
 
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 $query = "SELECT MAX(rcid) FROM carga";
