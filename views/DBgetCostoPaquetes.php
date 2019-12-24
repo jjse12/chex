@@ -91,7 +91,9 @@ foreach ($infoPaquetes as &$infoPaquete) {
                 $cotizacion = getCotizacionExpress($tarifa, $infoPaquete['libras'], $infoPaquete['precio_fob'],
                     $infoPaquete['arancel'], $desaduanaje, $iva, $seguro, $cambioDolar);
                 $infoPaquete['chex'] = $cotizacion['chex'];
+                $infoPaquete['chexInfo'] = $cotizacion['chexInfo'];
                 $infoPaquete['impuestos'] = $cotizacion['impuestos'];
+                $infoPaquete['impuestosInfo'] = $cotizacion['impuestosInfo'];
 
                 $totalPaquete += $cotizacion['total'];
                 if ($pagoTarjeta) {
@@ -179,7 +181,7 @@ unset($infoPaquete);
                 <th class="text-center"><?= $infoPaquete['libras'] ?> lbs</th>
                 <th class="text-center"><?= $infoPaquete['precio_fob'] === null ? 'N/A' :
                     ( $infoPaquete['precio_fob'] === '' ? '<i class="fa fa-asterisk"></i>' :
-                        'Q ' . $infoPaquete['precio_fob'])?>
+                        '$ ' . $infoPaquete['precio_fob'])?>
                 </th>
                 <th class="text-center"><?= $infoPaquete['arancel'] === null ? 'N/A' :
                     ($infoPaquete['arancel'] === '' ? '<i class="fa fa-asterisk"></i>' :
@@ -192,9 +194,9 @@ unset($infoPaquete);
                     <th class="text-center"><?= !is_numeric($infoPaquete['cobro_tarjeta']) ? $infoPaquete['cobro_tarjeta'] :
                         'Q ' . number_format($infoPaquete['cobro_tarjeta'], 2) ?></th>
                 <?php endif ?>
-                <th class="text-center"><?= !is_numeric($infoPaquete['chex']) ? $infoPaquete['chex'] :
+                <th class="text-center" title="<?= $infoPaquete['chexInfo'] ?? '' ?>"><?= !is_numeric($infoPaquete['chex']) ? $infoPaquete['chex'] :
                     'Q ' . number_format($infoPaquete['chex'], 2) ?></th>
-                <th class="text-center"><?= $infoPaquete['impuestos'] === null ? 'N/A' :
+                <th class="text-center" title="<?= $infoPaquete['impuestosInfo'] ?? '' ?>"><?= $infoPaquete['impuestos'] === null ? 'N/A' :
                     (!is_numeric($infoPaquete['impuestos']) ? $infoPaquete['impuestos'] :
                         'Q ' . number_format($infoPaquete['impuestos'], 2))?></th>
                 <th class="text-center"><?= !is_numeric($infoPaquete['total']) ? $infoPaquete['total'] :
