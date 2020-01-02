@@ -40,14 +40,14 @@
 		        	}
 		        	$cont++;
 		        }
-		        $valor = substr($valor, 0, strlen($valor)-1) . "), ";
+		        $valor .= '25), ';
 		        $values .= $valor;
-		    }   
+		    }
 		    $values = substr($values, 0, strlen($values)-2);
 		    $result->free();
 		    $query = "INSERT IGNORE INTO cliente VALUES $values;";
 		    $result = $conn->query($query);
-		    if ($result){ 
+		    if ($result){
 		    	if ($conn->affected_rows == $cantNuevos)
 		    		echo "EXITO: $cantNuevos";
 		    	else
@@ -56,7 +56,7 @@
 		    else
 		    	echo "¡ERROR! - $conn->error";
 		}
-		else 
+		else
 			echo "¡ERROR! - $conn->error";
 	}
 	$server->close();
