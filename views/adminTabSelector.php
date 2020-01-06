@@ -15,6 +15,18 @@
       </nav>
     </section>
   </div>
+  <div class="mt-3 col-lg-3 col-md-3 col-sm-3">
+      <div class="pull-right mr-3 mt-3 btn-group">
+          <button class="btn btn-default btn-sm dropdown-toggle glyphicon glyphicon-wrench"
+              type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu options-dropdown-menu">
+              <li><a href="#" id="btnLogout"><span class="glyphicon glyphicon-off"></span> Salir</a></li>
+              <li><a href="#" id="btnImportarTarifaciones">Importar Tarifaciones</a></li>
+          </ul>
+      </div>
+  </div>
 </div>
 
 <div class="tab-content box">
@@ -26,21 +38,23 @@
         </div>
     </div>
   <div class="tab-pane fade active in" id="tab2">
-    <?php 
+    <?php
       include("mercaderia.php");
     ?>
   </div>
   <div class="tab-pane fade" id="tab3">
       <div class="container">
-        <?php 
+        <?php
           include("clientes.php");
         ?>
       </div>
   </div>
 </div>
 
-<a style="position: fixed; z-index: 1030; bottom: 0; right:0; margin-right: 10px; margin-bottom: 5px" onclick="logout()" class="btn-lg btn-danger header-title">Cerrar Sesión</a>
-  
+<script src="js/nav-options.js?v=1.0"></script>
+<script src="js/logout.js?v=1.0"></script>
+<script src="js/tarifaciones.js?v=1.0"></script>
+<script src="js/templates/tarifaciones-templates.js?v=1.0"></script>
 <script type="text/javascript">
 
     $.datepicker.regional['es'] = {
@@ -79,47 +93,12 @@
                 else if (res.includes("ERROR"))
                     bootbox.alert("Ocurrió un error al consultar la base de datos. Se recibió el siguiente mensaje: <i><br>" + res + "</i>");
                 initClientesChex();
-            }, 
+            },
             error: function(){
                 bootbox.alert("No se pudo verificar actualización de la tabla de clientes debido a un problema de conexión con el servidor.");
                 initClientesChex();
             }
         });
-  }
-
-  function logout(){
-      bootbox.confirm({
-        size: "small",
-        message: "Se cerrará la sesión actual...",
-        buttons: {
-          cancel: {
-            label: "Regresar",
-            className: "btn btn-md btn-info alinear-izquierda"
-          },
-          confirm: {
-              label: "Continuar",
-              className: "btn btn-md btn-danger alinear-derecha"
-          }
-        },
-        callback: function(res){
-            if (res){
-                $.ajax({
-                    url: "views/session.php",
-                    type: "POST",
-                    data: {
-                        vaciar: 1
-                    },
-                    cache: false,
-                    success: function(res){
-                        window.location.replace("?logout");
-                    },
-                    error: function(){
-                        bootbox.alert("Ocurrió un problema al intentar conectarse al servidor. Intente cerrar sesión nuevamente");
-                    }
-                });
-            }
-        }
-      });
   }
 
   function scroll0(){
