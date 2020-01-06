@@ -367,6 +367,21 @@ h4.header-title {
     display: block;
     background-color: #1b64b4;
 }
+
+.open > .options-dropdown-menu {
+    display: block;
+    background-color: #fbfbfb !important;
+}
+
+.options-dropdown-menu > li > a {
+    color: #404040 !important;
+}
+.options-dropdown-menu > li > a:hover,
+.options-dropdown-menu > li > a:focus {
+    color: #1c4962 !important;
+    background-color: #f1f1f1 !important;
+}
+
 .open > a {
     outline: 0;
 }
