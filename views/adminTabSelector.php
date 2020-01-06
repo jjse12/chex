@@ -22,8 +22,16 @@
               <span class="caret"></span>
           </button>
           <ul class="dropdown-menu options-dropdown-menu">
-              <li><a href="#" id="btnLogout"><span class="glyphicon glyphicon-off"></span> Salir</a></li>
-              <li><a href="#" id="btnImportarTarifaciones">Importar Tarifaciones</a></li>
+              <li>
+                  <a href="#" id="btnLogout">
+                      <span class="glyphicon glyphicon-off"></span>&nbsp;Salir
+                  </a>
+              </li>
+              <li>
+                  <a href="#" id="btnImportarTarifaciones">
+                    <span class="glyphicon glyphicon-import"></span>&nbsp;Importar Tarifaciones
+                  </a>
+              </li>
           </ul>
       </div>
   </div>
