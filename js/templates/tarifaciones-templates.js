@@ -9,7 +9,7 @@ const getImportTarifacionesDialogContent = () => {
 
 const getFailedImportedTarifacionBox = ({guideNumber, query, error}) => {
     return `
-        <div>
+        <div class="alert alert-warning" role="alert">
             <span>Paquete con número de guía <b>${guideNumber}</b>:</span><br>
             <span><b>Consulta</b>: <span style="color: #769299">${query}</span></span><br>
             <span><b>Error</b>: <span style="color: indianred">${error}</span></span>
