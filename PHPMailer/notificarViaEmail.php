@@ -21,7 +21,7 @@
     $mail->AddAddress($clientEmail, $clientName);
 	$mail->isHTML(true);  // Set email format to HTML
 	$mail->CharSet = 'UTF-8';
-	$mail->Subject = '¡Ya tenemos tu pedido!';
+	$mail->Subject = '¡Ya tenemos tus paquetes!';
 
 	$chexWhats = str_replace(' ', '%20', 'Hola Chispudito Express, quisiera que me entregaran mis paquetes... ');
 	$footer = "<br><br>
