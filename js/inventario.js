@@ -1264,8 +1264,6 @@ function getNewPlanForNotificatedPackage(prevPlan, newPlan) {
       newPlan = '';
   }
 
-  console.log('prev = ' + prevPlan + ' - new = ' +newPlan );
-
   return newPlan;
 }
 
