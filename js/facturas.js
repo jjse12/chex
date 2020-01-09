@@ -714,21 +714,22 @@ $(document).ready( function () {
             cache: false
         })
         .then(response => {
-            if (response.success) {
-                if (response.data === true){
+            const { success, data, message } = response;
+            if (success) {
+                if (data === true){
                     bootbox.hideAll();
                     loadFacturaDetailsAndShowDialog(factura);
                 }
                 else {
                     $('#divFacturaLogistica').html(facturaLogistica(response.data, factura));
                     toggleLogistica();
-                    activateLogisticaDatePickers(response.data);
-                    if (response.data.logistica.miami_received === null){
+                    activateLogisticaDatePickers(data);
+                    if (data.miami_received === null){
                         $('#factura-miami-received')[0].indeterminate = true;
                     }
                 }
-            } else if (response.message) {
-                bootbox.alert(response.message);
+            } else if (message) {
+                bootbox.alert(message);
             } else {
                 bootbox.alert("No se pudo crear el registro para la factura.");
             }

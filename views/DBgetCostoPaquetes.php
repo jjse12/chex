@@ -46,8 +46,8 @@ $totalChex = 0;
 $totalImpuestos = 0;
 $total = 0;
 $hasInvalidaPaquete = false;
+$coeficientesFetched = false;
 
-$serverConn = null;
 foreach ($infoPaquetes as &$infoPaquete) {
     $celulares = intval($infoPaquete['celulares']);
     $cobroExtra = floatval($infoPaquete['cobro_extra']);
@@ -72,21 +72,33 @@ foreach ($infoPaquetes as &$infoPaquete) {
             $hasInvalidaPaquete = true;
         }
         else {
-            if ($serverConn == null){
+            if (!$coeficientesFetched){
                 $serverConn = new mysqli(SERVER_DB_HOST, SERVER_DB_USER, SERVER_DB_PASS, SERVER_DB_NAME);
+                $query = "SELECT tarifa, desaduanaje, iva, seguro, cambio_dolar FROM cotizador_express_coeficientes WHERE fecha_desactivacion IS NULL";
+                $res = $serverConn->query($query);
+                if (!empty($res) && $res->num_rows > 0) {
+                    $row = $res->fetch_assoc();
+                    $tarifaFetched = floatval($row['tarifa']);
+                    $desaduanaje = floatval($row['desaduanaje']);
+                    $iva = floatval($row['iva']);
+                    $seguro = floatval($row['seguro']);
+                    $cambioDolar = floatval($row['cambio_dolar']);
+
+                }
+                $coeficientesFetched = true;
             }
 
-            $query = "SELECT tarifa, desaduanaje, iva, seguro, cambio_dolar FROM cotizador_express_coeficientes WHERE fecha_desactivacion IS NULL";
-            $res = $serverConn->query($query);
-            if (!empty($res) && $res->num_rows > 0) {
-                $row = $res->fetch_assoc();
-
+            if (!isset($tarifaFetched)) {
+                if ($pagoTarjeta) {
+                    $infoPaquete['cobro_tarjeta'] = '';
+                }
+                $infoPaquete['chex'] = '';
+                $infoPaquete['impuestos'] = '';
+                $infoPaquete['total'] = '';
+            }
+            else {
                 $tarifa = !empty($infoPaquete['tarifa_especial']) ? $infoPaquete['tarifa_especial'] :
-                    (!empty($tarifaExpressCliente) ? $tarifaExpressCliente : floatval($row['tarifa']));
-                $desaduanaje = floatval($row['desaduanaje']);
-                $iva = floatval($row['iva']);
-                $seguro = floatval($row['seguro']);
-                $cambioDolar = floatval($row['cambio_dolar']);
+                    (!empty($tarifaExpressCliente) ? $tarifaExpressCliente : $tarifaFetched);
 
                 $cotizacion = getCotizacionExpress($tarifa, $infoPaquete['libras'], $infoPaquete['precio_fob'],
                     $infoPaquete['arancel'], $desaduanaje, $iva, $seguro, $cambioDolar);
@@ -105,14 +117,6 @@ foreach ($infoPaquetes as &$infoPaquete) {
                 $infoPaquete['total'] = $totalPaquete;
                 $totalChex += $infoPaquete['chex'];
                 $totalImpuestos += $infoPaquete['impuestos'];
-            }
-            else {
-                if ($pagoTarjeta) {
-                    $infoPaquete['cobro_tarjeta'] = '';
-                }
-                $infoPaquete['chex'] = '';
-                $infoPaquete['impuestos'] = '';
-                $infoPaquete['total'] = '';
             }
             $infoPaquete['arancel'] = (100*floatval($infoPaquete['arancel'])) . '%';
         }

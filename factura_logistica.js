@@ -26,6 +26,10 @@ var couriers = [
 ];
 
 var signers = [
+    'CONFIRMACION SISTEMA',
+    'MARTINEZ',
+    'PARRALES',
+    'SANCHEZ',
     'A H',
     'AJ',
     'af',
