@@ -2,7 +2,6 @@ db/server_db_vars.php
 db/db_vars.php
 db/factura/factura_db_vars.php
 db/servicio/servicio_db_vars.php
-PHPMailer/config.php
 notification/config.php
 reportesFacturas/*
 git

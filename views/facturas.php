@@ -1,7 +1,7 @@
-<script src="js/facturas.js?rnd=2"></script>
-<script src="js/templates/facturas-templates.js?rnd=2"></script>
-<script src="factura_logistica.js?rnd=2"></script>
-<link href="css/facturaStyles.css?rnd=2" rel="stylesheet">
+<script src="js/facturas.js?v=1.0.1"></script>
+<script src="js/templates/facturas-templates.js?v=1.0.1"></script>
+<script src="factura_logistica.js?v=1.0.1"></script>
+<link href="css/facturaStyles.css?v=1.0.1" rel="stylesheet">
 
 <br><br>
 <br><br>
