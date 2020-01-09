@@ -59,7 +59,8 @@ function getEmailNotification($nombreCliente, $idCliente, $paquetes, $pesoTotal,
 {
     $message = "
         <div style='width: auto; padding: 32px 64px; align-self: center; background: #f5f5f5; align-items: center;'>
-            <img alt='chispudito-express-logo' style='max-width: 147px; max-height: 100px' height='100px' src='http://www.chispuditoexpress.com/images/logocorreo.png'>
+            <img alt='chispudito-express-logo' style='max-width: 147px; max-height: 100px'
+                height='100px' src='http://www.chispuditoexpress.com/images/logocorreo.png'>
             <br><br>";
     // Configuración de palabras para una notificación de múltiples paquetes
     if (count($paquetes) > 1) {
@@ -68,7 +69,7 @@ function getEmailNotification($nombreCliente, $idCliente, $paquetes, $pesoTotal,
         $message .= "
             <div>
                 <span style='color: #ef6400'>Hola $nombreCliente / CHEX $idCliente</span>
-                <br><br>
+                <hr><br>
                 <p style='color: #34557A; text-align: justify;'>
                     Te saludamos de Chispudito Express para informarte que tus siguientes
                     paquetes ya están disponibles en nuestras oficinas en Guatemala.
@@ -141,6 +142,7 @@ function getEmailNotification($nombreCliente, $idCliente, $paquetes, $pesoTotal,
         </p>";
 
     $chexWhats = str_replace(' ', '%20', 'Hola Chispudito Express, quisiera que me entregaran mis paquetes... ');
+
     /********* TEXTO DE DESPEDIDA *********/
     $message .= "
         <p style='color: #34557A; text-align: justify;'>
@@ -158,13 +160,16 @@ function getEmailNotification($nombreCliente, $idCliente, $paquetes, $pesoTotal,
         "WhatsApp: " . CHEX_WHATSAPP_PHONE_NUMBER .
         "<br>
         <small>
-                <a href='https://api.whatsapp.com/send?phone=" . CHEX_WHATSAPP_PHONE_NUMBER_FOR_URL . "&text=$chexWhats'
-                    style='color: #df8a27;'>(click aqui para comunicarte de inmediato vía WhatsApp)</a>
+            <a href='https://api.whatsapp.com/send?phone=" . CHEX_WHATSAPP_PHONE_NUMBER_FOR_URL . "&text=$chexWhats'
+                style='color: #df8a27;'>(click aqui para comunicarte de inmediato vía WhatsApp)</a>
         </small>
         <br><br>
-        <img alt='chispudito-express-logo' style='max-width: 147px; max-height: 100px' height='100px' src='http://www.chispuditoexpress.com/images/logocorreo.png'>
+        <img alt='chispudito-express-logo' style='max-width: 147px; max-height: 100px'
+            height='100px' src='http://www.chispuditoexpress.com/images/logocorreo.png'>
         <br>
     </div>";
+
+
 
     $bottomPadding = count($paquetes) > 4 ? '180px' : '100px';
     return "
