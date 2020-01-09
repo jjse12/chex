@@ -832,25 +832,54 @@ askForClientDataDialog = (isWhatsAppNotification = true) => {
             </div>`;
 };
 
-function getWhatsAppNotificationUrl(notificationData){
-  let paquetes = notificationData.paquetes;
-  let pesoTotal = paquetes.reduce((total, paquete) => { return total + paquete.libras; }, 0);
-  let costoTotal = pesoTotal * notificationData.rate;
-  let message = getNotificationMessage(notificationData.clientName, paquetes, pesoTotal, costoTotal);
-  message = message.replaceAll('<ENTER>', '%0A').replace(" ", "%20").replace("Ã¡", "á").replace("Ã©", "é").replace("Ã³", "ó").replace("Ãº", "ú").replace("Ã¼", "ü").replace("Ã±", "ñ").replace("Ã", "í");
-  return "https://web.whatsapp.com/send?phone="+notificationData.phoneNumber+"&text="+message;
+async function getWhatsAppNotificationUrl(notificationData){
+  let trackings = notificationData.paquetes.map(({ tracking }) => tracking );
+  const response = await $.ajax({
+    url: "notification/DBgetPaquetesNotificationContent.php",
+    type: "POST",
+    data: {
+      trackings,
+      uid: notificationData.uid,
+      uname: notificationData.clientName,
+      notificationType: 'whatsapp',
+    },
+    cache: false,
+  });
+
+  const { success, data, message } = response;
+  if (success) {
+    return "https://web.whatsapp.com/send?phone="+notificationData.phoneNumber+"&text="+data;
+  }
+  else {
+    bootbox.alert(message);
+    return false;
+  }
 }
 
-function getEmailNotificationMessage(notificationData){
-  let paquetes = notificationData.paquetes;
-  let pesoTotal = paquetes.reduce((total, paquete) => { return total + paquete.libras; }, 0);
-  let costoTotal = pesoTotal * notificationData.rate;
-  let message = getNotificationMessage(notificationData.clientName, paquetes, pesoTotal, costoTotal);
-  message = message.replace('<ENTER>', '<br>').replace("*efectivo*", '<b>efectivo</b>');
-  return message
+async function getEmailNotificationMessage(notificationData){
+  let trackings = notificationData.paquetes.map(({ tracking }) => tracking );
+  const response = await $.ajax({
+    url: "notification/DBgetPaquetesNotificationContent.php",
+    type: "POST",
+    data: {
+      trackings,
+      uid: notificationData.uid,
+      uname: notificationData.clientName,
+      notificationType: 'email',
+    },
+    cache: false,
+  });
+  const { success, data, message } = response;
+  if (success) {
+    return data;
+  }
+  else {
+    bootbox.alert(message);
+    return false;
+  }
 }
 
-function sendNotificationToClient(notificationData, searchAskedClientData, searchByClientUid, isWhatsAppNotification = true){
+async function sendNotificationToClient(notificationData, searchAskedClientData, searchByClientUid, isWhatsAppNotification = true){
   if (searchAskedClientData){
     let dest = isWhatsAppNotification ?
         document.getElementById("inputNotificationPhoneNumber").value :
@@ -873,7 +902,8 @@ function sendNotificationToClient(notificationData, searchAskedClientData, searc
 
   if (isWhatsAppNotification)
   {
-    let notificationUrl = getWhatsAppNotificationUrl(notificationData);
+    let notificationUrl = await getWhatsAppNotificationUrl(notificationData);
+    if (notificationUrl === false) return;
 
     if (whatsWebWindow != null && !whatsWebWindow.closed){
       whatsWebWindow.location.replace(notificationUrl);
@@ -933,9 +963,10 @@ function sendNotificationToClient(notificationData, searchAskedClientData, searc
   }
   else
   {
-    let message = getEmailNotificationMessage(notificationData);
+    let message = await getEmailNotificationMessage(notificationData);
+    if (message === false) return;
     $.ajax({
-      url: "PHPMailer/notificarViaEmail.php",
+      url: "notification/notificarViaEmail.php",
       type: "POST",
       data: {
         email: notificationData.email,
@@ -965,7 +996,7 @@ function sendNotificationToClient(notificationData, searchAskedClientData, searc
   }
 }
 
-function notificarViaWhatsApp(searchByClientUid = true){
+async function notificarViaWhatsApp(searchByClientUid = true){
   bootbox.hideAll();
   let selectedRows = $("#inventario").DataTable().rows(".selected").data().toArray();
   let paquetes = [];
@@ -982,32 +1013,32 @@ function notificarViaWhatsApp(searchByClientUid = true){
   // Obtener datos del cliente por medio su id
   if (searchByClientUid) {
     let uid = paquetes[0].uid;
+    notificationData.uid = uid;
     notificationData.clientName = paquetes[0].uname;
 
     let querysita = `SELECT celular, tarifa FROM cliente WHERE cid = '${uid}'`;
 
-    $.ajax({
-      url: "db/DBexecQuery.php",
-      type: "POST",
-      data: { query: querysita },
-      cache: false,
-      success: function(arr){
-        let rows = JSON.parse(arr);
-        if (rows.length === 0){
-          bootbox.alert("No se encontró en la base de datos los datos del cliente necesarios para enviar la notificación (celular y tarifa).");
-          return;
-        }
-        let clientData = rows[0];
-        notificationData.phoneNumber = "502"+clientData.celular;
-        notificationData.rate = clientData.tarifa;
+    try {
 
-        sendNotificationToClient(notificationData, false, true)
-      },
-      error: () => {
-        bootbox.alert("Ocurrió un problema al intentar conectarse al servidor y no se pudo obtener el número de celular del cliente. Intentalo nuevamente luego.");
-        document.getElementById("divBotones").style.visibility = "visible";
+      const response = await $.ajax({
+        url: "db/DBexecQuery.php",
+        type: "POST",
+        data: {query: querysita},
+        cache: false,
+      });
+      let rows = JSON.parse(response);
+      if (rows.length === 0){
+        bootbox.alert("No se encontró en la base de datos los datos del cliente necesarios para enviar la notificación (celular y tarifa).");
+        return;
       }
-    });
+      let clientData = rows[0];
+      notificationData.phoneNumber = "502"+clientData.celular;
+      notificationData.rate = clientData.tarifa;
+      sendNotificationToClient(notificationData, false, true)
+    } catch (e) {
+      bootbox.alert("Ocurrió un problema al intentar conectarse al servidor y no se pudo obtener el número de celular del cliente. Intentalo nuevamente luego.");
+      document.getElementById("divBotones").style.visibility = "visible";
+    }
 
     return;
   }
@@ -1096,7 +1127,7 @@ function notificarViaWhatsApp(searchByClientUid = true){
   });
 }
 
-function notificarViaEmail(searchByClientUid = true){
+async function notificarViaEmail(searchByClientUid = true){
   bootbox.hideAll();
   let selectedRows = $("#inventario").DataTable().rows(".selected").data().toArray();
   let paquetes = [];
@@ -1112,37 +1143,35 @@ function notificarViaEmail(searchByClientUid = true){
 
   if (searchByClientUid) {
     let uid = paquetes[0].uid, name;
+    notificationData.uid = uid;
     notificationData.clientName = name = paquetes[0].uname;
 
     let querysita = `SELECT email, tarifa FROM cliente WHERE cid = '${uid}'`;
 
-    $.ajax({
-      url: "db/DBexecQuery.php",
-      type: "POST",
-      data:{
-        query: querysita
-      },
-      cache: false,
-      success: function(arr)
-      {
-        let rows = JSON.parse(arr);
-        if (rows.length === 0){
-          bootbox.alert("No se encontró en la base de datos los datos del cliente necesarios para enviar la notificación (email y tarifa).");
-          return;
-        }
-        let clientData = rows[0];
-        notificationData.email = clientData.email;
-        notificationData.rate = clientData.tarifa;
-
-        sendNotificationToClient(notificationData, false, true, false);
-      },
-      error: () => {
-        bootbox.alert("Ocurrió un problema al intentar conectarse al servidor y no se pudo obtener el correo electrónico del cliente. Intenta nuevamente.");
-        document.getElementById("divBotones").style.visibility = "visible";
+    try {
+      const response = await $.ajax({
+        url: "db/DBexecQuery.php",
+        type: "POST",
+        data: {
+          query: querysita
+        },
+        cache: false,
+      });
+      let rows = JSON.parse(response);
+      if (rows.length === 0){
+        bootbox.alert("No se encontró en la base de datos los datos del cliente necesarios para enviar la notificación (email y tarifa).");
+        return;
       }
-    });
+      let clientData = rows[0];
+      notificationData.email = clientData.email;
+      notificationData.rate = clientData.tarifa;
 
-    return
+      await sendNotificationToClient(notificationData, false, true, false);
+    } catch (e) {
+      bootbox.alert("Ocurrió un problema al intentar conectarse al servidor y no se pudo obtener el correo electrónico del cliente. Intenta nuevamente.");
+      document.getElementById("divBotones").style.visibility = "visible";
+    }
+    return;
   }
 
   // Obtener datos del cliente por medio del nombre de los paquetes seleccionados
