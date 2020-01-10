@@ -1,5 +1,5 @@
 <?php
-require_once('./config.php');
+require_once('config.php');
 
 function getWhatsAppNotification($nombreCliente, $idCliente, $paquetes, $pesoTotal, $costoTotal) : string
 {
@@ -91,7 +91,7 @@ function getEmailNotification($nombreCliente, $idCliente, $paquetes, $pesoTotal,
                     Te saludamos de Chispudito Express para informarte que tu siguiente
                     paquete ya está disponible en nuestras oficinas en Guatemala.
                 </p>
-                <span style='margin-top: 8px; color: #ef6400''>Detalle de paquetes:<br><br>
+                <span style='margin-top: 8px; color: #ef6400''>Detalle de paquetes<br><br>
             </div>";
     }
 

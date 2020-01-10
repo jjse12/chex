@@ -368,7 +368,7 @@ function agregarPaquete(paquete) {
     "<h5 class='seleccionado ingCargaUid'>"+uid+"</h5>",
     "<h5 class='seleccionado ingCargaUname'>"+uname+"</h5>",
     "<h5 class='seleccionado ingCargaPeso'>"+peso+"</h5>",
-    `<img alt='eliminar' style='cursor: pointer;' data-tracking='${tracking}' data-guide-number='${guideNumber}' class='icon-delete'  src='/images/remove.png'/>`
+    `<img alt='eliminar' style='cursor: pointer;' data-tracking='${tracking}' data-guide-number='${guideNumber}' class='icon-delete'  src='images/remove.png'/>`
   ]).draw(false);
 
   document.getElementById("paquetes").innerHTML = "Paquetes: " + t.rows().data().length;

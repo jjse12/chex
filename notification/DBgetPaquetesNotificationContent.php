@@ -1,9 +1,9 @@
 <?php
 header('Content-Type: application/json;charset=utf-8');
-require_once("../db/utils.php");
-require_once("../db/db_vars.php");
-require_once("../db/server_db_vars.php");
-require_once("./notification_template.php");
+require_once("db/utils.php");
+require_once("db/db_vars.php");
+require_once("db/server_db_vars.php");
+require_once("notification_template.php");
 
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 $notificationType = $_POST['notificationType'];
