@@ -1,5 +1,5 @@
 <?php
-require_once('config.php');
+require_once('./config.php');
 
 function getWhatsAppNotification($nombreCliente, $idCliente, $paquetes, $pesoTotal, $costoTotal) : string
 {

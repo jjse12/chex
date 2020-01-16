@@ -1,8 +1,8 @@
 <?php
 header('Content-Type: text/html');
-require_once("db/utils.php");
-require_once("db/db_vars.php");
-require_once("db/server_db_vars.php");
+require_once("../db/utils.php");
+require_once("../db/db_vars.php");
+require_once("../db/server_db_vars.php");
 
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 $uid = $_POST['uid'];

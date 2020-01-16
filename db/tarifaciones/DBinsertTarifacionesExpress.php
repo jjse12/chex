@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json;charset=utf-8');
-require_once("db/db_vars.php");
+require_once("../db_vars.php");
 
 $data = $_POST['data'];
 $delimiter = '-DELIMITER-';
