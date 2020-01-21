@@ -7,7 +7,8 @@ $delimiter = '-DELIMITER-';
 
 $insertionString = 'insert into tarifacion_paquete_express(tracking, precio_fob, arancel) ' .
     'VALUES ((select tracking from paquete where guide_number = ';
-$allQueries = $insertionString . str_replace("	$", '), ', $data);
+$allQueries = str_replace(",", '', $data);
+$allQueries = $insertionString . str_replace("	$", '), ', $allQueries);
 $allQueries = str_replace("	", ', ', $allQueries);
 $allQueries = str_replace("%", '/100);', $allQueries);
 $allQueries = str_replace("\n", $delimiter . $insertionString, $allQueries);
