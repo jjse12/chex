@@ -5,7 +5,7 @@
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-<script src="js/inventario.js?v=1.0.1"></script>
+<script src="js/inventario.js?v=1.0.2"></script>
 <script src="js/templates/inventario-templates.js?v=1.0.1"></script>
 
 <div class="container" style="padding-top: 4.5cm">
@@ -46,9 +46,9 @@
     <div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style="padding-top: 6px;">
         <div class='col-lg-2 col-md-2 col-sm-2'></div>
         <div class='col-lg-8 col-md-8 col-sm-8 col-xs-12'>
-            <button onclick="notificarSeleccionados()" class="btn-lg btn-primary" align="center" style="width:28%; text-align: center ;">Notificar</button>
-            <button onclick="entregarSeleccionados()" class="btn-lg btn-success" align="center" style="width: 42%; text-align: center ;">Entregar Mercadería</button>
-            <button onclick="planificarEntrega()" class="btn-lg btn-warning" align="center" style="width: 28%; text-align: center;">Plan de Entrega</button>
+            <button onclick="notificarSeleccionados()" class="btn btn-primary" align="center" style="width:28%; text-align: center ;">Notificar</button>
+            <button onclick="entregarSeleccionados()" class="btn btn-success" align="center" style="width: 42%; text-align: center ;">Entregar Mercadería</button>
+            <button onclick="planificarEntrega()" class="btn btn-warning" align="center" style="width: 28%; text-align: center;">Plan de Entrega</button>
         </div>
     </div>
 </div>

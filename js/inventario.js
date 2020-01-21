@@ -1582,7 +1582,7 @@ var loadingEntregaMercaderiaTable = false;
 const getEntregaMercaderiaTable = async (trackings, uid, pagoTarjeta) => {
   loadingEntregaMercaderiaTable = true;
   const result = await $.ajax({
-    url: "views/DBgetCostoPaquetes.php",
+    url: "views/getTableCostoMercaderia.php",
     type: "POST",
     data: {
       trackings,

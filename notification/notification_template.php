@@ -1,17 +1,25 @@
 <?php
 require_once('./config.php');
 
-function getWhatsAppNotification($nombreCliente, $idCliente, $paquetes, $pesoTotal, $costoTotal) : string
+function getWhatsAppNotification($nombreCliente, $idCliente, $costeoData) : string
 {
+    $paquetes = $costeoData['paquetes'];
+    $totales = $costeoData['totales'];
+    $totalPaquetes = $totales['paquetes'];
+    $totalPeso = $totales['libras'];
+    $total = $totales['total'];
     // Configuración de palabras para una notificación de múltiples paquetes
-    if (count($paquetes) > 1) {
+    if ($totalPaquetes > 1) {
         $enviar = 'envíen';
         $programar = 'programen';
         $message =
             /********* TEXTO DE SALUDO (múltiples paquetes) *********/
             "Hola $nombreCliente / CHEX $idCliente<ENTER>" .
             "Te saludamos de Chispudito Express para informarte que tus siguientes " .
-            "paquetes ya están disponibles en nuestras oficinas en Guatemala.<ENTER>Detalle de paquetes:<ENTER><ENTER>";
+            "paquetes ya están disponibles en nuestras oficinas en Guatemala.<ENTER><ENTER>" .
+            "--------------------------------<ENTER>" .
+            "           Detalle de paquetes<ENTER>" .
+            "--------------------------------<ENTER><ENTER>";
     }
     // Configuración de palabras para una notificación de un único paquete
     else {
@@ -21,23 +29,32 @@ function getWhatsAppNotification($nombreCliente, $idCliente, $paquetes, $pesoTot
             /********* TEXTO DE SALUDO (un único paquete) *********/
             "Hola $nombreCliente / CHEX $idCliente<ENTER>" .
             "Te saludamos de Chispudito Express para informarte que tu siguiente " .
-            "paquete ya está disponible en nuestras oficinas en Guatemala.<ENTER>Detalle del paquete:<ENTER><ENTER>";
-
+            "paquete ya está disponible en nuestras oficinas en Guatemala.<ENTER><ENTER>" .
+            "--------------------------------<ENTER>" .
+            "           Detalle del paquete<ENTER>" .
+            "--------------------------------<ENTER><ENTER>";
     }
 
-    foreach ($paquetes as $num => $paquete) {
+    foreach ($paquetes as $paquete) {
+        $serviciosChex = $paquete['chex'] + $paquete['cobro_celulares'] + $paquete['cobro_extra'];
         /********* TEXTO DE PAQUETES (ESTE TEXTO SE ESCRIBE POR CADA PAQUETE SELECCIONADO) *********/
         $message .=
-            "*  Tracking: " . $paquete['tracking'] . '<ENTER> ' .
-            "   Peso: " . $paquete['libras'] . " lb". '<ENTER>'.
-            "    Costo: Q" . number_format($paquete['total'], 2) . '<ENTER><ENTER>';
+            "*  Tracking: " . $paquete['tracking'] . '<ENTER>' .
+            "    Peso: " . $paquete['libras'] . ($paquete['libras'] > 1 ? ' libras' : ' libra') . '<ENTER>'.
+            "    Servicios: Q " . number_format($serviciosChex, 2) . '<ENTER>'.
+            "    Impuestos: " . ($paquete['impuestos'] === '' ? 'Q 0.00' :
+                'Q ' . number_format($paquete['impuestos'], 2)) . '<ENTER>'.
+            "    Monto a cancelar: Q " . number_format($paquete['total'], 2) . '<ENTER><ENTER>';
     }
 
     /********* TEXTO TOTALES *********/
     $message .=
-        "- Total de paquetes: " . count($paquetes) .  '<ENTER>'  .
-//      "- Peso total: ${pesoTotal} lb."  .  '<ENTER>'  .
-        "- Total a cancelar: Q" . number_format($costoTotal, 2) . '<ENTER><ENTER>';
+        "--------------------------------<ENTER>" .
+        "                     Totales<ENTER>" .
+        "--------------------------------<ENTER><ENTER>" .
+        "- Paquetes: $totalPaquetes<ENTER>" .
+        "- Peso: $totalPeso " . ($totalPeso > 1 ? 'libras' : 'libra') . "<ENTER>" .
+        "- Monto a cancelar: Q " . number_format($total, 2) . '<ENTER><ENTER>';
 
     /********* TEXTO DE INFORMACIÓN EXTRA *********/
     // (las variables "$enviar" y "$programar" se asignan arriba
@@ -55,15 +72,22 @@ function getWhatsAppNotification($nombreCliente, $idCliente, $paquetes, $pesoTot
     return $message;
 };
 
-function getEmailNotification($nombreCliente, $idCliente, $paquetes, $pesoTotal, $costoTotal): string
+function getEmailNotification($nombreCliente, $idCliente, $costeoData): string
 {
+    $paquetes = $costeoData['paquetes'];
+    $totales = $costeoData['totales'];
+    $totalPaquetes = $totales['paquetes'];
+    $totalChex = $totales['chex'];
+    $totalImpuestos = $totales['impuestos'];
+    $totalPeso = $totales['libras'];
+    $total = $totales['total'];
     $message = "
         <div style='width: auto; padding: 32px 64px; align-self: center; background: #f5f5f5; align-items: center;'>
             <img alt='chispudito-express-logo' style='max-width: 147px; max-height: 100px'
                 height='100px' src='http://www.chispuditoexpress.com/images/logocorreo.png'>
             <br><br>";
     // Configuración de palabras para una notificación de múltiples paquetes
-    if (count($paquetes) > 1) {
+    if ($totalPaquetes > 1) {
         $enviar = 'envíen';
         $programar = 'programen';
         $message .= "
@@ -96,23 +120,30 @@ function getEmailNotification($nombreCliente, $idCliente, $paquetes, $pesoTotal,
     }
 
     $rows = '';
-    foreach ($paquetes as $num => $paquete) {
+    foreach ($paquetes as $paquete) {
+        $serviciosChex = $paquete['chex'] + $paquete['cobro_celulares'] + $paquete['cobro_extra'];
         $rows .= "
             <tr>
                 <th>{$paquete['tracking']}</th>
                 <th>" . $paquete['libras'] . ($paquete['libras'] > 1 ? ' libras' : ' libra') . "</th>
-                <th>Q" . number_format($paquete['total'], 2) . "</th>
+                <th title='" . ($paquete['chex_info'] ?? '') . "'>Q " . number_format($serviciosChex, 2) . "</th>
+                <th title='" . ($paquete['impuestos_info'] ?? '') . "'>" .
+                    ($paquete['impuestos'] === '' ? 'Q 0.00' :
+                        'Q ' . number_format($paquete['impuestos'], 2)) . "</th>
+                <th style='text-align: right'>Q " . number_format($paquete['total'], 2) . "</th>
             </tr>
         ";
     }
 
     $message .= "
-        <table style='width: 100%; text-align: left'>
+        <table style='width: 100%; text-align: left; font-size: small'>
             <thead>
                 <tr>
                     <th># Tracking</th>
                     <th>Peso</th>
-                    <th>Costo</th>
+                    <th>Servicios</th>
+                    <th>Impuestos</th>
+                    <th style='text-align: right'>Total a Pagar</th>
                 </tr>
             </thead>
             <tbody>
@@ -123,9 +154,11 @@ function getEmailNotification($nombreCliente, $idCliente, $paquetes, $pesoTotal,
                 <tr><th colspan='3'>&nbsp;</th></tr>
                 <tr><th colspan='3'><small>Totales:</small></th></tr>
                 <tr>
-                    <th>" . count($paquetes) . (count($paquetes) > 1 ? ' paquetes' : ' paquete') . "</th>
-                    <th>" . $pesoTotal . ($pesoTotal > 1 ? ' libras' : ' libra') . "</th>
-                    <th>Q" . number_format($costoTotal, 2) ."</th>
+                    <th>" . $totalPaquetes . ($totalPaquetes > 1 ? ' paquetes' : ' paquete') . "</th>
+                    <th>" . $totalPeso . ($totalPeso > 1 ? ' libras' : ' libra') . "</th>
+                    <th>Q " . number_format($totalChex, 2) ."</th>
+                    <th>Q " . number_format($totalImpuestos, 2) ."</th>
+                    <th style='text-align: right'>Q " . number_format($total, 2) ."</th>
                 </tr>
             </tfoot>
         </table>
@@ -171,7 +204,7 @@ function getEmailNotification($nombreCliente, $idCliente, $paquetes, $pesoTotal,
 
 
 
-    $bottomPadding = count($paquetes) > 4 ? '180px' : '100px';
+    $bottomPadding = $totalPaquetes > 4 ? '180px' : '100px';
     return "
 <html lang='es' xmlns='http://www.w3.org/1999/xhtml'>
     <head>

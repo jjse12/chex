@@ -15,9 +15,12 @@ function getCotizacionExpress($tarifa, $peso, $fob, $arancel, $desaduanaje, $iva
 
     return [
         'chex' => $totalChex,
-        'chexInfo' => "- Peso: Q $costoLibras\n- Desaduanaje: Q $desaduanaje\n- Seguro: Q $costoSeguro",
+        'chex_info' =>
+            "- Peso: Q " . number_format($costoLibras, 2) . "\n" .
+            "- Desaduanaje: Q " . number_format($desaduanaje, 2) . "\n" .
+            "- Seguro: Q " . number_format($costoSeguro, 2) . "\n",
         'impuestos' => $totalImpuestos,
-        'impuestosInfo' => '- IVA: Q ' . round($iva, 2) . "\n- Arancel: Q " . round($dai,2),
+        'impuestos_info' => '- IVA: Q ' . number_format($iva, 2) . "\n- Arancel: Q " . number_format($dai,2),
         'total' => $total
     ];
 }
