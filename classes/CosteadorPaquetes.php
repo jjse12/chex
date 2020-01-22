@@ -5,10 +5,13 @@ require_once("../db/server_db_vars.php");
 
 class CosteadorPaquetes {
 
+    const DEFAULT_TARIFA_ESTANDAR = 60;
+    const DEFAULT_TARIFA_EXPRESS = 25;
+
     private $paquetes;
-    private $tarifaEstandar;
-    private $tarifaExpress;
     private $pagoTarjeta;
+    private $isEntrega;
+    private $isNotificacion;
 
     public function __construct(array $paquetes)
     {
@@ -16,16 +19,16 @@ class CosteadorPaquetes {
         $this->pagoTarjeta = false;
     }
 
-    public function setTarifaEstandar(float $tarifaEstandar) {
-        $this->tarifaEstandar = $tarifaEstandar;
-    }
-
-    public function setTarifaExpress(float $tarifaExpress) {
-        $this->tarifaExpress = $tarifaExpress;
-    }
-
     public function setPagoTarjeta(bool $pagoTarjeta) {
         $this->pagoTarjeta = $pagoTarjeta;
+    }
+
+    public function setIsEntrega(bool $isEntrega) {
+        $this->isEntrega = $isEntrega;
+    }
+
+    public function setIsNotificacion(bool $isNotificacion) {
+        $this->isNotificacion = $isNotificacion;
     }
 
     public function costear(): array
@@ -42,22 +45,14 @@ class CosteadorPaquetes {
         $coeficientesFetched = false;
 
         foreach ($this->paquetes as &$paquete) {
-            $celulares = intval($paquete['celulares']);
-            $cobroCelulares = $celulares * 100;
-            $cobroExtra = floatval($paquete['cobro_extra']);
-            $paquete['cobro_celulares'] = $cobroCelulares;
-
-            $totalLibras += $paquete['libras'];
-            $totalCelulares += $celulares;
-            $totalCobroCelulares += $cobroCelulares;
-            $totalCobrosExtras += $cobroExtra;
-            $totalPaquete = $cobroCelulares + $cobroExtra;
+            $totalPaquete = 0;
 
             if ($paquete['servicio'] === 'Express') {
                 if (empty($paquete['precio_fob']) || empty($paquete['arancel'])){
                     $invalidPaquetes[] = $paquete['tracking'];
                 }
                 else {
+                    $tarifaFetched = self::DEFAULT_TARIFA_EXPRESS;
                     if (!$coeficientesFetched){
                         $serverConn = new mysqli(SERVER_DB_HOST, SERVER_DB_USER, SERVER_DB_PASS, SERVER_DB_NAME);
                         $query = "SELECT tarifa, desaduanaje, iva, seguro, cambio_dolar FROM cotizador_express_coeficientes WHERE fecha_desactivacion IS NULL";
@@ -82,8 +77,8 @@ class CosteadorPaquetes {
                         $coeficientesFetched = true;
                     }
 
-                    $tarifa = !empty($paquete['tarifa_especial']) ? $paquete['tarifa_especial'] :
-                        !empty($this->tarifaExpress) ? $this->tarifaExpress : $tarifaFetched;
+                    $tarifa = !empty($paquete['tarifa_express_especial']) ? $paquete['tarifa_express_especial'] :
+                        (!empty($paquete['tarifa_express']) ? $paquete['tarifa_express'] : $tarifaFetched);
 
                     $cotizacion = getCotizacionExpress($tarifa, $paquete['libras'], $paquete['precio_fob'],
                         $paquete['arancel'], $desaduanaje, $iva, $seguro, $cambioDolar);
@@ -109,8 +104,7 @@ class CosteadorPaquetes {
             else if ($paquete['servicio'] === 'Estándar' || $paquete['servicio'] === 'EstÃ¡ndar') {
                 $paquete['precio_fob'] = $paquete['arancel'] = $paquete['impuestos'] = '';
 
-                $tarifa = !empty($paquete['tarifa_especial']) ? $paquete['tarifa_especial'] :
-                    !empty($this->tarifaEstandar) ? $this->tarifaEstandar : 60;
+                $tarifa = !empty($paquete['tarifa_estandar']) ? $paquete['tarifa_estandar'] : self::DEFAULT_TARIFA_ESTANDAR;
                 $costoChex = $tarifa * $paquete['libras'];
                 $paquete['chex'] = $costoChex;
                 $paquete['chex_info'] = '- Peso: Q ' . number_format($costoChex, 2) . "\n";
@@ -128,10 +122,24 @@ class CosteadorPaquetes {
                 $paquete['total'] = $totalPaquete;
             }
 
-            if ($cobroCelulares + $cobroExtra > 0) {
-                $paquete['chex_info'] .= '- Otros: Q ' . number_format($cobroCelulares + $cobroExtra, 2);
+
+            if ($this->isEntrega || $this->isNotificacion) {
+                $celulares = intval($paquete['celulares']);
+                $cobroCelulares = $celulares * 100;
+                $cobroExtra = floatval($paquete['cobro_extra']);
+                $paquete['cobro_celulares'] = $cobroCelulares;
+
+                $totalCelulares += $celulares;
+                $totalCobroCelulares += $cobroCelulares;
+                $totalCobrosExtras += $cobroExtra;
+                $totalPaquete += $cobroCelulares + $cobroExtra;
+                $paquete['total'] = $totalPaquete;
+                if ($this->isNotificacion && ($cobroCelulares + $cobroExtra > 0)) {
+                    $paquete['chex_info'] .= '- Otros: Q ' . number_format($cobroCelulares + $cobroExtra, 2);
+                }
             }
 
+            $totalLibras += $paquete['libras'];
             $total += $totalPaquete;
         }
 

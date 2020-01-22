@@ -1,0 +1,1 @@
+update cliente set cumple = null where cumple = 0000-00-00

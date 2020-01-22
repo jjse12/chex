@@ -1,15 +1,8 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: Jenner
- * Date: 2019-02-23
- * Time: 03:00
- */
 
+require_once '../vendor/tecnickcom/tcpdf/tcpdf.php';
 
-require_once 'vendor/tecnickcom/tcpdf/tcpdf.php';
-
-class ChexFacturasPDF extends TCPDF {
+class FacturasPDFGenerator extends TCPDF {
 
     const COMPANY_NAME = 'Chispudito Express';
 
@@ -23,11 +16,11 @@ class ChexFacturasPDF extends TCPDF {
     private $fileDate;
 
     /**
-     * ChexFacturasPDF constructor.
-     * @param $facturas
+     * FacturasPDFGenerator constructor.
+     * @param array $facturas
      * @throws Exception
      */
-    public function __construct($facturas){
+    public function __construct(array $facturas){
         parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);;
 
         $this->facturas = $facturas;
@@ -128,20 +121,4 @@ class ChexFacturasPDF extends TCPDF {
         }
         $this->Output("{$path}facturas__{$this->fileDate}.pdf", 'FD');
     }
-}
-
-$facturas = $_POST['facturas'];
-
-if (isset($facturas)){
-    try {
-        $pdf = new ChexFacturasPDF($facturas);
-        $pdf->render();
-    } catch (Exception $e) {
-        header("HTTP/1.1 500 Internal Server Error");
-        echo "Error al procesar el pdf";
-    }
-}
-else {
-    header("HTTP/1.1 500 Internal Server Error");
-    echo "Error en la solicitud enviada.";
 }

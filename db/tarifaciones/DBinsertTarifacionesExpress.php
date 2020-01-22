@@ -24,12 +24,16 @@ $pattern = "/^.*$guideNumberConditionPattern.*$/m";
 
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
+$insertedTarifacionesGuideNumbers = [];
+
 foreach ($insertQueries as $insertQuery) {
+    $matches = [];
+    preg_match($pattern, $insertQuery, $matches);
     if ($conn->query($insertQuery)) {
         $insertedCount++;
+        $insertedTarifacionesGuideNumbers[] = $matches['guide_number'];
     }
     else {
-        preg_match($pattern, $insertQuery, $matches);
         $failedQueriesData[] = [
             'guideNumber' => $matches['guide_number'],
             'query' => $insertQuery,
@@ -41,6 +45,9 @@ foreach ($insertQueries as $insertQuery) {
 if ($insertedCount === count($insertQueries)) {
     echo json_encode([
         'success' => true,
+        'data' => [
+            'insertedTarifacionesGuideNumbers' => $insertedTarifacionesGuideNumbers,
+        ]
     ]);
     exit;
 }
@@ -50,6 +57,7 @@ echo json_encode([
     'success' => false,
     'message' => "No se pudieron importar $remaining tarifaciones de las $toInsertCount tarifaciones ingresadas",
     'data' => [
-        'failedQueriesData' => $failedQueriesData
+        'failedQueriesData' => $failedQueriesData,
+        'insertedTarifacionesGuideNumbers' => $insertedTarifacionesGuideNumbers
     ]
 ]);
