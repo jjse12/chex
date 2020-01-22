@@ -1817,20 +1817,26 @@ async function tipoDePagoOnChange(selectBox, trackings, uid) {
   }
 }
 
-async function showCostoMercaderia() {
+async function showCostoMercaderia(wholeInventory = false) {
   document.getElementById("divBotones").style.visibility = "hidden";
-  const data = $("#inventario").DataTable().rows(".selected").data().toArray();
-  let trackings = [];
-  for (var i = 0; i < data.length; i++) {
-    trackings.push($(data[i][inventarioIndexes.tracking]).data('tracking'));
+  let data = {};
+
+  if (wholeInventory){
+    data.inventory = true;
+  }
+  else {
+    const tableData = $("#inventario").DataTable().rows(".selected").data().toArray();
+    let trackings = [];
+    for (var i = 0; i < tableData.length; i++) {
+      trackings.push($(tableData[i][inventarioIndexes.tracking]).data('tracking'));
+    }
+    data.trackings = trackings;
   }
 
   const table = await $.ajax({
     url: "views/getTableCostoMercaderia.php",
     type: "POST",
-    data: {
-      trackings,
-    },
+    data,
     cache: false,
   });
 

@@ -32,6 +32,13 @@
                     <span class="glyphicon glyphicon-import"></span>&nbsp;Importar Tarifaciones
                   </a>
               </li>
+              <?php if ($isAdmin): ?>
+                  <li>
+                      <a href="#" id="btnVerCostoMercaderia">
+                          <i class="fas fa-dollar-sign"></i>&nbsp;Ver Costos Inventario
+                      </a>
+                  </li>
+              <?php endif ?>
           </ul>
       </div>
   </div>

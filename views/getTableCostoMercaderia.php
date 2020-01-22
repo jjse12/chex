@@ -5,6 +5,7 @@ require_once('../classes/CosteadorPaquetes.php');
 
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 $uid = $_POST['uid'] ?? '';
+$wholeInventory = ($_POST['inventory'] ?? '') == 'true';
 $trackings = $_POST['trackings'] ?? [];
 $guideNumbers = $_POST['guideNumbers'] ?? [];
 $pagoTarjeta = ($_POST['pagoTarjeta'] ?? '') == 'true';
@@ -15,10 +16,17 @@ $query = " SET @row_number = 0;
     t.precio_fob, t.arancel, t.tarifa_especial as tarifa_express_especial, c.tarifa as tarifa_estandar, c.tarifa_express
     FROM paquete p LEFT JOIN tarifacion_paquete_express t ON p.tracking = t.tracking
     LEFT JOIN cliente c on p.uid = c.cid COLLATE utf8_unicode_ci ";
-$whereClause = !empty($trackings) ?
-    ("WHERE p.tracking IN ('" . implode('\',\'', $trackings) . "')") :
-        (!empty($guideNumbers) ?
-    ("WHERE p.guide_number IN ('" . implode('\',\'', $guideNumbers) . "')") : "WHERE 0");
+
+if ($wholeInventory) {
+    $whereClause = 'WHERE p.estado IS NULL';
+}
+else {
+    $whereClause = !empty($trackings) ?
+        ("WHERE p.tracking IN ('" . implode('\',\'', $trackings) . "')") :
+            (!empty($guideNumbers) ?
+        ("WHERE p.guide_number IN ('" . implode('\',\'', $guideNumbers) . "')") : "WHERE 0");
+}
+
 $query .= $whereClause;
 
 if (!empty($uid)){
