@@ -1816,3 +1816,37 @@ async function tipoDePagoOnChange(selectBox, trackings, uid) {
     calcularTotalEntrega();
   }
 }
+
+async function showCostoMercaderia() {
+  document.getElementById("divBotones").style.visibility = "hidden";
+  const data = $("#inventario").DataTable().rows(".selected").data().toArray();
+  let trackings = [];
+  for (var i = 0; i < data.length; i++) {
+    trackings.push($(data[i][inventarioIndexes.tracking]).data('tracking'));
+  }
+
+  const table = await $.ajax({
+    url: "views/getTableCostoMercaderia.php",
+    type: "POST",
+    data: {
+      trackings,
+    },
+    cache: false,
+  });
+
+  bootbox.dialog({
+    closeButton: false,
+    title: "Costos de Paquetes Seleccionados",
+    size: 'large',
+    message: renderCostoMercaderaDialog(table),
+    buttons: {
+      cancel: {
+        label: "Regresar",
+        className: "btn btn-md btn-default",
+        callback: function () {
+          document.getElementById("divBotones").style.visibility = "visible";
+        }
+      },
+    }
+  });
+}

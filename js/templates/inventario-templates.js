@@ -249,3 +249,10 @@ const renderEntregaMercaderaDialog = (table, plan, trackings, uid) => {
             </div>
         </div>`;
 };
+
+const renderCostoMercaderaDialog = (table) => {
+    return `
+        <div class="mt-3 mb-3 container-flex">
+            <div class="mb-3">${table}</div>
+        </div>`;
+};

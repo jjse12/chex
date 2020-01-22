@@ -44,11 +44,11 @@
 
 <div class="container" align="center" style="background-color: white; position: fixed; left: 0; right: 0; bottom: 0; padding-bottom: 6px; z-index: 100; visibility: hidden;" id="divBotones">
     <div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style="padding-top: 6px;">
-        <div class='col-lg-2 col-md-2 col-sm-2'></div>
-        <div class='col-lg-8 col-md-8 col-sm-8 col-xs-12'>
-            <button onclick="notificarSeleccionados()" class="btn btn-primary" align="center" style="width:28%; text-align: center ;">Notificar</button>
-            <button onclick="entregarSeleccionados()" class="btn btn-success" align="center" style="width: 42%; text-align: center ;">Entregar Mercadería</button>
-            <button onclick="planificarEntrega()" class="btn btn-warning" align="center" style="width: 28%; text-align: center;">Plan de Entrega</button>
+        <div class='col-sm-offset-1 col-sm-10'>
+            <button onclick="notificarSeleccionados()" class="btn btn-primary" align="center" style="width:24%; text-align: center ;">Notificar</button>
+            <button onclick="entregarSeleccionados()" class="btn btn-success" align="center" style="width: 25%; text-align: center ;">Entregar Mercadería</button>
+            <button onclick="showCostoMercaderia()" class="btn btn-info" align="center" style="width: 25%; text-align: center;">Ver Costos</button>
+            <button onclick="planificarEntrega()" class="btn btn-warning" align="center" style="width: 24%; text-align: center;">Plan de Entrega</button>
         </div>
     </div>
 </div>
