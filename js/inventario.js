@@ -678,7 +678,7 @@ function loadInventario(){
             break;
         }
         var servicio = paquete.servicio;
-        var guideNumber = paquete.guide_number || 'Sin Especificar';
+        var guideNumber = paquete.guide_number || 'N/A';
         var celulares = paquete.celulares;
         var extras = paquete.cobro_extra;
         var especial = celulares + extras > 0;
