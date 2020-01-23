@@ -1,4 +1,22 @@
-const dataFacturaIndex = 11;
+const facturasIndexes = {
+    selectionCheckBox: 0,
+    tipoServicio: 1,
+    fechaCreacion: 2,
+    avisado: 3,
+    estado: 4,
+    fechaDelivery: 5,
+    fechaMiamiDelivery: 6,
+    tracking: 7,
+    uid: 8,
+    uname: 9,
+    costo: 10,
+    verFactura: 11,
+    verLogistica: 12,
+};
+
+const dataFacturaIndex = facturasIndexes.verLogistica;
+
+const heightForLogisticaCollapse = 74;
 
 const couriersSelectBox = selectedCourier => {
     let select = `<select id="factura-courier" data-original="${selectedCourier}" name="factura-courier" class="disabable form-control"><option value=""></option>`;
@@ -38,7 +56,7 @@ function resetLogisticaInputsToOriginals() {
     if (received){
         $miamiReceived[0].checked = true;
         if (!$divDateReceived.hasClass('in')) {
-            collapseElement($divDateReceived, 74);
+            collapseElement($divDateReceived, heightForLogisticaCollapse);
         }
     }
     else {
@@ -109,7 +127,7 @@ function handleMiamiReceivedCheckBox(cb) {
           cb.indeterminate=true;
       }
       else {
-        collapseElement($('#divDateReceived'), 74);
+        collapseElement($('#divDateReceived'), heightForLogisticaCollapse);
       }
     }
     else {
@@ -238,16 +256,17 @@ function loadFacturas(){
 
                 // Anytime the cant of columns is changed, please update variable `dataFacturaIndex`
                 table.row.add([
-                    `<h6 class='seleccionado'>${factura.service}</h6>`,
-                    `<h6 class='seleccionado' data-sorting-date="${factura.date_created}">${dateCreated}<span style="display: none">-${dateCreated}-</span></h6>`,
-                    `<div class='seleccionado' title="${notificado}" style='color: ${notifiedColor}; align-self: center; text-align: center;'><i class='fa ${notifiedIcon} fa-2x fa-lg'></i></div>`,
-                    `<div class='seleccionado' title="${enviado}" style='color: ${color}; align-self: center; text-align: center;'><i class='fa ${icon} fa-2x fa-lg'></i><small style='display:none;'>${enviado}</small></div>`,
-                    `<h6 class='seleccionado' data-sorting-date="${date}">${date}<span style="display: none">${enviado}</span></h6>`,
-                    `<h6 class='seleccionado' data-sorting-date="${dateReceived}">${dateReceived}</h6>`,
-                    `<h6 class='seleccionado'>${factura.tracking}</h6>`,
-                    `<h6 class='seleccionado'>${factura.uid}</h6>`,
-                    `<h6 class='seleccionado'>${factura.uname}</h6>`,
-                    `<h6 class='seleccionado'>${Number(factura.amount).toMoney()}</h6>`,
+                    '',
+                    `<h6>${factura.service}</h6>`,
+                    `<h6 data-sorting-date="${factura.date_created}">${dateCreated}<span style="display: none">-${dateCreated}-</span></h6>`,
+                    `<div title="${notificado}" style='color: ${notifiedColor}; align-self: center; text-align: center;'><i class='fa ${notifiedIcon} fa-2x fa-lg'></i></div>`,
+                    `<div title="${enviado}" style='color: ${color}; align-self: center; text-align: center;'><i class='fa ${icon} fa-2x fa-lg'></i><small style='display:none;'>${enviado}</small></div>`,
+                    `<h6 data-sorting-date="${date}">${date}<span style="display: none">${enviado}</span></h6>`,
+                    `<h6 data-sorting-date="${dateReceived}">${dateReceived}</h6>`,
+                    `<h6>${factura.tracking}</h6>`,
+                    `<h6>${factura.uid}</h6>`,
+                    `<h6>${factura.uname}</h6>`,
+                    `<h6>${Number(factura.amount).toMoney()}</h6>`,
                     `<div style='cursor:pointer; text-align: center; color: darkslategray' class='factura-see-image' data-factura='${JSON.stringify(factura)}'><i class='fa fa-eye fa-2x fa-lg'></div>`,
                     `<div style='cursor:pointer; text-align: center; color: greenyellow' class='factura-see-details' data-factura='${JSON.stringify(factura)}'><i class="fas fa-address-card fa-2x fa-lg"></i></div>`
                 ]);
@@ -262,7 +281,7 @@ function loadFacturas(){
 function generarPDF()
 {
     let table = $("#facturas").DataTable();
-    let selectedRows = table.rows(".selected").data().toArray();
+    let selectedRows = table.rows({ selected: true }).data().toArray();
     let facturas = {};
     selectedRows.map(row => {
         let factura = $(row[dataFacturaIndex]).data('factura');
@@ -307,7 +326,7 @@ function generarPDF()
                 });
 
                 $.ajax({
-                    url: '/pdf/createFacturasPDF.php',
+                    url: 'pdf/createFacturasPDF.php',
                     type: 'post',
                     data: {
                         facturas: facturas
@@ -341,7 +360,7 @@ function generarPDF()
                                 }
                             });
 
-                            table.rows(".selected").nodes().to$().removeClass("selected");
+                            table.rows({ selected: true }).nodes().to$().removeClass("selected");
                             table.draw(false);
                             document.getElementById("divFacturaOpciones").style.visibility = "hidden";
                         }
@@ -407,7 +426,7 @@ function setearPendientes(ids) {
 
 function eliminarFacturasConfirmado() {
     let table = $("#facturas").DataTable();
-    let selectedRows = table.rows(".selected").data().toArray();
+    let selectedRows = table.rows({ selected: true }).data().toArray();
     let facturas = [];
     selectedRows.map(row => {
         let factura = $(row[dataFacturaIndex]).data('factura');
@@ -433,7 +452,7 @@ function eliminarFacturasConfirmado() {
                     confirmButtonClass: 'btn-success'
                 });
 
-                table.rows(".selected").nodes().to$().removeClass("selected");
+                table.rows({ selected: true }).nodes().to$().removeClass("selected");
                 table.draw(false);
                 document.getElementById("divFacturaOpciones").style.visibility = "hidden";
             }
@@ -474,7 +493,10 @@ function eliminarFacturas()
 $(document).ready( function () {
     var table = $('#facturas').DataTable({
         "retrieve": true,
-        "select": true,
+        "select": {
+            "style": 'multi',
+            "selector": "td:first-child"
+        },
         "responsive": false,
         "scrollY": "500px",
         "scrollCollapse": true,
@@ -496,16 +518,26 @@ $(document).ready( function () {
             },
             "loadingRecords": "Cargando Facturas...",
             "processing":     "Procesando...",
+            "select": {
+                "rows": {
+                    "_": "Facturas seleccionadas: %d",
+                    "0": "",
+                }
+            }
         },
-        "order": [[7, 'asc']],
+        "order": [[facturasIndexes.uid, 'asc']],
         "columnDefs": [
             {
-                "targets": [2, 3, 6, 10, 11],
+                "targets": [facturasIndexes.selectionCheckBox, facturasIndexes.avisado, facturasIndexes.estado, facturasIndexes.tracking, facturasIndexes.verFactura, facturasIndexes.verLogistica],
                 "orderable": false
+            },
+            {
+                "className": 'select-checkbox',
+                "targets": inventarioIndexes.selectionCheckBox
             }
         ],
         "aoColumns": [
-          null,
+          null, null,
           { "sType": "date-time", "bSortable": true }, null, null,
           { "sType": "dd-mm-yyyy-date", "bSortable": true },
           { "sType": "dd-mm-yyyy-date", "bSortable": true },
@@ -540,6 +572,16 @@ $(document).ready( function () {
     $.fn.dataTableExt.oSort['dd-mm-yyyy-date-desc'] = (a,b) => sortddmmyyyyDate(true, a, b);
     $.fn.dataTableExt.oSort['date-time-asc'] = (a,b) => sortddmmyyyyDate(false, a, b);
     $.fn.dataTableExt.oSort['date-time-desc'] = (a,b) => sortDateTime(true, a, b);
+
+    table
+    .on( 'select', function() {
+        document.getElementById("divFacturaOpciones").style.visibility= "visible";
+    })
+    .on( 'deselect', function() {
+        if (table.rows({ selected: true }).count() === 0) {
+            document.getElementById("divFacturaOpciones").style.visibility = "hidden";
+        }
+    } );
 
     var onlyAdminEditableFields = [
         'service_id'
@@ -671,14 +713,6 @@ $(document).ready( function () {
     };
 
     let tableBody = $("#facturas tbody");
-
-    tableBody.on("click", ".seleccionado", function () {
-        $(this).closest('tr').toggleClass("selected");
-        table.draw(false);
-        if (table.rows('.selected').data().toArray().length === 0)
-            document.getElementById("divFacturaOpciones").style.visibility = "hidden";
-        else document.getElementById("divFacturaOpciones").style.visibility= "visible";
-    });
 
     tableBody.on("click", "div.factura-see-image", async function () {
         let factura = $(this).data('factura');

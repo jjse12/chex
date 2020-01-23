@@ -18,7 +18,7 @@
         <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="css/sansita-stylesheet.css" type="text/css" charset="utf-8" />
 
-        <link href="css/custom.css?v=1.0.1" rel="stylesheet">
+        <link href="css/custom.css?v=1.0.2" rel="stylesheet">
     </head>
     <body>
 

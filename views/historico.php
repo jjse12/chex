@@ -30,7 +30,6 @@
         "tableTools": {
             "sSwfPath": "./swf/copy_csv_xls_pdf.swf"
         },
-        "select": true,
         "responsive": true,
         "scrollY": "500px",
         "scrollCollapse": true,
@@ -91,7 +90,6 @@
         "tableTools": {
             "sSwfPath": "./swf/copy_csv_xls_pdf.swf"
         },
-        "select": true,
         "responsive": true,
         "scrollY": "500px",
         "scrollCollapse": true,
@@ -474,7 +472,6 @@
         var tabCargas = $('#historicoCargas').DataTable({
             "bSort" : false,
             "retrieve": true,
-            "select": true,
             "responsive": true,
             "scrollY": "500px",
             "scrollCollapse": true,
@@ -659,7 +656,6 @@
                         var tablita = $('#tablaPaquetesCarga').DataTable({
                             "bSort" : false,
                             "retrieve": true,
-                            "select": true,
                             "responsive": true,
                             "scrollY": "500px",
                             "scrollCollapse": true,
@@ -1032,7 +1028,6 @@
         var tabBoletas = $('#tablaBoletas').DataTable({
             "bSort" : false,
             "retrieve": true,
-            "select": true,
             "responsive": true,
             "scrollY": "500px",
             "scrollCollapse": true,

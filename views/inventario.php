@@ -5,13 +5,14 @@
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-<script src="js/inventario.js?v=1.0.3"></script>
+<script src="js/inventario.js?v=1.0.4"></script>
 <script src="js/templates/inventario-templates.js?v=1.0.2"></script>
 
 <div class="container" style="padding-top: 4.5cm">
     <table id="inventario" class="display compact" width="100%" cellspacing="0">
         <thead>
             <tr>
+                <th></th>
                 <th class="dt-head-center"><span style="color: transparent; -webkit-text-stroke-width: 2px; -webkit-text-stroke-color: gold"><i class="fa fa-star fa-2x"></i></span></th>
                 <th class="dt-head-center"><h6 style="color:black">Fecha de Ingreso</h6></th>
                 <th class="dt-head-center"><h6 style="color:black">Tipo de Servicio</h6></th>
@@ -26,6 +27,7 @@
         </thead>
         <tfoot>
             <tr>
+                <th></th>
                 <th></th>
                 <th class="dt-head-center"><input class="buscarIngreso" type="text" placeholder="Buscar"/></th>
                 <th></th>

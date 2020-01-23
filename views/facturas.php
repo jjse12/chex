@@ -1,4 +1,4 @@
-<script src="js/facturas.js?v=1.0.2"></script>
+<script src="js/facturas.js?v=1.0.3"></script>
 <script src="js/templates/facturas-templates.js?v=1.0.1"></script>
 <script src="factura_logistica.js?v=1.0.1"></script>
 <link href="css/facturaStyles.css?v=1.0.1" rel="stylesheet">
@@ -10,6 +10,7 @@
     <table id="facturas" class="display" width="100%" cellspacing="0" style="width: 100%;">
         <thead>
         <tr>
+            <th></th>
             <th class="dt-head-center"><h5 style="color:black">Tipo de Servicio</h5></th>
             <th class="dt-head-center"><h5 style="color:black">Fecha de Creación</h5></th>
             <th class="dt-head-center"><h5 style="color:black">Avisado</h5></th>
@@ -26,6 +27,7 @@
         </thead>
         <tfoot>
         <tr>
+            <th></th>
             <th></th>
             <th></th>
             <th></th>

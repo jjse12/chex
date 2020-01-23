@@ -2,12 +2,14 @@
 <link href="css/dataTables.tableTools.css" rel="stylesheet" type="text/css">
 <link href="css/dataTables.bootstrap.css" rel="stylesheet" type="text/css">
 <link href="css/dataTables.colVis.css" rel="stylesheet" type="text/css">
+<link href="css/dataTables.select.min.css" rel="stylesheet" type="text/css">
 <link href="css/dataTables.responsive.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="js/jquery.dataTables.js"></script>
 <script type="text/javascript" src="js/dataTables.tableTools.js"></script>
 <script type="text/javascript" src="js/dataTables.bootstrap.js"></script>
 <script type="text/javascript" src="js/dataTables.colVis.js"></script>
 <script type="text/javascript" src="js/dataTables.responsive.js"></script>
+<script type="text/javascript" src="js/dataTables.select.min.js"></script>
 
 <script>
     $(document).ready( function () {
@@ -19,7 +21,6 @@
             "tableTools": {
                 "sSwfPath": "./swf/copy_csv_xls_pdf.swf"
             },
-            "select": true,
             "responsive": true,
             "scrollY": "500px",
             "scrollCollapse": true,

@@ -1,14 +1,15 @@
 const inventarioIndexes = {
-  cobroEspecial: 0,
-  fechaIngreso: 1,
-  servicio: 2,
-  guideNumber: 3,
-  tracking: 4,
-  uid: 5,
-  uname: 6,
-  peso: 7,
-  plan: 8,
-  editar: 9,
+  selectionCheckBox: 0,
+  cobroEspecial: 1,
+  fechaIngreso: 2,
+  servicio: 3,
+  guideNumber: 4,
+  tracking: 5,
+  uid: 6,
+  uname: 7,
+  peso: 8,
+  plan: 9,
+  editar: 10,
 };
 
 $(document).ready( function () {
@@ -18,7 +19,10 @@ $(document).ready( function () {
     "tableTools": {
       "sSwfPath": "./swf/copy_csv_xls_pdf.swf"
     },
-    "select": true,
+    "select": {
+      "style": 'multi',
+      "selector": "td:first-child"
+    },
     "responsive": false,
     "scrollY": "500px",
     "scrollCollapse": true,
@@ -39,12 +43,22 @@ $(document).ready( function () {
       },
       "loadingRecords": "Cargando Paquetes...",
       "processing":     "Procesando...",
+      "select": {
+        "rows": {
+          "_": "Paquetes seleccionados: %d",
+          "0": "",
+        }
+      }
     },
     "order": [[inventarioIndexes.uname, 'asc']],
     "columnDefs": [
       {
-        "targets": [inventarioIndexes.cobroEspecial, inventarioIndexes.guideNumber, inventarioIndexes.tracking, inventarioIndexes.editar],
+        "targets": [inventarioIndexes.selectionCheckBox, inventarioIndexes.cobroEspecial, inventarioIndexes.guideNumber, inventarioIndexes.tracking, inventarioIndexes.editar],
         "orderable": false
+      },
+      {
+        "className": 'select-checkbox',
+        "targets": inventarioIndexes.selectionCheckBox
       }
     ],
     "aoColumns": [
@@ -78,6 +92,15 @@ $(document).ready( function () {
   $.fn.dataTableExt.oSort['date-time-asc'] = (a,b) => sortDateTime(false, a, b);
   $.fn.dataTableExt.oSort['date-time-desc'] = (a,b) => sortDateTime(true, a, b);
 
+  table.on( 'select', function() {
+      document.getElementById("divBotones").style.visibility= "visible";
+  })
+  .on( 'deselect', function() {
+    if (table.rows({ selected: true }).count() === 0) {
+      document.getElementById("divBotones").style.visibility = "hidden";
+    }
+  } );
+
   $(".buscarIngreso").keyup(function () {
     let val = $(this).val();
     table.column(inventarioIndexes.fechaIngreso).search(val).draw(false);
@@ -85,14 +108,6 @@ $(document).ready( function () {
   $(".buscarPlan").keyup(function () {
     let val = $(this).val();
     table.column(inventarioIndexes.plan).search(val).draw(false);
-  });
-
-  $("#inventario tbody").on("click", "h6.seleccionado", function () {
-    $(this).closest('tr').toggleClass("selected");
-    table.draw(false);
-    if (table.rows('.selected').data().toArray().length == 0)
-      document.getElementById("divBotones").style.visibility = "hidden";
-    else document.getElementById("divBotones").style.visibility= "visible";
   });
 
   $("#inventario tbody").on("mouseover", "h6.popup", function () {
@@ -457,10 +472,10 @@ $(document).ready( function () {
                         else{
                           bootbox.alert("La información del paquete ha sido actualizada. El total de libras del registro de carga asociado también ha sido actualizado.");
                           var table = $('#inventario').DataTable();
-                          arr[0][inventarioIndexes.cobroEspecial] = `<h6 class='seleccionado' data-celulares=${celularesN} data-cobro-extra=${extrasN} >${especial ? "<span title='Celulares: "+ celularesN + ", Cobro Extra: Q"+ numberWithCommas(extrasN) +"' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display: none;'>Especial</small></span>" : ""}</h6>`,
-                          arr[0][inventarioIndexes.uid] = "<h6 class='seleccionado'>"+uid+"</h6>";
-                          arr[0][inventarioIndexes.uname] = "<h6 class='seleccionado'>"+uname+"</h6>";
-                          arr[0][inventarioIndexes.peso] = "<h6 class='seleccionado'>"+pesito+"</h6>";
+                          arr[0][inventarioIndexes.cobroEspecial] = `<h6  data-celulares=${celularesN} data-cobro-extra=${extrasN} >${especial ? "<span title='Celulares: "+ celularesN + ", Cobro Extra: Q"+ numberWithCommas(extrasN) +"' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display: none;'>Especial</small></span>" : ""}</h6>`;
+                          arr[0][inventarioIndexes.uid] = "<h6 >"+uid+"</h6>";
+                          arr[0][inventarioIndexes.uname] = "<h6 >"+uname+"</h6>";
+                          arr[0][inventarioIndexes.peso] = "<h6 >"+pesito+"</h6>";
                           arr[0][inventarioIndexes.plan] = plan == "" ? "<h6 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h6>" :
                               plan == "Oficina" ? "<h6 class='plan btn-sm btn-success'>En Oficina</h6>" :
                                   plan.includes("Guatex") ? "<h6 class='popup plan btn-sm' style='background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h6>" :
@@ -480,10 +495,10 @@ $(document).ready( function () {
                   else{
                     bootbox.alert("Se actualizó la información del paquete exitosamente.");
                     var table = $('#inventario').DataTable();
-                    arr[0][inventarioIndexes.cobroEspecial] = `<h6 class='seleccionado' data-celulares=${celularesN} data-cobro-extra=${extrasN} >${especial ? "<span title='Celulares: "+ celularesN + ", Cobro Extra: Q"+ numberWithCommas(extrasN) +"' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display: none;'>Especial</small></span>" : ""}</h6>`,
-                    arr[0][inventarioIndexes.uid] = "<h6 class='seleccionado'>"+uid+"</h6>";
-                    arr[0][inventarioIndexes.uname] = "<h6 class='seleccionado'>"+uname+"</h6>";
-                    arr[0][inventarioIndexes.peso] = "<h6 class='seleccionado'>"+pesito+"</h6>";
+                    arr[0][inventarioIndexes.cobroEspecial] = `<h6  data-celulares=${celularesN} data-cobro-extra=${extrasN} >${especial ? "<span title='Celulares: "+ celularesN + ", Cobro Extra: Q"+ numberWithCommas(extrasN) +"' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display: none;'>Especial</small></span>" : ""}</h6>`,
+                    arr[0][inventarioIndexes.uid] = "<h6 >"+uid+"</h6>";
+                    arr[0][inventarioIndexes.uname] = "<h6 >"+uname+"</h6>";
+                    arr[0][inventarioIndexes.peso] = "<h6 >"+pesito+"</h6>";
                     arr[0][inventarioIndexes.plan] = plan == "" ? "<h6 class='popup-notif sin-plan plan btn-sm btn-danger'>Sin Especificar<div class='popupicon'><div class='row'><label class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='text-align:center;'>Notificar</label><img class='icon-email' src='images/email35px.png'/>&nbsp&nbsp<img class='icon-whatsapp' src='images/whatsapp35px.png'/></div></div></h6>" :
                         plan == "Oficina" ? "<h6 class='plan btn-sm btn-success'>En Oficina</h6>" :
                             plan.includes("Guatex") ? "<h6 class='popup plan btn-sm' style='background-color: #f4cb38'>Guatex<span class='popuptext'>"+plan.split(":")[1]+"</span></h6>" :
@@ -611,7 +626,7 @@ function getUserName2(id){
 }
 
 var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-var dataPaqueteIndice = 1;
+var dataPaqueteIndice = inventarioIndexes.fechaIngreso;
 
 function loadInventario(){
   var table = $('#inventario').DataTable();
@@ -672,14 +687,15 @@ function loadInventario(){
           trackingsito = trackingsito.substr(0, trackingsito.length/2) + "<br>" +
               trackingsito.substr(trackingsito.length/2, trackingsito.length);
         table.row.add([
-          `<h6 class='seleccionado' data-celulares=${celulares} data-cobro-extra=${extras} >${especial ? "<span title='Celulares: "+ celulares + ", Cobro Extra: Q"+ numberWithCommas(extras) +"' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display:none;'>Especial</small></span>" : ""}</h6>`,
-          `<h6 data-paquete='${JSON.stringify(paquete)}' title='Registro de Carga #${paquete.rcid}' class='seleccionado' data-sorting-date="${paquete.fecha}">${fechaIngreso}</h6>`,
-          "<h6 class='seleccionado'>"+servicio+"</h6>",
-          "<h6 class='seleccionado'>"+guideNumber+"</h6>",
-          `<h6 class='seleccionado' data-tracking="${paquete.tracking}">${trackingsito}</h6>`,
-          "<h6 class='seleccionado'>"+paquete.uid+"</h6>",
-          "<h6 class='seleccionado'>"+paquete.uname+"</h6>",
-          "<h6 class='seleccionado'>"+paquete.libras+"</h6>",
+          '',
+          `<h6  data-celulares=${celulares} data-cobro-extra=${extras} >${especial ? "<span title='Celulares: "+ celulares + ", Cobro Extra: Q"+ numberWithCommas(extras) +"' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display:none;'>Especial</small></span>" : ""}</h6>`,
+          `<h6 data-paquete='${JSON.stringify(paquete)}' title='Registro de Carga #${paquete.rcid}'  data-sorting-date="${paquete.fecha}">${fechaIngreso}</h6>`,
+          "<h6 >"+servicio+"</h6>",
+          "<h6 >"+guideNumber+"</h6>",
+          `<h6  data-tracking="${paquete.tracking}">${trackingsito}</h6>`,
+          "<h6 >"+paquete.uid+"</h6>",
+          "<h6 >"+paquete.uname+"</h6>",
+          "<h6 >"+paquete.libras+"</h6>",
           plansito,
           "<img class='icon-update' src='images/edit.png'/>"
         ]);
@@ -701,7 +717,7 @@ var isMobile = (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
 
 function notificarSeleccionados(){
   document.getElementById("divBotones").style.visibility = "hidden";
-  let selectedRows = $("#inventario").DataTable().rows(".selected").data().toArray();
+  let selectedRows = $("#inventario").DataTable().rows({ selected: true }).data().toArray();
 
   let ids = [];
   selectedRows.map(row => {
@@ -930,7 +946,7 @@ async function sendNotificationToClient(notificationData, searchAskedClientData,
       callback: res => {
         if (res){
           let t = $("#inventario").DataTable();
-          t.rows(".selected").nodes().to$().removeClass("selected");
+          t.rows({ selected: true }).nodes().to$().removeClass("selected");
           t.draw(false);
 
           setPlanForNotificatedPackages(notificationData.paquetes, 'whats');
@@ -978,7 +994,7 @@ async function sendNotificationToClient(notificationData, searchAskedClientData,
         if (res === "Enviado"){
           bootbox.alert("La notificación por correo electrónico ha sido enviada exitosamente.");
           let t = $("#inventario").DataTable();
-          t.rows(".selected").nodes().to$().removeClass("selected");
+          t.rows({ selected: true }).nodes().to$().removeClass("selected");
           t.draw(false);
 
           setPlanForNotificatedPackages(notificationData.paquetes, 'email');
@@ -998,7 +1014,7 @@ async function sendNotificationToClient(notificationData, searchAskedClientData,
 
 async function notificarViaWhatsApp(searchByClientUid = true){
   bootbox.hideAll();
-  let selectedRows = $("#inventario").DataTable().rows(".selected").data().toArray();
+  let selectedRows = $("#inventario").DataTable().rows({ selected: true }).data().toArray();
   let paquetes = [];
   selectedRows.map(row => {
     let paquete = $(row[dataPaqueteIndice]).data('paquete');
@@ -1129,7 +1145,7 @@ async function notificarViaWhatsApp(searchByClientUid = true){
 
 async function notificarViaEmail(searchByClientUid = true){
   bootbox.hideAll();
-  let selectedRows = $("#inventario").DataTable().rows(".selected").data().toArray();
+  let selectedRows = $("#inventario").DataTable().rows({ selected: true }).data().toArray();
   let paquetes = [];
   selectedRows.map(row => {
     let paquete = $(row[dataPaqueteIndice]).data('paquete');
@@ -1378,7 +1394,7 @@ function setPlanForNotificatedPackages(paquetes, newPlan) {
 
 function planificarEntrega(){
   document.getElementById("divBotones").style.visibility = "hidden";
-  var data = $("#inventario").DataTable().rows(".selected").data().toArray();
+  var data = $("#inventario").DataTable().rows({ selected: true }).data().toArray();
 
   var uid = data[0][inventarioIndexes.uid].toUpperCase();
   var continuar = true;
@@ -1533,7 +1549,7 @@ function planEntregaVarios(arr, nombre){
 
 function entregarSeleccionados(){
   document.getElementById("divBotones").style.visibility = "hidden";
-  var data = $("#inventario").DataTable().rows(".selected").data().toArray();
+  var data = $("#inventario").DataTable().rows({ selected: true }).data().toArray();
 
   var uid = data[0][inventarioIndexes.uid].toUpperCase();
   var plan = data[0][inventarioIndexes.plan].toUpperCase();
@@ -1726,7 +1742,7 @@ async function showEntregaMercaderiaDialog(data, titulo) {
               if (success) {
                 const fecha = convertToHumanDate(data.date);
                 if (!message) {
-                  $("#inventario").DataTable().rows('.selected').remove().draw(false);
+                  $("#inventario").DataTable().rows({ selected: true }).remove().draw(false);
                   document.getElementById("divBotones").style.visibility = "hidden";
                   bootbox.alert("La mercadería ha sido entregada con éxito. Se registró una nueva boleta virtual, con fecha " + fecha + ".");
                 }
@@ -1825,7 +1841,7 @@ async function showCostoMercaderia(wholeInventory = false) {
     data.inventory = true;
   }
   else {
-    const tableData = $("#inventario").DataTable().rows(".selected").data().toArray();
+    const tableData = $("#inventario").DataTable().rows({ selected: true }).data().toArray();
     let trackings = [];
     for (var i = 0; i < tableData.length; i++) {
       trackings.push($(tableData[i][inventarioIndexes.tracking]).data('tracking'));

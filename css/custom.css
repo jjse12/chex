@@ -750,7 +750,6 @@ ul.ColVis_collection li label span {
     margin: 14px !important;
 }
 
-
 .horizontal-borders {
     border-top: 1px solid black;
     border-bottom: 1px solid black;
@@ -758,4 +757,22 @@ ul.ColVis_collection li label span {
 
 .invalid-paquete-express {
     border: 1px solid #ff4149 !important;
+}
+
+.select-item {
+    font-size: 14px !important;
+    margin-left: 6px !important;
+    font-weight: bold;
+}
+
+.select-checkbox {
+    width: 16px !important;
+}
+
+td h6 {
+    text-align: center !important;
+}
+
+td h5 {
+    text-align: center !important;
 }

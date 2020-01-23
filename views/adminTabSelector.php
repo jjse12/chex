@@ -33,11 +33,11 @@
                   </a>
               </li>
               <?php if ($isAdmin): ?>
-                  <li>
-                      <a href="#" id="btnVerCostoMercaderia">
-                          <i class="fas fa-dollar-sign"></i>&nbsp;Ver Costos Inventario
-                      </a>
-                  </li>
+              <li>
+                  <a style="margin-left: 2px" href="#" id="btnVerCostoMercaderia">
+                      <i class="fas fa-dollar-sign"></i>&nbsp;&nbsp;Ver Costos Inventario
+                  </a>
+              </li>
               <?php endif ?>
           </ul>
       </div>
@@ -66,9 +66,9 @@
   </div>
 </div>
 
-<script src="js/nav-options.js?v=1.0.1"></script>
+<script src="js/nav-options.js?v=1.0.2"></script>
 <script src="js/logout.js?v=1.0.1"></script>
-<script src="js/tarifaciones.js?v=1.0.2"></script>
+<script src="js/tarifaciones.js?v=1.0.3"></script>
 <script src="js/templates/tarifaciones-templates.js?v=1.0.1"></script>
 <script type="text/javascript">
 

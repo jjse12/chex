@@ -37,6 +37,15 @@ $costeador->setIsNotificacion(true);
 $tableData = $costeador->costear();
 $invalidPaquetes = $tableData['invalid_paquetes'];
 
+if (!empty($invalidPaquetes)) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'No se puede enviar la notificación debido uno o más de los paquetes ' .
+            'seleccionados no poseen la información necesaria para calcular sus costos.'
+    ]);
+    exit;
+}
+
 if ($notificationType === 'email') {
     $notification = getEmailNotification($uname, $uid, $tableData);
 }

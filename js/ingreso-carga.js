@@ -6,7 +6,6 @@ $(document).ready( function () {
   var tablilla = $('#tablaNuevaCarga').DataTable({
     "bSort" : false,
     "retrieve": true,
-    "select": true,
     "responsive": true,
     "scrollY": "500px",
     "scrollCollapse": true,
