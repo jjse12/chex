@@ -1858,7 +1858,7 @@ async function showCostoMercaderia(wholeInventory = false) {
 
   bootbox.dialog({
     closeButton: false,
-    title: "Costos de Paquetes Seleccionados",
+    title: wholeInventory ? 'Costo De Todos Los Paquetes' : 'Costo De Paquetes Seleccionados',
     size: 'large',
     message: renderCostoMercaderaDialog(table),
     buttons: {
