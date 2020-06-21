@@ -28,6 +28,7 @@
 		    	$valor = "(";
 		    	$cont = 0;
 		        foreach($row as $cell){
+		            $cell = str_replace("'", "\\'", $cell);
 		        	switch($cont){
 		        		case 0:
 		        		case 5:
