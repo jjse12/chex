@@ -82,16 +82,22 @@ class TarifacionesPDFGenerator extends TCPDF {
      * @throws Exception
      */
     public function render() {
-        $this->AddPage();
-        $this->Ln();
-        $this->Ln();
-        $this->writeHTML($this->tableHtml, true, false, false, false, '');
-
         $path =  $_SERVER['DOCUMENT_ROOT'] . 'tarifaciones-ingresadas/';
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $path =  $_SERVER['DOCUMENT_ROOT'] . 'chex/tarifaciones-ingresadas/';
             $path = str_replace('/', '\\', $path);
         }
+        else {
+            ob_start();
+        }
+        $this->AddPage();
+        $this->Ln();
+        $this->Ln();
+        $this->writeHTML($this->tableHtml, true, false, false, false, '');
+
         $this->Output("{$path}tarifaciones__{$this->fileDate}.pdf", 'FD');
+        if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+            ob_end_flush();
+        }
     }
 }
