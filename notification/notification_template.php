@@ -83,9 +83,8 @@ function getEmailNotification($nombreCliente, $idCliente, $costeoData): string
     $total = $totales['total'];
     $message = "
         <div style='width: auto; padding: 32px 64px; align-self: center; background: #f5f5f5; align-items: center;'>
-            <img alt='chispudito-express-logo' style='max-width: 147px; max-height: 100px'
-                height='100px' src='http://www.chispuditoexpress.com/images/logocorreo.png'>
-            <br><br>";
+            <img alt='chispudito-express-logo' style='max-width: 250px; max-height: 170px' src='http://www.chispuditoexpress.com/images/logocorreo.png'>
+            <br>";
     // Configuración de palabras para una notificación de múltiples paquetes
     if ($totalPaquetes > 1) {
         $enviar = 'envíen';
@@ -197,8 +196,8 @@ function getEmailNotification($nombreCliente, $idCliente, $costeoData): string
                 style='color: #df8a27;'>(click aqui para comunicarte de inmediato vía WhatsApp)</a>
         </small>
         <br><br>
-        <img alt='chispudito-express-logo' style='max-width: 147px; max-height: 100px'
-            height='100px' src='http://www.chispuditoexpress.com/images/logocorreo.png'>
+        <img alt='chispudito-express-logo' style='max-width: 250px; max-height: 170px'
+            src='http://www.chispuditoexpress.com/images/logocorreo.png'>
         <br>
     </div>";
 
