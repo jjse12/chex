@@ -36,7 +36,7 @@ function getWhatsAppNotification($nombreCliente, $idCliente, $costeoData) : stri
     }
 
     foreach ($paquetes as $paquete) {
-        $serviciosChex = $paquete['chex'] + $paquete['cobro_celulares'] + $paquete['cobro_extra'];
+        $serviciosChex = $paquete['chex'] + $paquete['cobro_extra'];
         /********* TEXTO DE PAQUETES (ESTE TEXTO SE ESCRIBE POR CADA PAQUETE SELECCIONADO) *********/
         $message .=
             "*  Tracking: " . $paquete['tracking'] . '<ENTER>' .
@@ -121,7 +121,7 @@ function getEmailNotification($nombreCliente, $idCliente, $costeoData): string
 
     $rows = '';
     foreach ($paquetes as $paquete) {
-        $serviciosChex = $paquete['chex'] + $paquete['cobro_celulares'] + $paquete['cobro_extra'];
+        $serviciosChex = $paquete['chex'] + $paquete['cobro_extra'];
         $rows .= "
             <tr>
                 <th>{$paquete['tracking']}</th>
@@ -209,7 +209,7 @@ function getEmailNotification($nombreCliente, $idCliente, $costeoData): string
 <html lang='es' xmlns='http://www.w3.org/1999/xhtml'>
     <head>
         <meta charset='utf-8'/>
-        <title>America Voice</title>
+        <title>Chispudito Express</title>
     </head>
     <body>
         <div style='padding-bottom: $bottomPadding; font-size: 12px; font-family: sans-serif; font-weight: lighter; background:#ffffff;'>

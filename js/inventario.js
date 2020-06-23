@@ -358,7 +358,6 @@ $(document).ready( function () {
 
     var index = table.row($(this).closest('tr')).index();
     var arr = table.rows(index).data().toArray();
-    var celulares = arr[0][inventarioIndexes.cobroEspecial].split('data-celulares=')[1].split(' ')[0];
     var extras = arr[0][inventarioIndexes.cobroEspecial].split('data-cobro-extra=')[1].split(' ')[0];
     var fechaIng = arr[0][inventarioIndexes.fechaIngreso].split(">")[1].split("<")[0];
     var rcid = arr[0][inventarioIndexes.fechaIngreso].split("#")[1].split("'")[0];
@@ -382,7 +381,7 @@ $(document).ready( function () {
       closeButton: false,
       title: "Modificar paquete de " + uname,
       message: renderModificarPaqueteDialogContent({
-        celulares, extras, fechaIng, rcid, tracking, uid, uname, peso
+        extras, fechaIng, rcid, tracking, uid, uname, peso
       }),
       buttons: {
         cancel: {
@@ -397,10 +396,7 @@ $(document).ready( function () {
             var uname = document.getElementById("form_carga_uname").value;
             var pesito = document.getElementById("form_carga_libras").value;
             var esp = document.getElementById("form_carga_esperando").value;
-            var celularesN = document.getElementById("form_carga_celulares").value;
             var extrasN = document.getElementById("form_carga_cobro_extra").value;
-            if (celularesN == '')
-              celularesN = 0;
             if (extrasN == '')
               extrasN = 0;
 
@@ -440,8 +436,7 @@ $(document).ready( function () {
               url: "db/DBsetPaquete.php",
               type: "POST",
               data: {
-                set: "uid='"+uid+"', uname='"+uname+"', libras="+pesito+", plan='"+plan+"' ,"
-                    + "celulares="+celularesN+", cobro_extra="+extrasN,
+                set: "uid='"+uid+"', uname='"+uname+"', libras="+pesito+", plan='"+plan+"', cobro_extra="+extrasN,
                 where: "tracking = '"+tracking+"'"
               },
               cache: false,
@@ -452,7 +447,7 @@ $(document).ready( function () {
                 else if (Number(res) < 1)
                   bootbox.alert("No se pudo efectuar el cambio en la base de datos, intente nuevamente");
                 else{
-                  var especial = celularesN + extrasN > 0;
+                  var especial = extrasN > 0;
                   if (peso != pesito){
                     $.ajax({
                       url: "db/DBsetCarga.php",
@@ -472,7 +467,7 @@ $(document).ready( function () {
                         else{
                           bootbox.alert("La información del paquete ha sido actualizada. El total de libras del registro de carga asociado también ha sido actualizado.");
                           var table = $('#inventario').DataTable();
-                          arr[0][inventarioIndexes.cobroEspecial] = `<h6  data-celulares=${celularesN} data-cobro-extra=${extrasN} >${especial ? "<span title='Celulares: "+ celularesN + ", Cobro Extra: Q"+ numberWithCommas(extrasN) +"' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display: none;'>Especial</small></span>" : ""}</h6>`;
+                          arr[0][inventarioIndexes.cobroEspecial] = `<h6 data-cobro-extra=${extrasN} >${especial ? "<span title='Cobro Extra: Q"+ numberWithCommas(extrasN) +"' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display: none;'>Especial</small></span>" : ""}</h6>`;
                           arr[0][inventarioIndexes.uid] = "<h6 >"+uid+"</h6>";
                           arr[0][inventarioIndexes.uname] = "<h6 >"+uname+"</h6>";
                           arr[0][inventarioIndexes.peso] = "<h6 >"+pesito+"</h6>";
@@ -495,7 +490,7 @@ $(document).ready( function () {
                   else{
                     bootbox.alert("Se actualizó la información del paquete exitosamente.");
                     var table = $('#inventario').DataTable();
-                    arr[0][inventarioIndexes.cobroEspecial] = `<h6  data-celulares=${celularesN} data-cobro-extra=${extrasN} >${especial ? "<span title='Celulares: "+ celularesN + ", Cobro Extra: Q"+ numberWithCommas(extrasN) +"' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display: none;'>Especial</small></span>" : ""}</h6>`,
+                    arr[0][inventarioIndexes.cobroEspecial] = `<h6 data-cobro-extra=${extrasN} >${especial ? "<span title='Cobro Extra: Q"+ numberWithCommas(extrasN) +"' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display: none;'>Especial</small></span>" : ""}</h6>`,
                     arr[0][inventarioIndexes.uid] = "<h6 >"+uid+"</h6>";
                     arr[0][inventarioIndexes.uname] = "<h6 >"+uname+"</h6>";
                     arr[0][inventarioIndexes.peso] = "<h6 >"+pesito+"</h6>";
@@ -679,23 +674,22 @@ function loadInventario(){
         }
         var servicio = paquete.servicio;
         var guideNumber = paquete.guide_number || 'N/A';
-        var celulares = paquete.celulares;
         var extras = paquete.cobro_extra;
-        var especial = celulares + extras > 0;
+        var especial = extras > 0;
         var trackingsito = paquete.tracking;
         if (trackingsito.length > 20)
           trackingsito = trackingsito.substr(0, trackingsito.length/2) + "<br>" +
               trackingsito.substr(trackingsito.length/2, trackingsito.length);
         table.row.add([
           '',
-          `<h6  data-celulares=${celulares} data-cobro-extra=${extras} >${especial ? "<span title='Celulares: "+ celulares + ", Cobro Extra: Q"+ numberWithCommas(extras) +"' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display:none;'>Especial</small></span>" : ""}</h6>`,
+          `<h6 data-cobro-extra=${extras} >${especial ? "<span title='Cobro Extra: Q" + numberWithCommas(extras) + "' style='color: gold;'><i class='fa fa-star fa-2x fa-lg'></i><small style='display:none;'>Especial</small></span>" : ""}</h6>`,
           `<h6 data-paquete='${JSON.stringify(paquete)}' title='Registro de Carga #${paquete.rcid}'  data-sorting-date="${paquete.fecha}">${fechaIngreso}</h6>`,
-          "<h6 >"+servicio+"</h6>",
-          "<h6 >"+guideNumber+"</h6>",
-          `<h6  data-tracking="${paquete.tracking}">${trackingsito}</h6>`,
-          "<h6 >"+paquete.uid+"</h6>",
-          "<h6 >"+paquete.uname+"</h6>",
-          "<h6 >"+paquete.libras+"</h6>",
+          "<h6>"+servicio+"</h6>",
+          "<h6>"+guideNumber+"</h6>",
+          `<h6 data-tracking="${paquete.tracking}">${trackingsito}</h6>`,
+          "<h6>"+paquete.uid+"</h6>",
+          "<h6>"+paquete.uname+"</h6>",
+          "<h6>"+paquete.libras+"</h6>",
           plansito,
           "<img class='icon-update' src='images/edit.png'/>"
         ]);
@@ -1613,7 +1607,7 @@ const getEntregaMercaderiaTable = async (trackings, uid, pagoTarjeta) => {
 
 async function showEntregaMercaderiaDialog(data, titulo) {
   tipoDePagoSeleccionado = '';
-  var paquetes = data.length, libras = 0, celulares = 0, extras = 0;
+  var paquetes = data.length, libras = 0;
   var uid = data[0][inventarioIndexes.uid].split(">")[1].split("<")[0];
   var unombre = data[0][inventarioIndexes.uname].split(">")[1].split("<")[0];
   var plan = "";

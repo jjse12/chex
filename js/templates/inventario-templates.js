@@ -79,7 +79,7 @@ const renderMultiplePlanSelectionDialogContent = (checkLabel, anonimo) => {
 
 const renderModificarPaqueteDialogContent = (paquete) => {
     const {
-        celulares, extras, fechaIng, rcid, tracking, uid, uname, peso
+        extras, fechaIng, rcid, tracking, uid, uname, peso
     } = paquete;
     return `
     <div class='row' style='background-color: #dadada'>
@@ -129,15 +129,7 @@ const renderModificarPaqueteDialogContent = (paquete) => {
                             type='email' maxlength='50' class='form-control' id='form_carga_uname' />
                     </div>
                 </div>
-                <div class='control-group form-group col-lg-3 col-md-3 col-sm-3 col-xs-3'>
-                    <div class='controls'>
-                        <label style='color: #337ab7; text-align:center; width:100%'>Celulares</label>
-                        <input placeholder='Cantidad' value='${celulares > 0 ? celulares : ""}'
-                            onkeyup="this.value=this.value.replace(/^0+/, '');" onkeypress='return integersonly(this, event);'
-                            type='text' maxlength='3' style='text-align:center;' class='form-control' id='form_carga_celulares'/>
-                    </div>
-                </div>
-                <div class='control-group form-group col-lg-3 col-md-3 col-sm-3 col-xs-3'>
+                <div class='control-group form-group col-lg-5 col-md-5 col-sm-5 col-xs-5'>
                     <div class='controls'>
                         <label style='color: #337ab7; text-align:center; width:100%'>Cobro Extra</label>
                         <input placeholder='Monto (Q)' value='${extras > 0 ? extras : ""}'
@@ -145,7 +137,7 @@ const renderModificarPaqueteDialogContent = (paquete) => {
                             type='text' maxlength='5' style='text-align:center;' class='form-control' id='form_carga_cobro_extra'/>
                     </div>
                 </div>
-                <div class='control-group form-group col-lg-6 col-md-6 col-sm-6 col-xs-6'>
+                <div class='control-group form-group col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1'>
                     <label style='color: #337ab7; width:100%; text-align: center'>Plan de Entrega</label>
                     <button onclick='toggleActivadito(this)' id='btnOficina' style='width:49%; color:#337ab7' type='button' class='btn btn-default'>Oficina</button>
                     <button onclick='toggleActivadito(this)' id='btnRuta' style='width:49%; color:#337ab7' type='button' class='btn btn-default'>En Ruta</button>

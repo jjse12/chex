@@ -13,7 +13,7 @@ $uname = $_POST['uname'];
 $trackings = $_POST['trackings'];
 
 $query = " 
-    SELECT p.servicio, p.tracking, guide_number, libras, celulares, cobro_extra,
+    SELECT p.servicio, p.tracking, guide_number, libras, cobro_extra,
     t.precio_fob, t.arancel, t.tarifa_especial as tarifa_express_especial, c.tarifa as tarifa_estandar, c.tarifa_express
     FROM paquete p LEFT JOIN tarifacion_paquete_express t ON p.tracking = t.tracking
     LEFT JOIN cliente c on p.uid = c.cid COLLATE utf8_unicode_ci

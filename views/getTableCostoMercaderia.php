@@ -12,7 +12,7 @@ $pagoTarjeta = ($_POST['pagoTarjeta'] ?? '') == 'true';
 $isEntrega = ($_POST['isEntrega'] ?? 'true') != 'false';
 
 $query = " SET @row_number = 0; 
-    SELECT (@row_number:=@row_number + 1) AS num, servicio, p.tracking, guide_number, libras, celulares, cobro_extra,
+    SELECT (@row_number:=@row_number + 1) AS num, servicio, p.tracking, guide_number, libras, cobro_extra,
     t.precio_fob, t.arancel, t.poliza, t.tarifa_especial as tarifa_express_especial, c.tarifa as tarifa_estandar, c.tarifa_express
     FROM paquete p LEFT JOIN tarifacion_paquete_express t ON p.tracking = t.tracking
     LEFT JOIN cliente c on p.uid = c.cid COLLATE utf8_unicode_ci ";
@@ -61,8 +61,8 @@ $invalidPaquetes = $tableData['invalid_paquetes'];
         <?php if ($isEntrega) :?>
             <tr>
                 <th></th>
-                <th class="text-center" colspan="<?= $pagoTarjeta ? '9' : '8' ?>" style="background-color: #ffdebe"><span>Datos del Paquete</span></th>
-                <th class="text-center" colspan="<?= $pagoTarjeta ? '6' : '5' ?>" style="background-color: #c6ddff"><span>Costos del Paquete</span></th>
+                <th class="text-center" colspan="<?= $pagoTarjeta ? 8 : 7 ?>" style="background-color: #ffdebe"><span>Datos del Paquete</span></th>
+                <th class="text-center" colspan="<?= $pagoTarjeta ? 5 : 4 ?>" style="background-color: #c6ddff"><span>Costos del Paquete</span></th>
             </tr>
             <tr>
                 <th class="text-center"><span style="color:black">No.</span></th>
@@ -73,8 +73,6 @@ $invalidPaquetes = $tableData['invalid_paquetes'];
                 <th class="text-center"><span style="color:black">Fob</span></th>
                 <th class="text-center"><span style="color:black">Arancel</span></th>
                 <th class="text-center"><span style="color:black">Poliza</span></th>
-                <th class="text-center"><span style="color:black">Celulares</span></th>
-                <th class="text-center"><span style="color:black">Cobro Celulares</span></th>
                 <th class="text-center"><span style="color:black">Extras</span></th>
                 <?php if ($pagoTarjeta) :?>
                     <th class="text-center"><span style="color:black">Tarjeta de C.</span></th>
@@ -83,7 +81,7 @@ $invalidPaquetes = $tableData['invalid_paquetes'];
                 <th class="text-center"><span style="color:black">Impuestos</span></th>
                 <th class="text-center"><span style="color:black">Total</span></th>
             </tr>
-            <tr class="mt-2 mb-2"><th style="text-align: left;" colspan="<?= $pagoTarjeta ? '14' : '13' ?>">&nbsp;</th></tr>
+            <tr class="mt-2 mb-2"><th style="text-align: left;" colspan="<?= $pagoTarjeta ? '12' : '11' ?>">&nbsp;</th></tr>
         <?php else :?>
             <tr style="font-size: 10px;">
                 <th></th>
@@ -139,8 +137,6 @@ $invalidPaquetes = $tableData['invalid_paquetes'];
                         <th class="text-center">N/A</th>
                         <th class="text-center">N/A</th>
                     <?php endif ?>
-                    <th class="text-center"><?= $paquete['celulares'] ?></th>
-                    <th class="text-center">Q <?= number_format($paquete['cobro_celulares'], 2) ?></th>
                     <th class="text-center">Q <?= number_format($paquete['cobro_extra'], 2) ?></th>
                     <?php if ($pagoTarjeta) :?>
                         <th class="text-center"><?=
@@ -196,14 +192,12 @@ $invalidPaquetes = $tableData['invalid_paquetes'];
     </tbody>
     <tfoot>
         <?php if ($isEntrega) :?>
-            <tr class="mt-2 mb-2"><th class="text-left" colspan="<?= $pagoTarjeta ? '15' : '14' ?>">&nbsp;</th></tr>
-            <tr class="mt-2 mb-2 horizontal-borders"><th class="text-left" colspan="<?= $pagoTarjeta ? '15' : '14' ?>">Resumen:</th></tr>
+            <tr class="mt-2 mb-2"><th class="text-left" colspan="<?= $pagoTarjeta ? '13' : '12' ?>">&nbsp;</th></tr>
+            <tr class="mt-2 mb-2 horizontal-borders"><th class="text-left" colspan="<?= $pagoTarjeta ? '13' : '12' ?>">Resumen:</th></tr>
             <tr>
                 <th class="text-left" colspan="2"><?= $totales['paquetes'] ?> paquetes</th>
                 <th class="text-right" colspan="3"><?= $totales['libras'] ?> libras</th>
                 <th colspan="3"></th>
-                <th class="text-center"><?= $totales['celulares'] ?></th>
-                <th class="text-center">Q <?= number_format($totales['cobro_celulares'], 2) ?></th>
                 <th class="text-center">Q <?= number_format($totales['cobros_extras'], 2) ?></th>
                 <?php if ($pagoTarjeta) :?>
                     <th class="text-center">Q <?= number_format($totales['cobro_tarjeta'], 2) ?></th>

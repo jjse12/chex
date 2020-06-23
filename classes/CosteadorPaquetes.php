@@ -34,8 +34,6 @@ class CosteadorPaquetes {
     public function costear(): array
     {
         $totalLibras = 0;
-        $totalCelulares = 0;
-        $totalCobroCelulares = 0;
         $totalCobrosExtras = 0;
         $totalCobroTarjeta = 0;
         $totalChex = 0;
@@ -124,18 +122,12 @@ class CosteadorPaquetes {
 
 
             if ($this->isEntrega || $this->isNotificacion) {
-                $celulares = intval($paquete['celulares']);
-                $cobroCelulares = $celulares * 100;
                 $cobroExtra = floatval($paquete['cobro_extra']);
-                $paquete['cobro_celulares'] = $cobroCelulares;
-
-                $totalCelulares += $celulares;
-                $totalCobroCelulares += $cobroCelulares;
                 $totalCobrosExtras += $cobroExtra;
-                $totalPaquete += $cobroCelulares + $cobroExtra;
+                $totalPaquete += $cobroExtra;
                 $paquete['total'] = $totalPaquete;
-                if ($this->isNotificacion && ($cobroCelulares + $cobroExtra > 0)) {
-                    $paquete['chex_info'] .= '- Otros: Q ' . number_format($cobroCelulares + $cobroExtra, 2);
+                if ($this->isNotificacion && $cobroExtra > 0) {
+                    $paquete['chex_info'] .= '- Otros: Q ' . number_format($cobroExtra, 2);
                 }
             }
 
@@ -147,9 +139,7 @@ class CosteadorPaquetes {
             'paquetes' => $this->paquetes,
             'invalid_paquetes' => $invalidPaquetes,
             'totales' => [
-                'celulares' => $totalCelulares,
                 'chex' => $totalChex,
-                'cobro_celulares' => $totalCobroCelulares,
                 'cobros_extras' => $totalCobrosExtras,
                 'cobro_tarjeta' => $totalCobroTarjeta,
                 'impuestos' => $totalImpuestos,
