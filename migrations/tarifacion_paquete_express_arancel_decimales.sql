@@ -1,0 +1,1 @@
+alter table tarifacion_paquete_express modify arancel decimal(5,4) not null;
