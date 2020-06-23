@@ -1827,19 +1827,29 @@ async function tipoDePagoOnChange(selectBox, trackings, uid) {
   }
 }
 
-async function showCostoMercaderia(wholeInventory = false) {
+async function showCostoMercaderia(wholeInventory) {
   document.getElementById("divBotones").style.visibility = "hidden";
   let data = {};
-
+  let title;
   if (wholeInventory){
     data.inventory = true;
+    title = 'Costo de todos los paquetes';
   }
   else {
     const tableData = $("#inventario").DataTable().rows({ selected: true }).data().toArray();
     let trackings = [];
+    let clientChexIds = [];
+    let userName;
     for (var i = 0; i < tableData.length; i++) {
-      trackings.push($(tableData[i][inventarioIndexes.tracking]).data('tracking'));
+      let paquete = $(tableData[i][inventarioIndexes.fechaIngreso]).data('paquete');
+      trackings.push(paquete.tracking);
+      clientChexIds.push(paquete.uid);
+      userName = paquete.uname;
     }
+    let uniqueClientChexIds = [... new Set(clientChexIds)];
+    title = uniqueClientChexIds.length === 1 ?
+        `Costo de paquetes de: ${userName} CHEX ${uniqueClientChexIds[0]}`:
+        'Costo de paquetes seleccionados';
     data.trackings = trackings;
   }
 
@@ -1852,7 +1862,7 @@ async function showCostoMercaderia(wholeInventory = false) {
 
   bootbox.dialog({
     closeButton: false,
-    title: wholeInventory ? 'Costo De Todos Los Paquetes' : 'Costo De Paquetes Seleccionados',
+    title,
     size: 'large',
     message: renderCostoMercaderaDialog(table),
     buttons: {
@@ -1860,7 +1870,9 @@ async function showCostoMercaderia(wholeInventory = false) {
         label: "Regresar",
         className: "btn btn-md btn-default",
         callback: function () {
-          document.getElementById("divBotones").style.visibility = "visible";
+          if (!wholeInventory){
+            document.getElementById("divBotones").style.visibility = "visible";
+          }
         }
       },
     }
