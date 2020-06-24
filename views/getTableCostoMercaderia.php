@@ -13,7 +13,8 @@ $isEntrega = ($_POST['isEntrega'] ?? 'true') != 'false';
 
 $query = " SET @row_number = 0; 
     SELECT (@row_number:=@row_number + 1) AS num, servicio, p.tracking, guide_number, libras, cobro_extra,
-    t.precio_fob, t.arancel, t.poliza, t.tarifa_especial as tarifa_express_especial, c.tarifa as tarifa_estandar, c.tarifa_express
+    t.precio_fob, t.arancel, t.poliza, c.desaduanaje_express as desaduanaje,
+    t.tarifa_especial as tarifa_express_especial, c.tarifa as tarifa_estandar, c.tarifa_express
     FROM paquete p LEFT JOIN tarifacion_paquete_express t ON p.tracking = t.tracking
     LEFT JOIN cliente c on p.uid = c.cid COLLATE utf8_unicode_ci ";
 

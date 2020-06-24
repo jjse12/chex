@@ -7,6 +7,7 @@ class CosteadorPaquetes {
 
     const DEFAULT_TARIFA_ESTANDAR = 60;
     const DEFAULT_TARIFA_EXPRESS = 25;
+    const DEFAULT_DESADUANAJE = 25;
 
     private $paquetes;
     private $pagoTarjeta;
@@ -56,6 +57,7 @@ class CosteadorPaquetes {
                 }
                 else {
                     $tarifaFetched = self::DEFAULT_TARIFA_EXPRESS;
+                    $desaduanajeCoeficiente = self::DEFAULT_DESADUANAJE;
                     if (!$coeficientesFetched){
                         $serverConn = new mysqli(SERVER_DB_HOST, SERVER_DB_USER, SERVER_DB_PASS, SERVER_DB_NAME);
                         $query = "SELECT tarifa, desaduanaje, iva, seguro, cambio_dolar FROM cotizador_express_coeficientes WHERE fecha_desactivacion IS NULL";
@@ -63,7 +65,7 @@ class CosteadorPaquetes {
                         if (!empty($res) && $res->num_rows > 0) {
                             $row = $res->fetch_assoc();
                             $tarifaFetched = floatval($row['tarifa']);
-                            $desaduanaje = floatval($row['desaduanaje']);
+                            $desaduanajeCoeficiente = floatval($row['desaduanaje']);
                             $iva = floatval($row['iva']);
                             $seguro = floatval($row['seguro']);
                             $cambioDolar = floatval($row['cambio_dolar']);
@@ -82,6 +84,7 @@ class CosteadorPaquetes {
 
                     $tarifa = !empty($paquete['tarifa_express_especial']) ? $paquete['tarifa_express_especial'] :
                         (!empty($paquete['tarifa_express']) ? $paquete['tarifa_express'] : $tarifaFetched);
+                    $desaduanaje = !empty($paquete['desaduanaje']) ? $paquete['desaduanaje'] : $desaduanajeCoeficiente;
 
                     $cotizacion = getCotizacionExpress($tarifa, $paquete['libras'], $paquete['precio_fob'],
                         $paquete['arancel'], $desaduanaje, $iva, $seguro, $cambioDolar);

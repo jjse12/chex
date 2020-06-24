@@ -11,14 +11,14 @@
     $cantLocal = mysqli_fetch_row($result)[0];
     $result->free();
     $cantNuevos = $cantServer-$cantLocal;
-    //echo "Diferencia: $cantNuevos \r\n";
     if ($cantNuevos == 0){
     	echo "SINCRONIZADAS";
     }
     else{
 	    $query = "SELECT user_number_id FROM users ORDER BY user_number_id LIMIT ".($cantServer-$cantNuevos).", 1";
-	    $idMenor = mysqli_fetch_row($server->query($query))[0];
-	    //echo "idMenor: $idMenor \r\n";
+        $result = $server->query($query);
+	    $idMenor = mysqli_fetch_row($result)[0];
+        $result->free();
 
 	    $query = "SELECT * FROM users WHERE user_number_id >= $idMenor ORDER BY user_number_id ASC";
 	    $result = $server->query($query);
@@ -41,7 +41,7 @@
 		        	}
 		        	$cont++;
 		        }
-		        $valor .= '25), ';
+		        $valor .= '25, 25), ';
 		        $values .= $valor;
 		    }
 		    $values = substr($values, 0, strlen($values)-2);
