@@ -61,8 +61,13 @@ $invalidPaquetes = $tableData['invalid_paquetes'];
         <?php if ($isEntrega) :?>
             <tr>
                 <th></th>
-                <th class="text-center" colspan="<?= $pagoTarjeta ? 8 : 7 ?>" style="background-color: #ffdebe"><span>Datos del Paquete</span></th>
-                <th class="text-center" colspan="<?= $pagoTarjeta ? 5 : 4 ?>" style="background-color: #c6ddff"><span>Costos del Paquete</span></th>
+                <th class="text-center" colspan="7" style="background-color: #ffdebe"><span>Datos del Paquete</span></th>
+                <th class="text-center" colspan="<?= $pagoTarjeta ? 11 : 10 ?>" style="background-color: #c6ddff"><span>Costos del Paquete</span></th>
+            </tr>
+            <tr>
+                <th colspan="<?= $pagoTarjeta ? 10 : 9 ?>"></th>
+                <th class="text-center" colspan="4" style="background-color: #ff9e2f"><span>Servicios CHEX</span></th>
+                <th class="text-center" colspan="3" style="background-color: #fffaa2"><span>Impuestos</span></th>
             </tr>
             <tr>
                 <th class="text-center"><span style="color:black">No.</span></th>
@@ -77,11 +82,16 @@ $invalidPaquetes = $tableData['invalid_paquetes'];
                 <?php if ($pagoTarjeta) :?>
                     <th class="text-center"><span style="color:black">Tarjeta de C.</span></th>
                 <?php endif ?>
-                <th class="text-center"><span style="color:black">Servicios</span></th>
-                <th class="text-center"><span style="color:black">Impuestos</span></th>
+                <th class="text-center"><span style="color:rgba(0,0,0,0.4)">Peso</span></th>
+                <th class="text-center"><span style="color:rgba(0,0,0,0.4)">Desaduanaje</span></th>
+                <th class="text-center"><span style="color:rgba(0,0,0,0.4)">Seguro</span></th>
+                <th class="text-center"><span style="color:black">Total</span></th>
+                <th class="text-center"><span style="color:rgba(0,0,0,0.4)">Arancel</span></th>
+                <th class="text-center"><span style="color:rgba(0,0,0,0.4)">IVA</span></th>
+                <th class="text-center"><span style="color:black">Total</span></th>
                 <th class="text-center"><span style="color:black">Total</span></th>
             </tr>
-            <tr class="mt-2 mb-2"><th style="text-align: left;" colspan="<?= $pagoTarjeta ? '12' : '11' ?>">&nbsp;</th></tr>
+            <tr class="mt-2 mb-2"><th style="text-align: left;" colspan="<?= $pagoTarjeta ? '18' : '17' ?>">&nbsp;</th></tr>
         <?php else :?>
             <tr style="font-size: 10px;">
                 <th></th>
@@ -144,14 +154,42 @@ $invalidPaquetes = $tableData['invalid_paquetes'];
                             '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['cobro_tarjeta'], 2)) ?>
                         </th>
                     <?php endif ?>
-                    <th class="text-center" title="<?= $paquete['chex_info'] ?? '' ?>"><?=
+                    <th class="text-center" style="color:rgba(0,0,0,0.4)"><?=
                         $paquete['servicio'] === 'Express' && empty($paquete['precio_fob']) ?
-                            '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['chex'], 2)) ?>
+                            '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['costos_chex']['libras'], 2)) ?>
                     </th>
-                    <th class="text-center" title="<?= $paquete['impuestos_info'] ?? '' ?>"><?=
+                    <th class="text-center" style="color:rgba(0,0,0,0.4)"><?=
                         $paquete['servicio'] === 'Express' ? (
-                            empty($paquete['impuestos']) ?
-                                '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['impuestos'], 2))
+                        empty($paquete['costos_chex']['desaduanaje']) ?
+                            '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['costos_chex']['desaduanaje'], 2))
+                        ) : 'N/A'?>
+                    </th>
+                    <th class="text-center" style="color:rgba(0,0,0,0.4)"><?=
+                        $paquete['servicio'] === 'Express' ? (
+                        empty($paquete['costos_chex']['seguro']) ?
+                            '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['costos_chex']['seguro'], 2))
+                        ) : 'N/A'?>
+                    </th>
+                    <th class="text-center" title="<?= $paquete['chex_desglose'] ?? '' ?>"><?=
+                        $paquete['servicio'] === 'Express' && empty($paquete['precio_fob']) ?
+                            '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['costos_chex']['total'], 2)) ?>
+                    </th>
+                    <th class="text-center" style="color:rgba(0,0,0,0.4)"><?=
+                        $paquete['servicio'] === 'Express' ? (
+                        empty($paquete['costos_impuestos']['arancel']) ?
+                            '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['costos_impuestos']['arancel'], 2))
+                        ) : 'N/A'?>
+                    </th>
+                    <th class="text-center" style="color:rgba(0,0,0,0.4)"><?=
+                        $paquete['servicio'] === 'Express' ? (
+                        empty($paquete['costos_impuestos']['iva']) ?
+                            '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['costos_impuestos']['iva'], 2))
+                        ) : 'N/A'?>
+                    </th>
+                    <th class="text-center" title="<?= $paquete['impuestos_desglose'] ?? '' ?>"><?=
+                        $paquete['servicio'] === 'Express' ? (
+                            empty($paquete['costos_impuestos']['total']) ?
+                                '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['costos_impuestos']['total'], 2))
                         ) : 'N/A'?>
                     </th>
                     <th class="text-center"><?=
@@ -175,13 +213,13 @@ $invalidPaquetes = $tableData['invalid_paquetes'];
                     <th style="text-align: center;"><?= empty($paquete['poliza']) ?
                             '<i class="fa fa-asterisk"></i>' : $paquete['poliza'] ?>
                     </th>
-                    <th style="text-align: center;" title="<?= $paquete['chex_info'] ?? '' ?>"><?=
+                    <th style="text-align: center;" title="<?= $paquete['chex_desglose'] ?? '' ?>"><?=
                         $paquete['servicio'] === 'Express' && empty($paquete['precio_fob']) ?
-                            '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['chex'], 2)) ?>
+                            '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['costos_chex']['total'], 2)) ?>
                     </th>
-                    <th style="text-align: center;" title="<?= $paquete['impuestos_info'] ?? '' ?>"><?=
-                        empty($paquete['impuestos']) ?
-                            '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['impuestos'], 2))?>
+                    <th style="text-align: center;" title="<?= $paquete['impuestos_desglose'] ?? '' ?>"><?=
+                        empty($paquete['costos_impuestos']['total']) ?
+                            '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['costos_impuestos']['total'], 2))?>
                     </th>
                     <th style="text-align: center;"><?= empty($paquete['total']) ?
                         '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['total'], 2)) ?>
@@ -192,8 +230,8 @@ $invalidPaquetes = $tableData['invalid_paquetes'];
     </tbody>
     <tfoot>
         <?php if ($isEntrega) :?>
-            <tr class="mt-2 mb-2"><th class="text-left" colspan="<?= $pagoTarjeta ? '13' : '12' ?>">&nbsp;</th></tr>
-            <tr class="mt-2 mb-2 horizontal-borders"><th class="text-left" colspan="<?= $pagoTarjeta ? '13' : '12' ?>">Resumen:</th></tr>
+            <tr class="mt-2 mb-2"><th class="text-left" colspan="<?= $pagoTarjeta ? '18' : '17' ?>">&nbsp;</th></tr>
+            <tr class="mt-2 mb-2 horizontal-borders"><th class="text-left" colspan="<?= $pagoTarjeta ? '18' : '17' ?>">Resumen:</th></tr>
             <tr>
                 <th class="text-left" colspan="2"><?= $totales['paquetes'] ?> paquetes</th>
                 <th class="text-right" colspan="3"><?= $totales['libras'] ?> libras</th>
@@ -202,9 +240,13 @@ $invalidPaquetes = $tableData['invalid_paquetes'];
                 <?php if ($pagoTarjeta) :?>
                     <th class="text-center">Q <?= number_format($totales['cobro_tarjeta'], 2) ?></th>
                 <?php endif ?>
+                <th class="text-center" style="color:rgba(0,0,0,0.4)">Q <?= number_format($totales['chex_libras'], 2) ?></th>
+                <th class="text-center" style="color:rgba(0,0,0,0.4)">Q <?= number_format($totales['chex_desaduanaje'], 2) ?></th>
+                <th class="text-center" style="color:rgba(0,0,0,0.4)">Q <?= number_format($totales['chex_seguro'], 2) ?></th>
                 <th class="text-center">Q <?= number_format($totales['chex'], 2) ?></th>
+                <th class="text-center" style="color:rgba(0,0,0,0.4)">Q <?= number_format($totales['impuestos_arancel'], 2) ?></th>
+                <th class="text-center" style="color:rgba(0,0,0,0.4)">Q <?= number_format($totales['impuestos_iva'], 2) ?></th>
                 <th class="text-center">Q <?= number_format($totales['impuestos'], 2) ?></th>
-
                 <th id="th-total" data-total="<?= $totales['total'] ?>" class="text-center">Q <?= number_format($totales['total'], 2) ?></th>
             </tr>
         <?php else :?>

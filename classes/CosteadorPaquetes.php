@@ -36,7 +36,12 @@ class CosteadorPaquetes {
         $totalLibras = 0;
         $totalCobrosExtras = 0;
         $totalCobroTarjeta = 0;
+        $totalChexLibras = 0;
+        $totalChexDesaduanaje = 0;
+        $totalChexSeguro = 0;
         $totalChex = 0;
+        $totalImpuestosArancel = 0;
+        $totalImpuestosIva = 0;
         $totalImpuestos = 0;
         $total = 0;
         $invalidPaquetes = [];
@@ -46,7 +51,7 @@ class CosteadorPaquetes {
             $totalPaquete = 0;
 
             if ($paquete['servicio'] === 'Express') {
-                if (empty($paquete['precio_fob']) || empty($paquete['arancel'])){
+                if (empty($paquete['precio_fob']) || empty($paquete['arancel']) || empty($paquete['poliza'])){
                     $invalidPaquetes[] = $paquete['tracking'];
                 }
                 else {
@@ -80,13 +85,19 @@ class CosteadorPaquetes {
 
                     $cotizacion = getCotizacionExpress($tarifa, $paquete['libras'], $paquete['precio_fob'],
                         $paquete['arancel'], $desaduanaje, $iva, $seguro, $cambioDolar);
-                    $paquete['chex'] = $cotizacion['chex'];
-                    $paquete['chex_info'] = $cotizacion['chex_info'];
-                    $paquete['impuestos'] = $cotizacion['impuestos'];
-                    $paquete['impuestos_info'] = $cotizacion['impuestos_info'];
 
-                    $totalChex += $cotizacion['chex'];
-                    $totalImpuestos += $cotizacion['impuestos'];
+                    $paquete['costos_chex'] = $cotizacion['costos_chex'];
+                    $paquete['chex_desglose'] = $cotizacion['chex_desglose'];
+                    $paquete['costos_impuestos'] = $cotizacion['costos_impuestos'];
+                    $paquete['impuestos_desglose'] = $cotizacion['impuestos_desglose'];
+
+                    $totalChexLibras += $cotizacion['costos_chex']['libras'];
+                    $totalChexSeguro += $cotizacion['costos_chex']['seguro'];
+                    $totalChexDesaduanaje += $cotizacion['costos_chex']['desaduanaje'];
+                    $totalChex += $cotizacion['costos_chex']['total'];
+                    $totalImpuestosArancel += $cotizacion['costos_impuestos']['arancel'];
+                    $totalImpuestosIva += $cotizacion['costos_impuestos']['iva'];
+                    $totalImpuestos += $cotizacion['costos_impuestos']['total'];
                     $totalPaquete += $cotizacion['total'];
 
                     if ($this->pagoTarjeta) {
@@ -100,12 +111,20 @@ class CosteadorPaquetes {
                 }
             }
             else if ($paquete['servicio'] === 'Estándar' || $paquete['servicio'] === 'EstÃ¡ndar') {
-                $paquete['precio_fob'] = $paquete['arancel'] = $paquete['impuestos'] = '';
+                $paquete['precio_fob'] = $paquete['arancel'] = $paquete['poliza'] = '';
+                $paquete['costos_impuestos'] = [
+                    'arancel' => '',
+                    'iva' => '',
+                    'total' => '',
+                ];
 
                 $tarifa = !empty($paquete['tarifa_estandar']) ? $paquete['tarifa_estandar'] : self::DEFAULT_TARIFA_ESTANDAR;
                 $costoChex = $tarifa * $paquete['libras'];
-                $paquete['chex'] = $costoChex;
-                $paquete['chex_info'] = '- Peso: Q ' . number_format($costoChex, 2) . "\n";
+                $paquete['costos_chex'] = [
+                    'libras' => $costoChex,
+                    'total' => $costoChex
+                ];
+                $paquete['chex_desglose'] = '- Peso: Q ' . number_format($costoChex, 2) . "\n";
 
                 $totalChex += $costoChex;
                 $totalPaquete += $costoChex;
@@ -127,7 +146,7 @@ class CosteadorPaquetes {
                 $totalPaquete += $cobroExtra;
                 $paquete['total'] = $totalPaquete;
                 if ($this->isNotificacion && $cobroExtra > 0) {
-                    $paquete['chex_info'] .= '- Otros: Q ' . number_format($cobroExtra, 2);
+                    $paquete['chex_desglose'] .= '- Otros: Q ' . number_format($cobroExtra, 2);
                 }
             }
 
@@ -139,12 +158,17 @@ class CosteadorPaquetes {
             'paquetes' => $this->paquetes,
             'invalid_paquetes' => $invalidPaquetes,
             'totales' => [
-                'chex' => $totalChex,
-                'cobros_extras' => $totalCobrosExtras,
-                'cobro_tarjeta' => $totalCobroTarjeta,
-                'impuestos' => $totalImpuestos,
                 'libras' => $totalLibras,
                 'paquetes' => count($this->paquetes),
+                'cobros_extras' => $totalCobrosExtras,
+                'cobro_tarjeta' => $totalCobroTarjeta,
+                'chex_libras' => $totalChexLibras,
+                'chex_desaduanaje' => $totalChexDesaduanaje,
+                'chex_seguro' => $totalChexSeguro,
+                'chex' => $totalChex,
+                'impuestos_arancel' => $totalImpuestosArancel,
+                'impuestos_iva' => $totalImpuestosIva,
+                'impuestos' => $totalImpuestos,
                 'total' => $total,
             ],
         ];

@@ -36,14 +36,14 @@ function getWhatsAppNotification($nombreCliente, $idCliente, $costeoData) : stri
     }
 
     foreach ($paquetes as $paquete) {
-        $serviciosChex = $paquete['chex'] + $paquete['cobro_extra'];
+        $serviciosChex = $paquete['costos_chex']['total'] + $paquete['cobro_extra'];
         /********* TEXTO DE PAQUETES (ESTE TEXTO SE ESCRIBE POR CADA PAQUETE SELECCIONADO) *********/
         $message .=
             "*  Tracking: " . $paquete['tracking'] . '<ENTER>' .
             "    Peso: " . $paquete['libras'] . ($paquete['libras'] > 1 ? ' libras' : ' libra') . '<ENTER>'.
             "    Servicios: Q " . number_format($serviciosChex, 2) . '<ENTER>'.
-            "    Impuestos: " . ($paquete['impuestos'] === '' ? 'Q 0.00' :
-                'Q ' . number_format($paquete['impuestos'], 2)) . '<ENTER>'.
+            "    Impuestos: " . (empty($paquete['costos_impuestos']['total']) ? 'Q 0.00' :
+                'Q ' . number_format($paquete['costos_impuestos']['total'], 2)) . '<ENTER>'.
             "    Monto a cancelar: Q " . number_format($paquete['total'], 2) . '<ENTER><ENTER>';
     }
 
@@ -121,15 +121,15 @@ function getEmailNotification($nombreCliente, $idCliente, $costeoData): string
 
     $rows = '';
     foreach ($paquetes as $paquete) {
-        $serviciosChex = $paquete['chex'] + $paquete['cobro_extra'];
+        $serviciosChex = $paquete['costos_chex']['total'] + $paquete['cobro_extra'];
         $rows .= "
             <tr>
                 <th>{$paquete['tracking']}</th>
                 <th>" . $paquete['libras'] . ($paquete['libras'] > 1 ? ' libras' : ' libra') . "</th>
-                <th title='" . ($paquete['chex_info'] ?? '') . "'>Q " . number_format($serviciosChex, 2) . "</th>
-                <th title='" . ($paquete['impuestos_info'] ?? '') . "'>" .
-                    ($paquete['impuestos'] === '' ? 'Q 0.00' :
-                        'Q ' . number_format($paquete['impuestos'], 2)) . "</th>
+                <th title='" . ($paquete['chex_desglose'] ?? '') . "'>Q " . number_format($serviciosChex, 2) . "</th>
+                <th title='" . ($paquete['impuestos_desglose'] ?? '') . "'>" .
+                    (empty($paquete['costos_impuestos']['total']) ? 'Q 0.00' :
+                        'Q ' . number_format($paquete['costos_impuestos']['total'], 2)) . "</th>
                 <th style='text-align: right'>Q " . number_format($paquete['total'], 2) . "</th>
             </tr>
         ";
