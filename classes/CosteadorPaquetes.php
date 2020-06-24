@@ -51,7 +51,7 @@ class CosteadorPaquetes {
             $totalPaquete = 0;
 
             if ($paquete['servicio'] === 'Express') {
-                if (empty($paquete['precio_fob']) || empty($paquete['arancel']) || empty($paquete['poliza'])){
+                if (empty($paquete['precio_fob']) || empty($paquete['arancel'])){
                     $invalidPaquetes[] = $paquete['tracking'];
                 }
                 else {
