@@ -4,13 +4,20 @@ require_once("db_vars.php");
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 $query = "SELECT * FROM cliente ORDER BY ccid ASC";
 $result = $conn->query($query);
-$myArray = array();
-while($row = $result->fetch_assoc()) {
-    $myArray[] = $row;
+if (isset($result) && $result !== false){
+    $data = array();
+    while($row = mysqli_fetch_assoc($result)){
+        $formattedRow = [];
+        foreach ($row as $key => $value) {
+            $formattedRow[$key] = utf8_encode($value);
+        }
+        $data[] = $formattedRow;
+    }
+    echo json_encode([
+        'data' => $data
+    ]);;
+    exit;
 }
-echo json_encode([
-    'data' => $myArray
-]);
 
 $result->close();
 $conn->close();

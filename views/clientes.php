@@ -82,6 +82,87 @@
                 }
             });
         });
+
+        $("#clientes tbody").on("click", "div.tarifa_express", function () {
+            var index = table.row($(this).closest('tr')).index();
+            var arr = table.rows(index).data().toArray();
+            var cliente = arr[0][1] + " " + arr[0][2];
+            var clienteID = arr[0][0];
+            bootbox.prompt({
+                title: "Nueva tarifa express para " + cliente + " (en Quetzales)",
+                inputType: 'number',
+                callback: function (result) {
+                    if (result){
+                        $.ajax({
+                            url: "db/DBsetCliente.php",
+                            type: "POST",
+                            data: {
+                                set: "tarifa_express = " + result,
+                                where: "cid = '" + clienteID + "'"
+                            },
+                            cache: false,
+                            success: function(res){
+                                if (res == 1){
+                                    table.cell(index, 4).data("<div style='cursor:pointer;' class='tarifa_express'>Q " + result + "</div>",);
+                                    table.draw(false);
+                                }
+                                else{
+                                    bootbox.alert("No se pudo efectuar el cambio de tarifa, verifique que haya ingresado un valor correcto.");
+                                    return false;
+                                }
+                            },
+                            error: function() {
+                                bootbox.alert("Ocurrió un error al conectarse a la base de datos.");
+                            }
+                        });
+                    }
+                    else{
+                        bootbox.alert("No se pudo efectuar el cambio de tarifa, verifique que haya ingresado un valor correcto.");
+                    }
+                }
+            });
+        });
+
+        $("#clientes tbody").on("click", "div.desaduanaje_express", function () {
+            var index = table.row($(this).closest('tr')).index();
+            var arr = table.rows(index).data().toArray();
+            var cliente = arr[0][1] + " " + arr[0][2];
+            var clienteID = arr[0][0];
+            bootbox.prompt({
+                title: "Nuevo desaduanaje personalizado para " + cliente + " (en Quetzales)",
+                inputType: 'number',
+                callback: function (result) {
+                    if (result){
+                        $.ajax({
+                            url: "db/DBsetCliente.php",
+                            type: "POST",
+                            data: {
+                                set: "desaduanaje_express = " + result,
+                                where: "cid = '" + clienteID + "'"
+                            },
+                            cache: false,
+                            success: function(res){
+                                if (res == 1){
+                                    table.cell(index, 5).data("<div style='cursor:pointer;' class='desaduanaje_express'>Q " + result + "</div>",);
+                                    table.draw(false);
+                                }
+                                else{
+                                    bootbox.alert("No se pudo efectuar el cambio de tarifa, verifique que haya ingresado un valor correcto.");
+                                    return false;
+                                }
+                            },
+                            error: function() {
+                                bootbox.alert("Ocurrió un error al conectarse a la base de datos.");
+                            }
+                        });
+                    }
+                    else{
+                        bootbox.alert("No se pudo efectuar el cambio de tarifa, verifique que haya ingresado un valor correcto.");
+                    }
+                }
+            });
+        });
+
     } );
 </script>
 
@@ -95,7 +176,9 @@
                 <th class="dt-head-center"><h5 style="color:black">ID</h5></th>
                 <th class="dt-head-center"><h5 style="color:black">Nombre</h5></th>
                 <th class="dt-head-center"><h5 style="color:black">Apellido</h5></th>
-                <th class="dt-head-center"><h5 style="color:black">Tarifa</h5></th>
+                <th class="dt-head-center"><h5 style="color:black">Tarifa Estandar</h5></th>
+                <th class="dt-head-center"><h5 style="color:black">Tarifa Express</h5></th>
+                <th class="dt-head-center"><h5 style="color:black">Desaduanaje Express</h5></th>
                 <th class="dt-head-center"><h5 style="color:black">Email</h5></th>
                 <th class="dt-head-center"><h5 style="color:black">Celular</h5></th>
                 <th class="dt-head-center"><h5 style="color:black">Teléfono</h5></th>
@@ -110,6 +193,8 @@
         </thead>
         <tfoot>
             <tr>
+                <th></th>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -149,6 +234,8 @@
                     rows[i]["nombre"],
                     rows[i]["apellido"],
                     "<div style='cursor:pointer;' class='tarifa'>Q " + rows[i]["tarifa"] + "</div>",
+                    "<div style='cursor:pointer;' class='tarifa_express'>Q " + rows[i]["tarifa_express"] + "</div>",
+                    "<div style='cursor:pointer;' class='desaduanaje_express'>Q " + rows[i]["desaduanaje_express"] + "</div>",
                     rows[i]["email"],
                     rows[i]["celular"],
                     rows[i]["telefono"],
@@ -164,7 +251,9 @@
             table.draw(false);
             table.columns.adjust().responsive.recalc();
         },
-        () => bootbox.alert("Ocurrió un problema al intentar conectarse al servidor."));
+        () => {
+            bootbox.alert("Ocurrió un problema al intentar conectarse al servidor.")
+        });
     }
 
     function modifyUserData(myUserData) {
