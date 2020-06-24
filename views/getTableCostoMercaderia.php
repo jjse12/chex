@@ -155,40 +155,40 @@ $invalidPaquetes = $tableData['invalid_paquetes'];
                         </th>
                     <?php endif ?>
                     <th class="text-center" style="color:rgba(0,0,0,0.4)"><?=
-                        $paquete['servicio'] === 'Express' && empty($paquete['precio_fob']) ?
+                        !isset($paquete['costos_chex']['libras']) || $paquete['costos_chex']['libras'] === '' ?
                             '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['costos_chex']['libras'], 2)) ?>
                     </th>
                     <th class="text-center" style="color:rgba(0,0,0,0.4)"><?=
                         $paquete['servicio'] === 'Express' ? (
-                        empty($paquete['costos_chex']['desaduanaje']) ?
+                        !isset($paquete['costos_chex']['desaduanaje']) || $paquete['costos_chex']['desaduanaje'] === '' ?
                             '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['costos_chex']['desaduanaje'], 2))
                         ) : 'N/A'?>
                     </th>
                     <th class="text-center" style="color:rgba(0,0,0,0.4)"><?=
                         $paquete['servicio'] === 'Express' ? (
-                        empty($paquete['costos_chex']['seguro']) ?
+                        !isset($paquete['costos_chex']['seguro']) || $paquete['costos_chex']['seguro'] === '' ?
                             '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['costos_chex']['seguro'], 2))
                         ) : 'N/A'?>
                     </th>
                     <th class="text-center" title="<?= $paquete['chex_desglose'] ?? '' ?>"><?=
-                        $paquete['servicio'] === 'Express' && empty($paquete['precio_fob']) ?
+                        !isset($paquete['costos_chex']['total']) || $paquete['costos_chex']['total'] === '' ?
                             '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['costos_chex']['total'], 2)) ?>
                     </th>
                     <th class="text-center" style="color:rgba(0,0,0,0.4)"><?=
                         $paquete['servicio'] === 'Express' ? (
-                        empty($paquete['costos_impuestos']['arancel']) ?
+                        !isset($paquete['costos_impuestos']['arancel']) || $paquete['costos_impuestos']['arancel'] === '' ?
                             '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['costos_impuestos']['arancel'], 2))
                         ) : 'N/A'?>
                     </th>
                     <th class="text-center" style="color:rgba(0,0,0,0.4)"><?=
                         $paquete['servicio'] === 'Express' ? (
-                        empty($paquete['costos_impuestos']['iva']) ?
+                        !isset($paquete['costos_impuestos']['iva']) || $paquete['costos_impuestos']['iva'] === '' ?
                             '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['costos_impuestos']['iva'], 2))
                         ) : 'N/A'?>
                     </th>
                     <th class="text-center" title="<?= $paquete['impuestos_desglose'] ?? '' ?>"><?=
                         $paquete['servicio'] === 'Express' ? (
-                            empty($paquete['costos_impuestos']['total']) ?
+                        !isset($paquete['costos_impuestos']['total']) || $paquete['costos_impuestos']['total'] === '' ?
                                 '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['costos_impuestos']['total'], 2))
                         ) : 'N/A'?>
                     </th>
