@@ -49,7 +49,7 @@
         <div class='col-sm-offset-1 col-sm-10'>
             <button onclick="notificarSeleccionados()" class="btn btn-primary" align="center" style="width:24%; text-align: center ;">Notificar</button>
             <button onclick="entregarSeleccionados()" class="btn btn-success" align="center" style="width: 25%; text-align: center ;">Entregar Mercadería</button>
-            <button onclick="showCostoMercaderia()" class="btn btn-info" align="center" style="width: 25%; text-align: center;">Ver Costos</button>
+            <button onclick="showCostoMercaderia(false) " class="btn btn-info" align="center" style="width: 25%; text-align: center;">Ver Costos</button>
             <button onclick="planificarEntrega()" class="btn btn-warning" align="center" style="width: 24%; text-align: center;">Plan de Entrega</button>
         </div>
     </div>

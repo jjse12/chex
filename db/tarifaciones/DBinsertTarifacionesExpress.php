@@ -5,13 +5,14 @@ require_once("../db_vars.php");
 $data = $_POST['data'];
 $delimiter = '-DELIMITER-';
 
-$insertionString = 'insert into tarifacion_paquete_express(tracking, precio_fob, arancel) ' .
-    'VALUES ((select tracking from paquete where guide_number = ';
+$insertionString = 'INSERT INTO tarifacion_paquete_express(tracking, precio_fob, arancel, poliza) ' .
+    'VALUES ((SELECT tracking FROM paquete WHERE guide_number = ';
 $allQueries = str_replace(",", '', $data);
 $allQueries = $insertionString . str_replace("	$", '), ', $allQueries);
+$allQueries = str_replace("%	", "/100, '", $allQueries);
 $allQueries = str_replace("	", ', ', $allQueries);
-$allQueries = str_replace("%", '/100);', $allQueries);
-$allQueries = str_replace("\n", $delimiter . $insertionString, $allQueries);
+$allQueries = str_replace("\n", "');" . $delimiter . $insertionString, $allQueries);
+$allQueries .= "')";
 
 $insertQueries = explode($delimiter, $allQueries);
 
