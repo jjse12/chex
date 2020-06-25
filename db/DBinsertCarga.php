@@ -18,7 +18,7 @@ if ($res->num_rows == 1){
     if ($conn->query($query)) {
         $query = "INSERT INTO paquete VALUES(";
         foreach ($data as $carga){
-            $query .= "'$carga[2]', '$carga[3]', '$carga[4]', $carga[5], $rcid, NULL, '', 0, 0, '$carga[0]', $carga[1]), (";
+            $query .= "'$carga[2]', '$carga[3]', '$carga[4]', $carga[5], $rcid, NULL, '', 0, '$carga[0]', $carga[1]), (";
         }
         $query = substr($query, 0, strlen($query)-3);
         if ($conn->query($query))
