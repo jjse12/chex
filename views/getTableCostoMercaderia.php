@@ -123,7 +123,7 @@ $invalidPaquetes = $tableData['invalid_paquetes'];
                     <th class="text-center"><?= $paquete['servicio'] ?></th>
                     <th class="text-center"><?= $paquete['tracking'] ?></th>
                     <th class="text-center"><?= $paquete['guide_number'] ?></th>
-                    <th class="text-center"><?= $paquete['libras'] ?> libras</th>
+                    <th class="text-center"><?= $paquete['libras'] ?> lb</th>
                     <?php if ($paquete['servicio'] === 'Express') :?>
                         <th class="text-center">
                             <?= empty($paquete['precio_fob']) ?
@@ -204,7 +204,7 @@ $invalidPaquetes = $tableData['invalid_paquetes'];
                     <th style="text-align: center;"><?= $paquete['servicio'] ?></th>
                     <th style="text-align: center;"><?= $paquete['tracking'] ?></th>
                     <th style="text-align: center;"><?= $paquete['guide_number'] ?></th>
-                    <th style="text-align: center;"><?= $paquete['libras'] ?> libras</th>
+                    <th style="text-align: center;"><?= $paquete['libras'] ?> lb</th>
                     <th style="text-align: center;"><?= empty($paquete['precio_fob']) ?
                         '<i class="fa fa-asterisk"></i>' : ('$ ' . number_format($paquete['precio_fob'], 2)) ?>
                     </th>
@@ -235,7 +235,7 @@ $invalidPaquetes = $tableData['invalid_paquetes'];
             <tr class="mt-2 mb-2 horizontal-borders"><th class="text-left" colspan="<?= $pagoTarjeta ? '18' : '17' ?>">Resumen:</th></tr>
             <tr>
                 <th class="text-left" colspan="2"><?= $totales['paquetes'] ?> paquetes</th>
-                <th class="text-right" colspan="3"><?= $totales['libras'] ?> libras</th>
+                <th class="text-right" colspan="3"><?= $totales['libras'] ?> lb</th>
                 <th colspan="3"></th>
                 <th class="text-center">Q <?= number_format($totales['cobros_extras'], 2) ?></th>
                 <?php if ($pagoTarjeta) :?>
@@ -256,7 +256,7 @@ $invalidPaquetes = $tableData['invalid_paquetes'];
             <tr>
                 <th style="text-align: left;" colspan="2"><?= $totales['paquetes'] ?> paquetes</th>
                 <th colspan="2"></th>
-                <th style="text-align: center;"><?= $totales['libras'] ?> libras</th>
+                <th style="text-align: center;"><?= $totales['libras'] ?> lb</th>
                 <th colspan="3"></th>
                 <th style="text-align: center;">Q <?= number_format($totales['chex'], 2) ?></th>
                 <th style="text-align: center;">Q <?= number_format($totales['impuestos'], 2) ?></th>
