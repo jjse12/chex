@@ -265,7 +265,7 @@ function renderTableEntrega($pagoTarjeta){
 <?php else :?>
 
 <!-- TABLA ESPECIFICA PARA TARIFACIONES-->
-    <table style="white-space: nowrap; font-size: 9px;" id="table-entrega-mercaderia" class="display compact" width="100%" cellspacing="0">
+    <table style="white-space: nowrap; font-size: 12px;" id="table-entrega-mercaderia" class="display compact" width="100%" cellspacing="0">
         <thead>
             <tr style="font-size: 10px;">
                 <th></th>

@@ -19,6 +19,18 @@ async function createTarifacionesPDF(guideNumbers) {
         },
         cache: false,
         success: function (res, status, xhr) {
+            if (xhr.status === 200){
+                let fileName = res.fileName;
+                Swal.fire({
+                    title: 'Tabla HTML Guardada',
+                    html: `Se ha creado un archivo con el contenido HTML de la tabla de las tarifaciones ingresadas.<br><br><br><b>${fileName}</b>`,
+                    type: 'success',
+                    allowEscapeKey : false,
+                    allowOutsideClick: false,
+                    confirmButtonText: 'Ok',
+                });
+            }
+            /*
             var filename = "";
             var disposition = xhr.getResponseHeader('Content-Disposition');
             if (disposition && disposition.indexOf('attachment') !== -1) {
@@ -41,6 +53,7 @@ async function createTarifacionesPDF(guideNumbers) {
             else {
                 bootbox.alert("No se pudo abrir el PDF de las tarifaciones ingresadas. Por favor contacta al administrador para verificar si el archivo fue creado exitosamente.");
             }
+            */
         },
         error: function() {
             bootbox.alert("Ocurrió un error al intentar generar el PDF de las tarifaciones ingresadas.");
