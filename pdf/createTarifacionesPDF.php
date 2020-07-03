@@ -1,7 +1,5 @@
 <?php
 
-require_once '../classes/TarifacionesPDFGenerator.php';
-
 $table = $_POST['table'];
 
 if (isset($table)){
