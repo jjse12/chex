@@ -6,7 +6,7 @@ async function createTarifacionesPDF(guideNumbers) {
         type: "POST",
         data: {
             guideNumbers,
-            isEntrega: false,
+            isTarifacion: true,
         },
         cache: false,
     });
