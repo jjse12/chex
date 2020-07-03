@@ -1761,7 +1761,8 @@ async function showEntregaMercaderiaDialog(data, titulo) {
         }
       }
     }
-  });
+  }).find("div.modal-dialog").addClass("medium-largeWidthDialog");
+
   $('.modal-body').css({paddingTop: 0, paddingBottom: 0});
   calcularTotalEntrega();
 }
@@ -1876,5 +1877,5 @@ async function showCostoMercaderia(wholeInventory) {
         }
       },
     }
-  });
+  }).find("div.modal-dialog").addClass("largeWidthDialog");
 }

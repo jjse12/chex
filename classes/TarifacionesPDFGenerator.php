@@ -28,7 +28,7 @@ class TarifacionesPDFGenerator extends TCPDF {
         $this->SetMargins(PDF_MARGIN_LEFT, 30, PDF_MARGIN_RIGHT);
         $this->SetFooterMargin(12);
         $this->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
-        $this->SetFont('helvetica', '', 10, '', true);
+        $this->SetFont('times', '', 6);
 
         date_default_timezone_set('America/Guatemala');
         $this->displayDate = date('d/m/Y h:i A');

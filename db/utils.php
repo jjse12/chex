@@ -27,6 +27,7 @@ function getCotizacionExpress($tarifa, $peso, $fob, $arancel, $desaduanaje, $iva
         'costos_impuestos' => [
             'arancel' => $dai,
             'iva' => $iva,
+            'cif' => $cif,
             'total' => $totalImpuestos
         ],
         'impuestos_desglose' =>

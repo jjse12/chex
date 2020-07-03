@@ -776,3 +776,13 @@ td h6 {
 td h5 {
     text-align: center !important;
 }
+
+.medium-largeWidthDialog {
+    margin: 0 auto;
+    width: 65%;
+}
+
+.largeWidthDialog {
+    margin: 0 auto;
+    width: 85%;
+}

@@ -11,7 +11,7 @@ class CosteadorPaquetes {
 
     private $paquetes;
     private $pagoTarjeta;
-    private $isEntrega;
+    private $isTarifacion;
     private $isNotificacion;
 
     public function __construct(array $paquetes)
@@ -24,8 +24,8 @@ class CosteadorPaquetes {
         $this->pagoTarjeta = $pagoTarjeta;
     }
 
-    public function setIsEntrega(bool $isEntrega) {
-        $this->isEntrega = $isEntrega;
+    public function setIsTarifacion(bool $isTarifacion) {
+        $this->isTarifacion = $isTarifacion;
     }
 
     public function setIsNotificacion(bool $isNotificacion) {
@@ -143,7 +143,7 @@ class CosteadorPaquetes {
             }
 
 
-            if ($this->isEntrega || $this->isNotificacion) {
+            if (!$this->isTarifacion || $this->isNotificacion) {
                 $cobroExtra = floatval($paquete['cobro_extra']);
                 $totalCobrosExtras += $cobroExtra;
                 $totalPaquete += $cobroExtra;
