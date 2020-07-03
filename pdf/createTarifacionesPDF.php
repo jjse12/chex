@@ -9,9 +9,6 @@ if (isset($table)){
             $path =  $_SERVER['DOCUMENT_ROOT'] . 'chex/tarifaciones-ingresadas/';
             $path = str_replace('/', '\\', $path);
         }
-        /*else {
-            ob_start();
-        }*/
         date_default_timezone_set('America/Guatemala');
         $fileDate = date('d-m-Y_h-i-s_A');
         $fileName = "html_tarifaciones_{$fileDate}.html";
