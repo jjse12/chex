@@ -29,6 +29,7 @@ async function createTarifacionesPDF(guideNumbers) {
                     allowOutsideClick: false,
                     confirmButtonText: 'Ok',
                 });
+                window.open('tarifaciones-ingresadas/'+fileName);
             }
             /*
             var filename = "";
