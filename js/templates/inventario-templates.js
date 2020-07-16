@@ -210,26 +210,24 @@ const renderEntregaMercaderaDialog = (table, plan, trackings, uid) => {
                         class="form-control" style="width:100%; text-align:center;"/>
                 </div>` : ''
                 }
-                <div class="mt-3 col-sm-12">
-                    <div class="col-sm-2 col-sm-offset-1">
-                        <button onclick="toggleDescuento()" id="btnDescuento" style="color:#337ab7; margin-top: 2px;"
-                            type="button" class="btn btn-default">Descuento<br>Especial</button>
+                <div class="mt-4 col-sm-4 col-sm-offset-4">
+                    <div class="mt-3 col-sm-6">
+                        <button onclick="toggleDescuento()" id="btnDescuento" style="color:#337ab7; height: 50px"
+                            type="button" class="btn btn-default">Descuento Especial</button>
                     </div>
-                    <div class="col-sm-8">
-                        <div id="divDescuentoInput" style="pointer-events:none; opacity:0.4;" class="form-group text-center col-sm-5">
-                            <label style="color: #337ab7; width: 100%;">Descuento (Q)</label>
-                            <input onfocusout="roundField(this); calcularTotalEntrega();" id="descuentoEntrega"
-                                type="text" class="form-control" style="text-align:center;"
-                                onkeypress="return numbersonly(this, event, '-')"
-                                onkeyup="this.value=this.value.replace(/^0+/, '');"/>
-                        </div>
-                        <div id="divComentarioDescuento" class="form-group col-sm-7">
-                            <label style="color: #337ab7; text-align:center; width: 100%;">Comentario</label>
-                            <textarea id="comentarioEntrega" type="text" class="form-control"/>
-                        </div>
+                    <div id="divDescuentoInput" style="pointer-events:none; opacity:0.4;" class="form-group text-center col-sm-6">
+                        <label style="color: #337ab7; width: 100%;">Descuento (Q)</label>
+                        <input onfocusout="roundField(this); calcularTotalEntrega();" id="descuentoEntrega"
+                            type="text" class="form-control" style="text-align:center;"
+                            onkeypress="return numbersonly(this, event, '-')"
+                            onkeyup="this.value=this.value.replace(/^0+/, '');"/>
                     </div>
                 </div>
-                <div class="form-group col-sm-offset-4 col-sm-4">
+                <div id="divComentarioDescuento" class="form-group mt-4 col-sm-offset-4 col-sm-4">
+                    <label style="color: #337ab7; text-align:center; width: 100%;">Comentario</label>
+                    <textarea id="comentarioEntrega" type="text" class="form-control"/>
+                </div>
+                <div class="form-group mt-4 col-sm-offset-4 col-sm-4">
                     <label style="color: #337ab7; text-align:center; width:100%">Total</label>
                     <input id="totalEntrega" type="text" class="text-center form-control" disabled/>
                 </div>

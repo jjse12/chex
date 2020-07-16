@@ -1710,7 +1710,7 @@
                                 }
                             }
                         }
-                    });
+                    }).find("div.modal-dialog").addClass("largeWidthDialog");
                 },
                 error: function(){
                     bootbox.alert("Ocurrió un problema al intentar conectarse al servidor.");
