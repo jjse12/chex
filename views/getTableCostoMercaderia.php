@@ -13,16 +13,17 @@ $isTarifacion = ($_POST['isTarifacion'] ?? 'false') == 'true';
 
 $selectStatement = "
     SELECT (@row_number:=@row_number + 1) AS num, servicio, p.tracking, guide_number, libras, cobro_extra,
-        t.precio_fob, t.arancel, t.poliza, c.desaduanaje_express as desaduanaje,
-        t.tarifa_especial as tarifa_express_especial, c.tarifa as tarifa_estandar, c.tarifa_express";
+        ca.fecha as fecha_ingreso, t.precio_fob, t.arancel, t.poliza, cl.desaduanaje_express as desaduanaje,
+        t.tarifa_especial as tarifa_express_especial, cl.tarifa as tarifa_estandar, cl.tarifa_express";
 if ($isTarifacion){
-    $selectStatement .= ", c.cid as clientChexCode, CONCAT(c.nombre, ' ', c.apellido) as clientName";
+    $selectStatement .= ", cl.cid as clientChexCode, CONCAT(cl.nombre, ' ', cl.apellido) as clientName";
 }
 
 $query = " SET @row_number = 0; 
     $selectStatement
     FROM paquete p LEFT JOIN tarifacion_paquete_express t ON p.tracking = t.tracking
-    LEFT JOIN cliente c on p.uid = c.cid COLLATE utf8_unicode_ci ";
+    LEFT JOIN cliente cl on p.uid = cl.cid COLLATE utf8_unicode_ci
+    LEFT JOIN carga ca on p.rcid = ca.rcid ";
 
 if ($wholeInventory) {
     $whereClause = 'WHERE p.estado IS NULL';

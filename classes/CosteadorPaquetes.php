@@ -32,6 +32,42 @@ class CosteadorPaquetes {
         $this->isNotificacion = $isNotificacion;
     }
 
+    private function getAllCoeficientesCotizaciones(){
+        $query = "SELECT tarifa, desaduanaje, iva, seguro, cambio_dolar, fecha_desactivacion
+            FROM cotizador_express_coeficientes
+            ORDER BY fecha_desactivacion";
+        $serverConn = new mysqli(SERVER_DB_HOST, SERVER_DB_USER, SERVER_DB_PASS, SERVER_DB_NAME);
+        $res = $serverConn->query($query);
+        if (!empty($res) && $res->num_rows > 0) {
+            while($row = $res->fetch_assoc()){
+                $coeficientes[] = $row;
+            }
+            return $coeficientes;
+        }
+        else {
+            $error = !empty($serverConn->error) ?
+                " El servidor indicó el siguitente error: $serverConn->error." :
+                ($res->num_rows === 0 ?
+                    ' Parece que no hay ninguna configuración de coeficientes, verifica en la base de datos' : '');
+            $errorMsg = 'No se pudieron obtener los coeficientes para calcular ' .
+                "los costos de los paquetes express.$error";
+            throw new RuntimeException($errorMsg);
+        }
+    }
+
+    private function getCoeficientesCotizacionPaquete($coeficientes, $fechaPaquete){
+        $coeficientesLength = sizeof($coeficientes);
+        for ($i = 1; $i < $coeficientesLength; $i++){
+            $fechaPaquete = strtotime($fechaPaquete);
+            $fechaDesactivacion = strtotime($coeficientes[$i]['fecha_desactivacion']);
+            $diferencia = $fechaPaquete - $fechaDesactivacion;
+            if ($diferencia > 0){
+                return $coeficientes[$i-1];
+            }
+        }
+        return $coeficientes[$coeficientesLength-1];
+    }
+
     public function costear(): array
     {
         $totalLibras = 0;
@@ -46,7 +82,8 @@ class CosteadorPaquetes {
         $totalImpuestos = 0;
         $total = 0;
         $invalidPaquetes = [];
-        $coeficientesFetched = false;
+
+        $coeficientes = $this->getAllCoeficientesCotizaciones();
 
         foreach ($this->paquetes as &$paquete) {
             $totalPaquete = 0;
@@ -56,31 +93,12 @@ class CosteadorPaquetes {
                     $invalidPaquetes[] = $paquete['tracking'];
                 }
                 else {
-                    $tarifaFetched = self::DEFAULT_TARIFA_EXPRESS;
-                    $desaduanajeCoeficiente = self::DEFAULT_DESADUANAJE;
-                    if (!$coeficientesFetched){
-                        $serverConn = new mysqli(SERVER_DB_HOST, SERVER_DB_USER, SERVER_DB_PASS, SERVER_DB_NAME);
-                        $query = "SELECT tarifa, desaduanaje, iva, seguro, cambio_dolar FROM cotizador_express_coeficientes WHERE fecha_desactivacion IS NULL";
-                        $res = $serverConn->query($query);
-                        if (!empty($res) && $res->num_rows > 0) {
-                            $row = $res->fetch_assoc();
-                            $tarifaFetched = floatval($row['tarifa']);
-                            $desaduanajeCoeficiente = floatval($row['desaduanaje']);
-                            $iva = floatval($row['iva']);
-                            $seguro = floatval($row['seguro']);
-                            $cambioDolar = floatval($row['cambio_dolar']);
-                        }
-                        else {
-                            $error = !empty($serverConn->error) ?
-                                " El servidor indicó el siguitente error: $serverConn->error." :
-                                    ($res->num_rows === 0 ?
-                                ' Parece que no hay ninguna configuración de coeficientes habilitada, verifica en la base de datos' : '');
-                            $errorMsg = 'No se pudieron obtener los coeficientes para calcular ' .
-                                "los costos de los paquetes express.$error";
-                            throw new RuntimeException($errorMsg);
-                        }
-                        $coeficientesFetched = true;
-                    }
+                    $coeficientesCotPaquete = $this->getCoeficientesCotizacionPaquete($coeficientes, $paquete['fecha_ingreso']);
+                    $tarifaFetched = floatval($coeficientesCotPaquete['tarifa'] ?? self::DEFAULT_TARIFA_ESTANDAR);
+                    $desaduanajeCoeficiente = floatval($coeficientesCotPaquete['desaduanaje'] ?? self::DEFAULT_DESADUANAJE);
+                    $iva = floatval($coeficientesCotPaquete['iva']);
+                    $seguro = floatval($coeficientesCotPaquete['seguro']);
+                    $cambioDolar = floatval($coeficientesCotPaquete['cambio_dolar']);
 
                     $tarifa = !empty($paquete['tarifa_express_especial']) ? $paquete['tarifa_express_especial'] :
                         (!empty($paquete['tarifa_express']) ? $paquete['tarifa_express'] : $tarifaFetched);
