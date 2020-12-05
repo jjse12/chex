@@ -12,7 +12,7 @@ async function createTarifacionesPDF(guideNumbers) {
     });
 
     $.ajax({
-        url: 'pdf/createTarifacionesPDF.php',
+        url: 'utils/saveTarifacion.php',
         type: 'post',
         data: {
             table
