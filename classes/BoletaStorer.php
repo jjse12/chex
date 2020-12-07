@@ -136,13 +136,11 @@ class BoletaStorer
             <meta charset='utf-8'> " .
             $this->getBoletaHtmlStyles() . "
         </head>
-        <body>
+        <body style='margin: 0'>
             <div class='invoice-box'>
                 <table cellpadding='0' cellspacing='0'>
                     <tr class='top'>
-                        <td colspan='2' style='padding: 2px'>" .
-                            $this->getBoletaHeaderHtml() . " 
-                        </td>
+                        <td colspan='2'>" . $this->getBoletaHeaderHtml() . "</td>
                     </tr>          
                     <tr class='information'>
                         <td colspan='2'>" .
@@ -256,12 +254,13 @@ class BoletaStorer
         return "
         <table>
             <tr>
-                <td style='padding-bottom: 0'>
+                <td style='padding-bottom: 0; text-align: left; width: 33%;'>
                     <img alt='Chispudito Express' style='max-width: 128px' src='/images/logo-courier-y-carga.png'>
                 </td>
-                <td>
+                <td style='font-weight: bold; vertical-align: top; text-align: center; width: 33%;'>BOLETA DE ENTREGA</td>
+                <td style='text-align: right; width: 33%;'>
                     Boleta #$correlativeId<br>" .
-                    $this->boleta->getFecha() . "<br>
+                    $this->boleta->getFecha() . "
                 </td>
             </tr>
         </table>";
@@ -295,6 +294,7 @@ class BoletaStorer
     }
 
     /**
+     * @param array $packages
      * @return string
      */
     private function getBoletaPackagesHtml(array $packages): string
@@ -359,22 +359,13 @@ class BoletaStorer
                 $costoRutaElement
                 <td class='cell'>Q" . $this->boleta->getCostoTotal() . "</td>
             </tr>
-            <tr>
-                <td colspan='3'>
-                    <br><br><br><br>
-                    <span>
-                        <strong>Comentario:</strong> " . $this->boleta->getComentario() . "
-                    </span>
-                    <br><br><br><br><br><br><br><br><br><br><br>
-                </td>
-            </tr>
-            <tr style='position: relative'>
-                <td colspan='3'
-                    style='width: 80%; margin-left: 10%; text-align: center; position: absolute; bottom: 0; border-top: #aaa solid 2px'>
-                    Firma de recibido
-                </td>
-            </tr>
         </table>
+        <span style='display: inline-block; position: relative; top: 60px; padding-left: 5px; text-align: left'>
+            <strong>Comentario:</strong> " . $this->boleta->getComentario() . "
+        </span>
+        <span style='margin-left: 15%; margin-right: 15%; width: 70%; display: inline-block; text-align: center; position: relative; top: 180px; border-top: #aaa solid 2px; padding-top: 10px'>
+            Firma de recibido
+        </span>
         ";
     }
 }
