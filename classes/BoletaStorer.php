@@ -104,7 +104,8 @@ class BoletaStorer
             do {
                 $packageGroupSize = count($packages) > 10 ? 10 : count($packages);
                 $packageGroup = array_slice($packages, 0, $packageGroupSize);
-                $boletaHtml = $this->getBoletaHtml($packageGroup);
+                $packagesOffset = ($counter-1) * 10;
+                $boletaHtml = $this->getBoletaHtml($packageGroup, $packagesOffset);
                 $this->mainAlreadyRendered = true;
                 $fileName = $this->createBoletaHtmlFile($boletaHtml, $counter);
                 array_push($fileNames, $fileName);
@@ -125,9 +126,10 @@ class BoletaStorer
 
     /**
      * @param array $packagesGroup
+     * @param int $packagesOffset
      * @return string
      */
-    private function getBoletaHtml(array $packagesGroup): string
+    private function getBoletaHtml(array $packagesGroup, int $packagesOffset = 0): string
     {
         return "
         <!doctype html>
@@ -140,7 +142,7 @@ class BoletaStorer
             <div class='invoice-box'>
                 <table cellpadding='0' cellspacing='0'>
                     <tr class='top'>
-                        <td colspan='2'>" . $this->getBoletaHeaderHtml() . "</td>
+                        <td colspan='2' style='padding-bottom: 0; padding-top: 0;'>" . $this->getBoletaHeaderHtml() . "</td>
                     </tr>          
                     <tr class='information'>
                         <td colspan='2'>" .
@@ -149,7 +151,7 @@ class BoletaStorer
                     </tr>          
                     <tr>
                         <td style='width: 50%; padding-left: 10px; padding-right: 12px'>" .
-                            $this->getBoletaPackagesHtml($packagesGroup). "
+                            $this->getBoletaPackagesHtml($packagesGroup, $packagesOffset). "
                         </td>
                         <td style='width: 50%'>" .
                             $this->getTotalsAndSignSectionHtml() . "
@@ -254,11 +256,11 @@ class BoletaStorer
         return "
         <table>
             <tr>
-                <td style='padding-bottom: 0; text-align: left; width: 33%;'>
+                <td style='padding-top: 0; padding-bottom: 0; text-align: left; width: 33%;'>
                     <img alt='Chispudito Express' style='max-width: 128px' src='/images/logo-courier-y-carga.png'>
                 </td>
-                <td style='font-weight: bold; vertical-align: top; text-align: center; width: 33%;'>BOLETA DE ENTREGA</td>
-                <td style='text-align: right; width: 33%;'>
+                <td style='padding-top: 0; padding-bottom: 0; font-weight: bold; vertical-align: top; text-align: center; width: 33%;'>BOLETA DE ENTREGA</td>
+                <td style='padding-top: 0; padding-bottom: 0; text-align: right; width: 33%;'>
                     Boleta #$correlativeId<br>" .
                     $this->boleta->getFecha() . "
                 </td>
@@ -271,45 +273,45 @@ class BoletaStorer
      */
     private function getBoletaCustomerInfoSectionHtml(): string
     {
-        $typeAndPaymentMethodSection = "
-        <td>
-            <strong>Tipo:</strong> " . $this->boleta->getTipo() . "<br>
-            <strong>Forma de pago:</strong> " . $this->boleta->getMetodoPago() . "<br>
-        </td>";
-        if ($this->mainAlreadyRendered){
-            $typeAndPaymentMethodSection = '';
-        }
         return "
         <table>
             <tr>
-                <td>
+                <td style='text-align: left; width: 70%;'>
                     <strong>Cliente:</strong> " . $this->boleta->getCliente() . "<br>
                     <strong>Nombre:</strong> " . $this->boleta->getReceptor() . "<br>
                     <strong>Teléfono:</strong> " . $this->boleta->getTelefono() . "<br>
                     <strong>Dirección:</strong> " . $this->boleta->getDireccion() . "
                 </td>
-                $typeAndPaymentMethodSection
+                <td style='text-align: right;'>
+                    <strong>Tipo:</strong> " . $this->boleta->getTipo() . "<br>
+                    <strong>Forma de pago:</strong> " . $this->boleta->getMetodoPago() . "
+                </td>
             </tr>
         </table>";
     }
 
     /**
      * @param array $packages
+     * @param int $packagesOffset
      * @return string
      */
-    private function getBoletaPackagesHtml(array $packages): string
+    private function getBoletaPackagesHtml(array $packages, int $packagesOffset): string
     {
         $allPackages = $this->boleta->getPaquetes();
         $totalPackages = sizeof($allPackages);
         $totalPounds = array_sum(array_column($allPackages, 'peso'));
         $rows = '';
-        foreach ($packages as $package) {
+        foreach ($packages as $key => $package) {
+            $rowNumber = $packagesOffset + $key + 1;
             $rows .= "
                 <tr class='paquete'>
-                    <td class='tracking'>
+                    <td style='text-align: center'>
+                        $rowNumber
+                    </td>
+                    <td colspan='2' style='text-align: left'>
                         {$package['tracking']}
                     </td>
-                    <td class='peso'>
+                    <td style='text-align: center'>
                         {$package['peso']}
                     </td>
                 </tr>
@@ -319,17 +321,18 @@ class BoletaStorer
         return "
         <strong>&nbsp;Detalle de paquetes:</strong>
         <br>
-        <table>
+        <table style='font-size: 12px'>
             <tr class='heading'>
-                <td>Tracking</td>
-                <td>Peso</td>
+                <td style='width: 10%; text-align: center;'>No.</td>
+                <td colspan='2' style='width: 70%; text-align: center;'>Tracking</td>
+                <td style='width: 20%; text-align: center;'>Peso</td>
             </tr>
             $rows
             <tr class='total'>
-                <td>
+                <td colspan='2' style='text-align: left'>
                     Total de paquetes: $totalPackages
                 </td>
-                <td>
+                <td colspan='2' style='text-align: right; padding-right: 28px;'>
                     Total peso: $totalPounds
                 </td>
             </tr>
@@ -345,22 +348,22 @@ class BoletaStorer
         if ($this->mainAlreadyRendered) return "";
         $costoRutaElement = '<td colspan="2"></td>';
         if (!empty($this->boleta->getCostoRuta())){
-            $costoRutaElement = "<td colspan='2'><strong>Costo ruta:</strong> Q" . $this->boleta->getCostoRuta() . "</td>";
+            $costoRutaElement = "<td colspan='2'><strong>Costo ruta:</strong> " . $this->boleta->getCostoRuta() . "</td>";
         }
         return "
         <br><br>
         <table>
             <tr>
-                <td colspan='2'><strong>Costo paquetes:</strong> Q" .
+                <td colspan='2'><strong>Costo paquetes:</strong> " .
                     $this->boleta->getCostoPaquetes() . "</td>
                 <td class='heading'>Total a cancelar</td>
             </tr>
             <tr>
                 $costoRutaElement
-                <td class='cell'>Q" . $this->boleta->getCostoTotal() . "</td>
+                <td class='cell'>" . $this->boleta->getCostoTotal() . "</td>
             </tr>
         </table>
-        <span style='display: inline-block; position: relative; top: 60px; padding-left: 5px; text-align: left'>
+        <span style='display: inline-block; width: 100%; position: relative; top: 60px; padding-left: 5px; text-align: left'>
             <strong>Comentario:</strong> " . $this->boleta->getComentario() . "
         </span>
         <span style='margin-left: 15%; margin-right: 15%; width: 70%; display: inline-block; text-align: center; position: relative; top: 180px; border-top: #aaa solid 2px; padding-top: 10px'>

@@ -266,7 +266,7 @@ function loadFacturas(){
                     `<h6>${factura.tracking}</h6>`,
                     `<h6>${factura.uid}</h6>`,
                     `<h6>${factura.uname}</h6>`,
-                    `<h6>${Number(factura.amount).toMoney()}</h6>`,
+                    `<h6>${Number(factura.amount).toUSDMoney()}</h6>`,
                     `<div style='cursor:pointer; text-align: center; color: darkslategray' class='factura-see-image' data-factura='${JSON.stringify(factura)}'><i class='fa fa-eye fa-2x fa-lg'></div>`,
                     `<div style='cursor:pointer; text-align: center; color: greenyellow' class='factura-see-details' data-factura='${JSON.stringify(factura)}'><i class="fas fa-address-card fa-2x fa-lg"></i></div>`
                 ]);
@@ -633,7 +633,7 @@ $(document).ready( function () {
                                     success: function (res) {
                                         if (res.success){
                                             if (column === 'amount' || column === 'fob_price'){
-                                                span.text(Number(newValue).toMoney());
+                                                span.text(Number(newValue).toUSDMoney());
                                             }
                                             else if (column === 'service_id'){
                                                 const option = input.find('option:selected');

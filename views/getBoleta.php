@@ -3,18 +3,18 @@
 require_once('../classes/Boleta.php');
 require_once('../classes/BoletaStorer.php');
 
-$fecha = $_GET['fecha'] ?? '';
-$cliente = $_GET['cliente'] ?? '';
-$receptor = $_GET['receptor'] ?? '';
-$telefono = $_GET['telefono'] ?? '';
-$direccion = $_GET['direccion'] ?? '';
-$tipo = $_GET['tipo'] ?? '';
-$metodoPago = $_GET['metodoPago'] ?? '';
-$paquetes = $_GET['paquetes'] ?? '';
-$costoPaquetes = $_GET['costoPaquetes'] ?? '';
-$costoRuta = $_GET['costoRuta'] ?? '';
-$costoTotal = $_GET['costoTotal'] ?? '';
-$comentario = $_GET['comentario'] ?? '';
+$fecha = $_POST['fecha'] ?? '';
+$cliente = $_POST['cliente'] ?? '';
+$receptor = $_POST['receptor'] ?? '';
+$telefono = $_POST['telefono'] ?? '';
+$direccion = $_POST['direccion'] ?? '';
+$tipo = $_POST['tipo'] ?? '';
+$metodoPago = $_POST['metodoPago'] ?? '';
+$paquetes = $_POST['paquetes'] ?? '';
+$costoPaquetes = $_POST['costoPaquetes'] ?? '';
+$costoRuta = $_POST['costoRuta'] ?? '';
+$costoTotal = $_POST['costoTotal'] ?? '';
+$comentario = $_POST['comentario'] ?? '';
 
 if (empty($fecha) || empty($cliente) || empty($receptor) || empty($telefono) ||empty($direccion) ||
     empty($tipo) || empty($metodoPago) || empty($paquetes) || empty($costoPaquetes) || empty($costoTotal)
@@ -24,7 +24,6 @@ if (empty($fecha) || empty($cliente) || empty($receptor) || empty($telefono) ||e
     exit;
 }
 
-$paquetes = json_decode($paquetes, true);
 header('Content-Type: application/json;charset=utf-8');
 
 try {
