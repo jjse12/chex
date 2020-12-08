@@ -173,8 +173,8 @@ class BoletaStorer
             <style>
                 .invoice-box {
                     max-width: 760px;
-                    height: 490px;
-                    max-height: 490px;
+                    height: 470px;
+                    max-height: 470px;
                     margin: auto;
                     padding: 14px;
                     border: 3px solid #bbb;
@@ -257,7 +257,7 @@ class BoletaStorer
         <table>
             <tr>
                 <td style='padding-top: 0; padding-bottom: 0; text-align: left; width: 33%;'>
-                    <img alt='Chispudito Express' style='max-width: 128px' src='/images/logo-courier-y-carga.png'>
+                    <img alt='Chispudito Express' style='max-width: 128px' src='../images/logo-courier-y-carga.png'>
                 </td>
                 <td style='padding-top: 0; padding-bottom: 0; font-weight: bold; vertical-align: top; text-align: center; width: 33%;'>BOLETA DE ENTREGA</td>
                 <td style='padding-top: 0; padding-bottom: 0; text-align: right; width: 33%;'>
@@ -311,7 +311,7 @@ class BoletaStorer
                     <td colspan='2' style='text-align: left; border-left: #ddd solid 1px; border-right: #ddd solid 1px;'>
                         {$package['tracking']}
                     </td>
-                    <td style='text-align: right; border-left: #ddd solid 1px;'>
+                    <td style='text-align: center; border-left: #ddd solid 1px;'>
                         {$package['peso']} lb.
                     </td>
                 </tr>
@@ -332,7 +332,7 @@ class BoletaStorer
                 <td colspan='2' style='text-align: left'>
                     Total de paquetes: $totalPackages
                 </td>
-                <td colspan='2' style='text-align: right;'>
+                <td colspan='2' style='text-align: right; padding-right: 22px;'>
                     Total peso: {$totalPounds} lb.
                 </td>
             </tr>
@@ -346,10 +346,6 @@ class BoletaStorer
     private function getTotalsAndSignSectionHtml(): string
     {
         if ($this->mainAlreadyRendered) return "";
-        $costoRutaElement = '<td colspan="2"></td>';
-        if (!empty($this->boleta->getCostoRuta())){
-            $costoRutaElement = "<td colspan='2'><strong>Costo ruta:</strong> " . $this->boleta->getCostoRuta() . "</td>";
-        }
         $comentario = '';
         if (!empty($this->boleta->getComentario())){
             $comentario = "
@@ -366,7 +362,7 @@ class BoletaStorer
                 <td class='heading'>Total a cancelar</td>
             </tr>
             <tr>
-                $costoRutaElement
+                <td colspan='2'></td>
                 <td class='cell'>" . $this->boleta->getCostoTotal() . "</td>
             </tr>
         </table>

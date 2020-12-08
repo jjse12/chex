@@ -22,8 +22,6 @@ class Boleta
     private $paquetes;
     /** @var string $costoPaquetes */
     private $costoPaquetes;
-    /** @var string $costoRuta */
-    private $costoRuta;
     /** @var string $costoTotal*/
     private $costoTotal;
     /** @var string $comentario*/
@@ -31,7 +29,7 @@ class Boleta
 
     public function __construct(string $fecha, string $cliente, string $receptor, string $telefono,
                                 string $direccion, string $tipo, string $metodoPago, array $paquetes,
-                                string $costoPaquetes, string$costoRuta, string $costoTotal, string $comentario)
+                                string $costoPaquetes, string $costoTotal, string $comentario)
     {
         $this->fecha = $fecha;
         $this->cliente = $cliente;
@@ -42,7 +40,6 @@ class Boleta
         $this->metodoPago = $metodoPago;
         $this->paquetes = $paquetes;
         $this->costoPaquetes = $costoPaquetes;
-        $this->costoRuta = $costoRuta;
         $this->costoTotal = $costoTotal;
         $this->comentario = $comentario;
     }
@@ -133,14 +130,6 @@ class Boleta
     public function getCostoPaquetes(): string
     {
         return $this->costoPaquetes;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCostoRuta(): string
-    {
-        return $this->costoRuta;
     }
 
     /**

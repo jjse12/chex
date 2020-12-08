@@ -12,7 +12,6 @@ $tipo = $_POST['tipo'] ?? '';
 $metodoPago = $_POST['metodoPago'] ?? '';
 $paquetes = $_POST['paquetes'] ?? '';
 $costoPaquetes = $_POST['costoPaquetes'] ?? '';
-$costoRuta = $_POST['costoRuta'] ?? '';
 $costoTotal = $_POST['costoTotal'] ?? '';
 $comentario = $_POST['comentario'] ?? '';
 
@@ -28,7 +27,7 @@ header('Content-Type: application/json;charset=utf-8');
 
 try {
     $storer = new BoletaStorer(new Boleta($fecha, $cliente, $receptor, $telefono, $direccion, $tipo,
-        $metodoPago, $paquetes, $costoPaquetes, $costoRuta, $costoTotal, $comentario));
+        $metodoPago, $paquetes, $costoPaquetes, $costoTotal, $comentario));
     $fileNames = $storer->store();
     echo json_encode([
         'success' => true,

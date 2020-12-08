@@ -1733,7 +1733,7 @@ async function showEntregaMercaderiaDialog(data, titulo) {
       closeButton: false,
       title: 'Datos para boleta de entrega',
       size: 'medium',
-      message: renderGenerateBoletaDialog(customerInfo, comentario),
+      message: renderGenerateBoletaDialog(customerInfo, plan === 'Oficina', comentario),
       buttons: {
         cancel: {
           label: "Cancelar Boleta",
@@ -1744,10 +1744,10 @@ async function showEntregaMercaderiaDialog(data, titulo) {
           className: "btn btn-md btn-success alinear-derecha",
           callback: () => {
             let costoPaquetes = Number($('#th-total').data('total')).toGTQMoney();
-            let costoRuta = '';
             let fecha = moment().format('LL');
+            let tipo = 'Oficina';
             if (plan.includes("/")) {
-              costoRuta = Number($('#costoRutaEntrega').val()).toGTQMoney();
+              tipo = 'Ruta';
               let fechaParts = plan.split(': ')[1].split('/');
               fecha = moment(`${fechaParts[2]}-${fechaParts[1]}-${fechaParts[0]}`).format( 'LL');
             }
@@ -1760,11 +1760,10 @@ async function showEntregaMercaderiaDialog(data, titulo) {
               receptor: $('#boletaNombreReceptor').val(),
               telefono: $('#boletaTelefono').val(),
               direccion: $('#boletaDireccion').val(),
-              tipo: costoRuta === '' ? 'Oficina' : 'Ruta',
+              tipo,
               metodoPago: tipoPago === 'Tarjeta' ? 'Tarjeta de crédito' : tipoPago,
               paquetes: boletaEntregaPaquetes,
               costoPaquetes,
-              costoRuta,
               costoTotal,
               comentario: $('#boletaComentario').val()
             };

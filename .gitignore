@@ -3,6 +3,7 @@ db/db_vars.php
 db/factura/factura_db_vars.php
 db/servicio/servicio_db_vars.php
 notification/config.php
+configurables.js
 reportesFacturas/*
 boletas/*
 tarifaciones-ingresadas/*
