@@ -1645,7 +1645,7 @@ async function showEntregaMercaderiaDialog(data, titulo) {
       direccion: ''
     };
   }
-  const callBack = () => {
+  const callback = () => {
     const $restringirEntrega = $('#restringir-entrega');
     if ($restringirEntrega.length > 0) {
       activateSpanEntrega("No se puede entregar la mercadería. Verifica los datos de los paquetes a entregar...");
@@ -1724,8 +1724,8 @@ async function showEntregaMercaderiaDialog(data, titulo) {
     }
   };
 
-  const showBoletaInputsDialog = () => {
-    const callBackResult = callBack();
+  const showBoletaInputsDialog = (finalCallback = null) => {
+    const callBackResult = callback();
     if (callBackResult === false) return false;
     const { tipoPago } = callBackResult;
     const comentario = document.getElementById('comentarioEntrega').value;
@@ -1781,7 +1781,7 @@ async function showEntregaMercaderiaDialog(data, titulo) {
                         'La boleta se ha almacenado en el siguiente archivo HTML: <br><br>';
                     html += `<b>${boletas.join('.html</b><br><b>')}.html</b>`;
                     bootbox.hideAll();
-                    document.getElementById("divBotones").style.visibility = "visible";
+                    document.getElementById("divBotones").style.visibility = "none";
                     let t = $("#inventario").DataTable();
                     t.rows({ selected: true }).nodes().to$().removeClass("selected");
                     t.draw(false);
@@ -1794,27 +1794,31 @@ async function showEntregaMercaderiaDialog(data, titulo) {
                       confirmButtonText: 'Ok',
                     });
 
-                    for (let i = 0; i < boletas.length; i++){
+                    for (let i = boletas.length -1; i >= 0; i--){
                       window.open(`boletas/${boletas[i]}.html`);
                     }
+
+                    if (finalCallback !== null){
+                      finalCallback();
+                    }
                   }
-                }
-                else {
-                  const { data: { errorMessage, stackTrace } } = res;
-                  bootbox.dialog({
-                    backdrop: true,
-                    closeButton: true,
-                    title: 'Error al intentar crear boleta de entrega',
-                    message: `
-                      <div style="overflow-y: auto;">
-                        <p style='color: black'>${errorMessage}</p>
-                          <div class="alert alert-warning" role="alert">
-                          <span>Stack trace del error</b>:</span><br>
-                          <span><b>Error</b>: <span style="color: indianred">${stackTrace}</span></span>
+                  else {
+                    const { data: { errorMessage, stackTrace } } = res;
+                    bootbox.dialog({
+                      backdrop: true,
+                      closeButton: true,
+                      title: 'Error al intentar crear boleta de entrega',
+                      message: `
+                        <div style="overflow-y: auto;">
+                          <p style='color: black'>${errorMessage}</p>
+                            <div class="alert alert-warning" role="alert">
+                            <span>Stack trace del error</b>:</span><br>
+                            <span><b>Error</b>: <span style="color: indianred">${stackTrace}</span></span>
+                          </div>
                         </div>
-                      </div>
-                    `,
-                  });
+                      `,
+                    });
+                  }
                 }
               },
               error: function (xhr) {
@@ -1850,65 +1854,105 @@ async function showEntregaMercaderiaDialog(data, titulo) {
         label: "Terminar Entrega",
         className: "btn btn-md btn-success alinear-derecha",
         callback: function () {
-          const callBackResult = callBack();
+          const callBackResult = callback();
           if (callBackResult === false) return false;
+
           const { total, tipoPago, costoEnvio, de, tableMarkup } = callBackResult;
-          $.ajax({
-            url: "db/DBinsertEntrega.php",
-            type: "POST",
-            data: {
-              trackings,
-              p: paquetes,
-              ui: uid,
-              un: unombre,
-              to: total,
-              lbs: libras,
-              m: tipoPago,
-              r: costoEnvio,
-              des: de,
-              pl: plan,
-              table: tableMarkup
-            },
-            cache: false,
-            success: function (response) {
-              const { success, message, data } = response;
-              if (success) {
-                const fecha = convertToHumanDate(data.date);
-                if (!message) {
-                  $("#inventario").DataTable().rows({ selected: true }).remove().draw(false);
-                  document.getElementById("divBotones").style.visibility = "hidden";
-                  bootbox.alert("La mercadería ha sido entregada con éxito. Se registró una nueva boleta virtual, con fecha " + fecha + ".");
-                }
-                else {
-                  bootbox.alert('La mercadería ha sido entregada con éxito. Se registró una nueva boleta virtual, ' +
-                  `con fecha ${fecha}.<br><br>Sin embargo el servidor indicó lo siguiente: ${message}` );
-                }
-              } else if (message) {
-                document.getElementById("divBotones").style.visibility = "visible";
-                bootbox.alert(message);
+          const data = {
+            trackings,
+            p: paquetes,
+            ui: uid,
+            un: unombre,
+            to: total,
+            lbs: libras,
+            m: tipoPago,
+            r: costoEnvio,
+            des: de,
+            pl: plan,
+            table: tableMarkup
+          };
+
+          const successCallback = (response) => {
+            const { success, message, data } = response;
+            if (success) {
+              const fecha = convertToHumanDate(data.date);
+              if (!message) {
+                $("#inventario").DataTable().rows({ selected: true }).remove().draw(false);
+                document.getElementById("divBotones").style.visibility = "hidden";
+                bootbox.alert("La mercadería ha sido entregada con éxito. Se registró una nueva boleta virtual, con fecha " + fecha + ".");
               }
               else {
-                document.getElementById("divBotones").style.visibility = "visible";
-                bootbox.alert("Ocurrió un error inesperado al consultar la base de datos");
+                bootbox.alert('La mercadería ha sido entregada con éxito. Se registró una nueva boleta virtual, ' +
+                    `con fecha ${fecha}.<br><br>Sin embargo el servidor indicó lo siguiente: ${message}` );
               }
-            },
-            error: function () {
+            } else if (message) {
               document.getElementById("divBotones").style.visibility = "visible";
-              bootbox.alert("Ocurrió un problema al intentar conectarse al servidor.");
+              bootbox.alert(message);
+            }
+            else {
+              document.getElementById("divBotones").style.visibility = "visible";
+              bootbox.alert("Ocurrió un error inesperado al consultar la base de datos");
+            }
+          };
+
+          const errorCallback = () => {
+            document.getElementById("divBotones").style.visibility = "visible";
+            bootbox.alert("Ocurrió un problema al intentar conectarse al servidor.");
+          };
+
+          const proceedInsertingEntrega = () => insertEntrega(data, successCallback, errorCallback);
+
+          bootbox.dialog({
+            closeButton: false,
+            title: 'Crear boleta de entrega',
+            size: 'small',
+            message: 'Deseas generar la boleta de entrega imprimible',
+            buttons: {
+              confirm: {
+                label: "Si",
+                className: 'btn btn-md btn-success alinear-derecha',
+                callback: () => {
+                  showBoletaInputsDialog(proceedInsertingEntrega);
+                }
+              },
+              cancel: {
+                label: "No",
+                className: 'btn btn-md btn-info alinear-derecha',
+                callback: () => {
+                  proceedInsertingEntrega();
+                  bootbox.hideAll();
+                }
+              },
             }
           });
+          return false;
         }
       },
       boleta: {
         label: 'Generar Boleta',
         className: 'btn btn-md btn-info alinear-derecha',
-        callback: showBoletaInputsDialog
+        callback: () => {
+          showBoletaInputsDialog()
+          return false;
+        }
       },
     }
   }).find("div.modal-dialog").addClass("largeWidthDialog");
 
   $('.modal-body').css({paddingTop: 0, paddingBottom: 0});
   calcularTotalEntrega();
+}
+
+function insertEntrega(data, success, error)
+{
+  $.ajax({
+    url: "db/DBinsertEntrega.php",
+    type: "POST",
+    data,
+    cache: false,
+    success,
+    error
+  });
 }
 
 async function getCustomerInfo(cid) {

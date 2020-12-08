@@ -41,7 +41,7 @@ class BoletaStorer
 
         $errorList = implode('***\n', array_column($mysqlConn->error_list, 'error'));
         $mysqlConn->close();
-        throw new Exception('Error al intentar obtener el correlativo de boletas! ' . $errorList);
+        throw new Exception('Error al intentar obtener el correlativo de boletas: ' . $errorList);
     }
 
     /**
@@ -85,7 +85,7 @@ class BoletaStorer
         if ($result !== true){
             $errorList = implode('***\n', array_column($mysqlConn->error_list, 'error'));
             $mysqlConn->close();
-            throw new Exception('Error al guardar el registro de la boleta en la base de datos! ' .
+            throw new Exception('Error al guardar el registro de la boleta en la base de datos: ' .
                 $errorList);
         }
         $mysqlConn->close();
