@@ -305,14 +305,14 @@ class BoletaStorer
             $rowNumber = $packagesOffset + $key + 1;
             $rows .= "
                 <tr class='paquete'>
-                    <td style='text-align: center'>
+                    <td style='text-align: center; border-right: #ddd solid 1px;'>
                         $rowNumber
                     </td>
-                    <td colspan='2' style='text-align: left'>
+                    <td colspan='2' style='text-align: left; border-left: #ddd solid 1px; border-right: #ddd solid 1px;'>
                         {$package['tracking']}
                     </td>
-                    <td style='text-align: center'>
-                        {$package['peso']}
+                    <td style='text-align: right; border-left: #ddd solid 1px;'>
+                        {$package['peso']} lb.
                     </td>
                 </tr>
             ";
@@ -332,8 +332,8 @@ class BoletaStorer
                 <td colspan='2' style='text-align: left'>
                     Total de paquetes: $totalPackages
                 </td>
-                <td colspan='2' style='text-align: right; padding-right: 28px;'>
-                    Total peso: $totalPounds
+                <td colspan='2' style='text-align: right;'>
+                    Total peso: {$totalPounds} lb.
                 </td>
             </tr>
         </table>
@@ -350,6 +350,13 @@ class BoletaStorer
         if (!empty($this->boleta->getCostoRuta())){
             $costoRutaElement = "<td colspan='2'><strong>Costo ruta:</strong> " . $this->boleta->getCostoRuta() . "</td>";
         }
+        $comentario = '';
+        if (!empty($this->boleta->getComentario())){
+            $comentario = "
+            <span style='display: inline-block; width: 100%; position: relative; top: 60px; padding-left: 5px; text-align: left'>
+                <strong>Comentario:</strong> " . $this->boleta->getComentario() . "
+            </span>";
+        }
         return "
         <br><br>
         <table>
@@ -363,9 +370,7 @@ class BoletaStorer
                 <td class='cell'>" . $this->boleta->getCostoTotal() . "</td>
             </tr>
         </table>
-        <span style='display: inline-block; width: 100%; position: relative; top: 60px; padding-left: 5px; text-align: left'>
-            <strong>Comentario:</strong> " . $this->boleta->getComentario() . "
-        </span>
+        $comentario
         <span style='margin-left: 15%; margin-right: 15%; width: 70%; display: inline-block; text-align: center; position: relative; top: 180px; border-top: #aaa solid 2px; padding-top: 10px'>
             Firma de recibido
         </span>
