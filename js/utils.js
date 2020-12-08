@@ -1,5 +1,9 @@
-Number.prototype.toMoney = function toMoney() {
+Number.prototype.toUSDMoney = function toUSDMoney() {
   return "US$ " + this.toFixed(2);
+};
+
+Number.prototype.toGTQMoney = function toGTQMoney() {
+    return "Q " + this.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 };
 
 String.prototype.replaceAll = function(search, replacement) {

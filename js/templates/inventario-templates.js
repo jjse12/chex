@@ -240,6 +240,30 @@ const renderEntregaMercaderaDialog = (table, plan, trackings, uid) => {
         </div>`;
 };
 
+const renderGenerateBoletaDialog = ({nombre, apellido, celular, telefono, direccion}, comentario) => {
+    return `
+        <div class="mt-3 mb-3 container-flex">
+            <div class="row text-center">
+                <div class="form-group mt-2 col-sm-offset-1 col-sm-5">
+                    <label style="color: #337ab7; text-align:center; width:100%">Nombre quien recibe</label>
+                    <input id="boletaNombreReceptor" type="text" value="${nombre} ${apellido}" class="text-center form-control"/>
+                </div>
+                <div class="form-group mt-2 col-sm-5">
+                    <label style="color: #337ab7; text-align:center; width:100%">Teléfono</label>
+                    <input id="boletaTelefono" type="text" value="${celular}${celular !== '' && telefono !== '' ? ' / ' : ''}${telefono}" class="text-center form-control"/>
+                </div>
+                <div class="form-group mt-2 col-sm-offset-1 col-sm-10">
+                    <label style="color: #337ab7; text-align:center; width:100%">Dirección</label>
+                    <input id="boletaDireccion" type="text" value="${direccion}" class="text-center form-control"/>
+                </div>
+                <div class="form-group mt-4 col-sm-offset-1 col-sm-10">
+                    <label style="color: #337ab7; text-align:center; width: 100%;">Comentario</label>
+                    <textarea id="boletaComentario" class="form-control">${comentario}</textarea>
+                </div>
+            </div>
+        </div>`;
+};
+
 const renderCostoMercaderaDialog = (table) => {
     return `
         <div class="mt-3 mb-3 container-flex">

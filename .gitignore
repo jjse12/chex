@@ -4,6 +4,7 @@ db/factura/factura_db_vars.php
 db/servicio/servicio_db_vars.php
 notification/config.php
 reportesFacturas/*
+boletas/*
 tarifaciones-ingresadas/*
 git
 .idea/workspace.xml
