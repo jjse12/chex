@@ -38,7 +38,7 @@
 
         <script type="text/javascript" src="js/moment.min.js"></script>
         <script type="text/javascript" src="js/loader.js?v=1.0.1"></script>
-        <script type="text/javascript" src="js/utils.js?v=1.0.1"></script>
+        <script type="text/javascript" src="js/utils.js?v=1.0.2"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
     </head>
     <!--
