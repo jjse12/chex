@@ -185,6 +185,11 @@ const renderNotificationOptionsDialogContent = (searchByUid) => {
 };
 
 const renderEntregaMercaderaDialog = (table, plan, trackings, uid) => {
+    let costoRutaSelect = `<select onchange="calcularTotalEntrega()" id="costoRutaEntrega" class="text-center form-control" style="width:100%;"><option value=""></option>`;
+    costos_ruta.map(costo => {
+        costoRutaSelect += `<option value="${costo}">${costo.toGTQMoney()}</option>`;
+    });
+    costoRutaSelect += '</select>';
     return `
         <div class="mt-3 mb-3 container-flex">
             <div class="mb-3" id="divEntregaMercaderiaTable">${table}</div>
@@ -204,10 +209,7 @@ const renderEntregaMercaderaDialog = (table, plan, trackings, uid) => {
                 ${plan.includes("/") ? `
                 <div id="divCostoRuta" class="mt-3 form-group-sm text-center col-sm-offset-4 col-sm-4">
                     <label style="color: #337ab7; width:100%">Costo de Envío (Q)</label>
-                    <input onfocusout="roundField(this); calcularTotalEntrega()"
-                        onkeypress="return numbersonly(this, event, '')"
-                        onkeyup="this.value=this.value.replace(/^0+/, '');" id="costoRutaEntrega" type="text"
-                        class="form-control" style="width:100%; text-align:center;"/>
+                    ${costoRutaSelect}
                 </div>` : ''
                 }
                 <div class="mt-4 col-sm-4 col-sm-offset-4">

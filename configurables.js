@@ -56,3 +56,5 @@ var signers = [
     'VALLEJO',
     'VARELA'
 ];
+
+var costos_ruta = [41, 35, 30, 25, 20, 0];
