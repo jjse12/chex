@@ -1,7 +1,7 @@
 
 const getImportTarifacionesDialogContent = () => {
-    return `<p style='color: black'>Copia las columnas <b>No. de Guía</b>, <b>Precio Fob</b>, <b>Arancel</b> y <b>Póliza</b> (en ese orden)
-    en tu archivo Excel para los paquetes deseados, y pegalas en el siguiente campo de texto:</p>
+    return `<p style='color: black'>Copia las columnas <b>No. de Guía</b>, <b>Precio Fob</b>, <b>Arancel</b>, <b>Póliza</b> y <b>Fecha de Póliza</b> (en ese orden)
+    en tu archivo Excel para los paquetes deseados, y pegalas en el siguiente campo de texto</p>
     <div class='form-group' style="width: 70%; margin-left: 15%;">
         <textarea class="form-control" id="inputImportTarifaciones" style="height: 200px; text-align: center;"/>
     </div>`;

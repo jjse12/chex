@@ -773,7 +773,6 @@ ul.ColVis_collection li label span {
 
 .horizontal-borders {
     border-top: 1px solid black;
-    border-bottom: 1px solid black;
 }
 
 .invalid-paquete-express {
@@ -806,4 +805,9 @@ td h5 {
 .largeWidthDialog {
     margin: 0 auto;
     width: 85%;
+}
+
+.fullWidthDialog {
+    margin: 0 auto;
+    width: 99%;
 }

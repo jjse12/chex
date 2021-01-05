@@ -14,7 +14,7 @@ $trackings = $_POST['trackings'];
 
 $query = " 
     SELECT p.servicio, p.tracking, guide_number, libras, cobro_extra, ca.fecha as fecha_ingreso,
-    t.precio_fob, t.arancel, t.poliza, t.tarifa_especial as tarifa_express_especial, c.tarifa as tarifa_estandar, c.tarifa_express
+    t.precio_fob, t.arancel, t.poliza, t.tarifa_especial as tarifa_express_especial, c.tarifa as tarifa_estandar, c.tarifa_express, c.desaduanaje_express as desaduanaje
     FROM paquete p LEFT JOIN tarifacion_paquete_express t ON p.tracking = t.tracking
     LEFT JOIN cliente c on p.uid = c.cid COLLATE utf8_unicode_ci
     LEFT JOIN carga ca on ca.rcid = p.rcid
