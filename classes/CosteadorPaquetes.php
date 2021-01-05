@@ -77,7 +77,8 @@ class CosteadorPaquetes {
         $totalChexDesaduanaje = 0;
         $totalChexSeguro = 0;
         $totalChex = 0;
-        $totalImpuestosArancel = 0;
+        $totalImpuestosValorBi = 0;
+        $totalImpuestosDai = 0;
         $totalImpuestosIva = 0;
         $totalImpuestos = 0;
         $total = 0;
@@ -116,7 +117,8 @@ class CosteadorPaquetes {
                     $totalChexSeguro += $cotizacion['costos_chex']['seguro'];
                     $totalChexDesaduanaje += $cotizacion['costos_chex']['desaduanaje'];
                     $totalChex += $cotizacion['costos_chex']['total'];
-                    $totalImpuestosArancel += $cotizacion['costos_impuestos']['arancel'];
+                    $totalImpuestosValorBi += $cotizacion['costos_impuestos']['valor_bi'];
+                    $totalImpuestosDai += $cotizacion['costos_impuestos']['dai'];
                     $totalImpuestosIva += $cotizacion['costos_impuestos']['iva'];
                     $totalImpuestos += $cotizacion['costos_impuestos']['total'];
                     $totalPaquete += $cotizacion['total'];
@@ -134,7 +136,8 @@ class CosteadorPaquetes {
             else if ($paquete['servicio'] === 'Estándar' || $paquete['servicio'] === 'EstÃ¡ndar') {
                 $paquete['precio_fob'] = $paquete['arancel'] = $paquete['poliza'] = '';
                 $paquete['costos_impuestos'] = [
-                    'arancel' => '',
+                    'valor_bi' =>  '',
+                    'dai' => '',
                     'iva' => '',
                     'total' => '',
                 ];
@@ -187,7 +190,8 @@ class CosteadorPaquetes {
                 'chex_desaduanaje' => $totalChexDesaduanaje,
                 'chex_seguro' => $totalChexSeguro,
                 'chex' => $totalChex,
-                'impuestos_arancel' => $totalImpuestosArancel,
+                'impuestos_valor_bi' => $totalImpuestosValorBi,
+                'impuestos_dai' => $totalImpuestosDai,
                 'impuestos_iva' => $totalImpuestosIva,
                 'impuestos' => $totalImpuestos,
                 'total' => $total,

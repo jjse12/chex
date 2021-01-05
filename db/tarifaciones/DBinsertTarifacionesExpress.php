@@ -2,19 +2,20 @@
 header('Content-Type: application/json;charset=utf-8');
 require_once("../db_vars.php");
 
-$data = $_POST['data'];
-$delimiter = '-DELIMITER-';
+$data = $_POST['data'] ?? $_GET['data'];
 
-$insertionString = 'INSERT INTO tarifacion_paquete_express(tracking, precio_fob, arancel, poliza) ' .
-    'VALUES ((SELECT tracking FROM paquete WHERE guide_number = ';
-$allQueries = str_replace(",", '', $data);
-$allQueries = $insertionString . str_replace("	$", '), ', $allQueries);
-$allQueries = str_replace("%	", "/100, '", $allQueries);
-$allQueries = str_replace("	", ', ', $allQueries);
-$allQueries = str_replace("\n", "');" . $delimiter . $insertionString, $allQueries);
-$allQueries .= "')";
-
-$insertQueries = explode($delimiter, $allQueries);
+$strRows = explode("\n", $data);
+foreach ($strRows as $strRow){
+    if (!empty($strRow)){
+        $row = explode("\t", $strRow);
+        $guideNumber = $row[0];
+        $precioFob = str_replace("$", "", $row[1]);
+        $arancel = str_replace("%", "/100", $row[2]);
+        $poliza = $row[3];
+        $fechaPoliza = $row[4];
+        $insertQueries[] = "INSERT INTO tarifacion_paquete_express(tracking, precio_fob, arancel, poliza, fecha_poliza) VALUES ((SELECT tracking FROM paquete WHERE guide_number = $guideNumber), $precioFob, $arancel, '$poliza', '$fechaPoliza');";
+    }
+}
 
 $toInsertCount = count($insertQueries);
 $insertedCount = 0;

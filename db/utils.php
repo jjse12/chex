@@ -8,7 +8,8 @@ function getCotizacionExpress($tarifa, $peso, $fob, $arancel, $desaduanaje, $iva
 
     $cif = $fob*$cambioDolar + ($fob*0.022*$cambioDolar) + ($peso*25/2.2 /* $tarifa  // Simpre usar Q25 como tarifa en esta ecuación */ );
     $dai = $arancel * $cif;
-    $iva = ($cif + $dai) * $iva;
+    $valorBi = $cif + $dai;
+    $iva = $valorBi * $iva;
     $totalImpuestos = round($iva + $dai, 2);
 
     $total = $totalChex + $totalImpuestos;
@@ -25,13 +26,14 @@ function getCotizacionExpress($tarifa, $peso, $fob, $arancel, $desaduanaje, $iva
             "- Desaduanaje: Q " . number_format($desaduanaje, 2) . "\n" .
             "- Seguro: Q " . number_format($costoSeguro, 2) . "\n",
         'costos_impuestos' => [
-            'arancel' => $dai,
+            'valor_bi' => $valorBi,
+            'dai' => $dai,
             'iva' => $iva,
             'cif' => $cif,
             'total' => $totalImpuestos
         ],
         'impuestos_desglose' =>
-            "- Arancel: Q " . number_format($dai,2) . "\n" .
+            "- DAI: Q " . number_format($dai,2) . "\n" .
             '- IVA: Q ' . number_format($iva, 2),
         'total' => $total
     ];
