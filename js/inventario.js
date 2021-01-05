@@ -1936,7 +1936,7 @@ async function showEntregaMercaderiaDialog(data, titulo) {
         }
       },
     }
-  }).find("div.modal-dialog").addClass("largeWidthDialog");
+  }).find("div.modal-dialog").addClass("fullWidthDialog");
 
   $('.modal-body').css({paddingTop: 0, paddingBottom: 0});
   calcularTotalEntrega();

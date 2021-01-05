@@ -116,7 +116,7 @@ function renderTableEntrega($pagoTarjeta){
 
 
 <?php if (!$isTarifacion) :?>
-    <table style="white-space: nowrap; font-size: 12px" id="table-entrega-mercaderia" class="display compact" width="100%" cellspacing="0">
+    <table style="border: 1px solid #222; white-space: nowrap; font-size: 12px" id="table-entrega-mercaderia" class="display compact" width="100%" cellspacing="0">
         <thead>
             <tr>
                 <th></th>
@@ -139,7 +139,7 @@ function renderTableEntrega($pagoTarjeta){
                 <th class="text-center"><span style="color:black">Póliza</span></th>
                 <th class="text-center"><span style="color:black">Fecha de Póliza</span></th>
                 <th class="text-center"><span style="color:black">Valor BI</span></th>
-                <th class="text-center"><span style="color:black">Extras</span></th>
+                <th class="text-center" style="border-left: 1px solid #222;"><span style="color:black">Extras</span></th>
                 <?php if ($pagoTarjeta) :?>
                     <th class="text-center"><span style="color:black">Tarjeta de C.</span></th>
                 <?php endif ?>
@@ -147,12 +147,17 @@ function renderTableEntrega($pagoTarjeta){
                 <th class="text-center"><span style="color:rgba(0,0,0,0.4)">Desaduanaje</span></th>
                 <th class="text-center"><span style="color:rgba(0,0,0,0.4)">Seguro</span></th>
                 <th class="text-center"><span style="color:black">Total</span></th>
-                <th class="text-center"><span style="color:rgba(0,0,0,0.4)">DAI</span></th>
+                <th class="text-center" style="border-left: 1px solid #222;"><span style="color:rgba(0,0,0,0.4)">DAI</span></th>
                 <th class="text-center"><span style="color:rgba(0,0,0,0.4)">IVA</span></th>
                 <th class="text-center"><span style="color:black">Total</span></th>
-                <th class="text-center"><span style="color:black">Total</span></th>
+                <th class="text-center" style="border-left: 1px solid #222;"><span style="color:black">Total</span></th>
             </tr>
-            <tr class="mt-2 mb-2"><th style="text-align: left;" colspan="<?= $pagoTarjeta ? '20' : '19' ?>">&nbsp;</th></tr>
+            <tr class="mt-2 mb-2">
+                <th colspan="10"></th>
+                <th class="text-center" colspan="<?= $pagoTarjeta ? 6 : 5 ?>" style="border-left: 1px solid #222;">&nbsp</th>
+                <th class="text-center" colspan="3" style="border-left: 1px solid #222;">&nbsp</th>
+                <th class="text-center" style="border-left: 1px solid #222;">&nbsp</th>
+            </tr>
         </thead>
         <tbody>
             <?php foreach ($tableData['paquetes'] as $paquete): ?>
@@ -200,7 +205,7 @@ function renderTableEntrega($pagoTarjeta){
                         <th class="text-center">N/A</th>
                         <th class="text-center">N/A</th>
                     <?php endif ?>
-                    <th class="text-center">Q <?= number_format($paquete['cobro_extra'], 2) ?></th>
+                    <th class="text-center" style="border-left: 1px solid #222;">Q <?= number_format($paquete['cobro_extra'], 2) ?></th>
                     <?php if ($pagoTarjeta) :?>
                         <th class="text-center"><?=
                             $paquete['servicio'] === 'Express' && empty($paquete['cobro_tarjeta']) ?
@@ -227,7 +232,7 @@ function renderTableEntrega($pagoTarjeta){
                         !isset($paquete['costos_chex']['total']) || $paquete['costos_chex']['total'] === '' ?
                             '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['costos_chex']['total'], 2)) ?>
                     </th>
-                    <th class="text-center" style="color:rgba(0,0,0,0.4)"><?=
+                    <th class="text-center" style="border-left: 1px solid #222; color:rgba(0,0,0,0.4)"><?=
                         $paquete['servicio'] === 'Express' ? (
                         !isset($paquete['costos_impuestos']['dai']) || $paquete['costos_impuestos']['dai'] === '' ?
                             '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['costos_impuestos']['dai'], 2))
@@ -245,7 +250,7 @@ function renderTableEntrega($pagoTarjeta){
                                 '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['costos_impuestos']['total'], 2))
                         ) : 'N/A'?>
                     </th>
-                    <th class="text-center"><?=
+                    <th class="text-center" style="border-left: 1px solid #222;"><?=
                         $paquete['servicio'] === 'Express' && empty($paquete['total']) ?
                             '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['total'], 2)) ?>
                     </th>
@@ -253,14 +258,24 @@ function renderTableEntrega($pagoTarjeta){
             <?php endforeach ?>
         </tbody>
         <tfoot>
-            <tr class="mt-2 mb-2"><th class="text-left" colspan="<?= $pagoTarjeta ? '20' : '19' ?>">&nbsp;</th></tr>
-            <tr class="mt-2 mb-2 horizontal-borders"><th class="text-left" colspan="<?= $pagoTarjeta ? '20' : '19' ?>">Resumen:</th></tr>
+            <tr class="mt-2 mb-2">
+                <th colspan="10"></th>
+                <th class="text-center" colspan="<?= $pagoTarjeta ? 6 : 5 ?>" style="border-left: 1px solid #222;">&nbsp</th>
+                <th class="text-center" colspan="3" style="border-left: 1px solid #222;">&nbsp</th>
+                <th class="text-center" style="border-left: 1px solid #222;">&nbsp</th>
+            </tr>
+            <tr class="mt-2 mb-2 horizontal-borders">
+                <th colspan="10" class="text-left" style="padding-left: 12px">Resumen:</th>
+                <th colspan="<?= $pagoTarjeta ? 6 : 5 ?>" style="border-left: 1px solid #222;">&nbsp;</th>
+                <th colspan="3" style="border-left: 1px solid #222;">&nbsp;</th>
+                <th style="border-left: 1px solid #222;">&nbsp;</th>
+            </tr>
             <tr>
-                <th class="text-left" colspan="2"><?= $totales['paquetes'] ?> paquetes</th>
+                <th class="text-left" style="padding-left: 12px" colspan="2"><?= $totales['paquetes'] ?> paquetes</th>
                 <th class="text-right" style="padding-right: 12px" colspan="3"><?= $totales['libras'] ?> lb</th>
                 <th colspan="4"></th>
                 <th class="text-center">Q <?= number_format($totales['impuestos_valor_bi'], 2) ?></th>
-                <th class="text-center">Q <?= number_format($totales['cobros_extras'], 2) ?></th>
+                <th class="text-center" style="border-left: 1px solid #222;">Q <?= number_format($totales['cobros_extras'], 2) ?></th>
                 <?php if ($pagoTarjeta) :?>
                     <th class="text-center">Q <?= number_format($totales['cobro_tarjeta'], 2) ?></th>
                 <?php endif ?>
@@ -268,10 +283,10 @@ function renderTableEntrega($pagoTarjeta){
                 <th class="text-center" style="color:rgba(0,0,0,0.4)">Q <?= number_format($totales['chex_desaduanaje'], 2) ?></th>
                 <th class="text-center" style="color:rgba(0,0,0,0.4)">Q <?= number_format($totales['chex_seguro'], 2) ?></th>
                 <th class="text-center">Q <?= number_format($totales['chex'], 2) ?></th>
-                <th class="text-center" style="color:rgba(0,0,0,0.4)">Q <?= number_format($totales['impuestos_dai'], 2) ?></th>
+                <th class="text-center" style="border-left: 1px solid #222; color:rgba(0,0,0,0.4)">Q <?= number_format($totales['impuestos_dai'], 2) ?></th>
                 <th class="text-center" style="color:rgba(0,0,0,0.4)">Q <?= number_format($totales['impuestos_iva'], 2) ?></th>
                 <th class="text-center">Q <?= number_format($totales['impuestos'], 2) ?></th>
-                <th id="th-total" data-total="<?= $totales['total'] ?>" class="text-center">Q <?= number_format($totales['total'], 2) ?></th>
+                <th id="th-total" data-total="<?= $totales['total'] ?>" class="text-center" style="border-left: 1px solid #222;">Q <?= number_format($totales['total'], 2) ?></th>
             </tr>
         </tfoot>
     </table>
