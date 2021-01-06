@@ -2086,5 +2086,5 @@ async function showCostoMercaderia(wholeInventory) {
         }
       },
     }
-  }).find("div.modal-dialog").addClass("largeWidthDialog");
+  }).find("div.modal-dialog").addClass("fullWidthDialog");
 }
