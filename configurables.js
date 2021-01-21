@@ -57,4 +57,4 @@ var signers = [
     'VARELA'
 ];
 
-var costos_ruta = [41, 35, 30, 25, 20, 0];
+var costos_ruta = [50, 41, 35, 30, 25, 20, 0];
