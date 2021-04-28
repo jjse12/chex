@@ -6,51 +6,14 @@ class BoletaStorer
 {
     const BOLETA_ID_PREFIX = 10000;
 
-    /** @var Boleta $boleta */
-    private $boleta;
-    /** @var bool $mainAlreadyRendered */
-    private $mainAlreadyRendered;
-
     /**
-     * @param Boleta $boleta
-     * @throws Exception
-     */
-    public function __construct(Boleta $boleta)
-    {
-        $boleta->setId($this->getNextBoletaId());
-        $this->boleta = $boleta;
-        $this->mainAlreadyRendered = false;
-    }
-
-    /**
-     * @return int
-     * @throws Exception
-     */
-    private function getNextBoletaId(): int
-    {
-        $dbName = DB_NAME;
-        $mysqlConn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-        $queryResult = $mysqlConn->query("SELECT AUTO_INCREMENT
-        FROM information_schema.TABLES
-        WHERE TABLE_SCHEMA = '$dbName'
-        AND TABLE_NAME = 'boleta'");
-        if ($queryResult->num_rows > 0) {
-            $mysqlConn->close();
-            return intval($queryResult->fetch_assoc()['AUTO_INCREMENT']);
-        }
-
-        $errorList = implode('***\n', array_column($mysqlConn->error_list, 'error'));
-        $mysqlConn->close();
-        throw new Exception('Error al intentar obtener el correlativo de boletas: ' . $errorList);
-    }
-
-    /**
+     * @param int $boletaId
      * @param string $boletaHtml
      * @param int|null $num
      * @return string
      * @throws Exception
      */
-    private function createBoletaHtmlFile(string $boletaHtml, int $num = null): string
+    private function createBoletaHtmlFile(int $boletaId, string $boletaHtml, int $num = null): string
     {
         try {
             $path =  $_SERVER['DOCUMENT_ROOT'] . '/boletas/';
@@ -59,10 +22,11 @@ class BoletaStorer
                 $path = str_replace('/', '\\', $path);
             }
 
-            $correlative = self::BOLETA_ID_PREFIX + $this->boleta->getId();
+            $correlative = self::BOLETA_ID_PREFIX + $boletaId;
             $fileName = "boleta_" . $correlative;
-            if ($num !== null)
+            if ($num !== null){
                 $fileName .= "($num)";
+            }
             $filePath = $path . $fileName . '.html';
             $file = fopen($filePath, "w");
             fwrite($file, $boletaHtml);
@@ -74,62 +38,73 @@ class BoletaStorer
     }
 
     /**
-     * @param array $files
+     * @param Boleta $boleta
+     * @return array
      * @throws Exception
      */
-    private function storeBoletaInfo(array $files)
+    public function store(Boleta $boleta): array
     {
-        $filesArrStr = implode(',', $files);
         $mysqlConn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-        $result = $mysqlConn->query("INSERT INTO boleta (archivos) VALUE ('$filesArrStr')");
-        if ($result !== true){
-            $errorList = implode('***\n', array_column($mysqlConn->error_list, 'error'));
+        try {
+            $mysqlConn->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+            $insertion = $mysqlConn->query("INSERT INTO boleta (archivos) VALUE ('')");
+            if ($insertion !== true){
+                $errorList = implode('***\n', array_column($mysqlConn->error_list, 'error'));
+                throw new Exception('Error al guardar el registro de la boleta en la base de datos: ' .
+                    $errorList);
+            }
+            $fileNames = [];
+            $boletaId = $mysqlConn->insert_id;
+            $boleta->setId($boletaId);
+            $packages = $boleta->getPaquetes();
+            $packagesCount = count($packages);
+            if ($packagesCount > 10) {
+                $counter = 1;
+                $mainAlreadyRendered = false;
+                do {
+                    $packageGroupSize = count($packages) > 10 ? 10 : count($packages);
+                    $packageGroup = array_slice($packages, 0, $packageGroupSize);
+                    $packagesOffset = ($counter - 1) * 10;
+                    $boletaHtml = $this->getBoletaHtml($boleta, $packageGroup, $packagesOffset, $mainAlreadyRendered);
+                    $mainAlreadyRendered = true;
+                    $fileName = $this->createBoletaHtmlFile($boletaId, $boletaHtml, $counter);
+                    array_push($fileNames, $fileName);
+                    $packages = array_slice($packages, 10);
+                    $counter++;
+                } while (count($packages) > 0);
+                $dbBoletaArchivos = implode(',', $fileNames);
+            }
+            else {
+                $boletaHtml = $this->getBoletaHtml($boleta, $packages, 0, false);
+                $boletaFileName = $this->createBoletaHtmlFile($boletaId, $boletaHtml);
+                $dbBoletaArchivos = $boletaFileName;
+                $fileNames = [$boletaFileName];
+            }
+
+            $update = $mysqlConn->query("UPDATE boleta SET archivos = '$dbBoletaArchivos' WHERE id = $boletaId");
+            if ($update !== true) {
+                $errorList = implode('***\n', array_column($mysqlConn->error_list, 'error'));
+                throw new Exception('Error al guardar el registro de la boleta en la base de datos: ' .
+                    $errorList);
+            }
+            $mysqlConn->commit(MYSQLI_TRANS_START_READ_WRITE);
             $mysqlConn->close();
-            throw new Exception('Error al guardar el registro de la boleta en la base de datos: ' .
-                $errorList);
-        }
-        $mysqlConn->close();
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function store(): array
-    {
-        $packages = $this->boleta->getPaquetes();
-        $packagesCount = count($packages);
-        if ($packagesCount > 10){
-            $fileNames = array();
-            $counter = 1;
-            do {
-                $packageGroupSize = count($packages) > 10 ? 10 : count($packages);
-                $packageGroup = array_slice($packages, 0, $packageGroupSize);
-                $packagesOffset = ($counter-1) * 10;
-                $boletaHtml = $this->getBoletaHtml($packageGroup, $packagesOffset);
-                $this->mainAlreadyRendered = true;
-                $fileName = $this->createBoletaHtmlFile($boletaHtml, $counter);
-                array_push($fileNames, $fileName);
-                $packages = array_slice($packages, 10);
-                $counter++;
-            } while(count($packages) > 0);
-            $this->storeBoletaInfo($fileNames);
             return $fileNames;
+        } catch (Exception $exception) {
+            $mysqlConn->rollback(MYSQLI_TRANS_START_READ_WRITE);
+            $mysqlConn->close();
+            throw $exception;
         }
-
-        $boletaHtml = $this->getBoletaHtml($packages);
-        $boletaFileName = $this->createBoletaHtmlFile($boletaHtml);
-        $this->storeBoletaInfo([$boletaFileName]);
-        return [
-            $boletaFileName
-        ];
     }
 
     /**
+     * @param Boleta $boleta
      * @param array $packagesGroup
      * @param int $packagesOffset
+     * @param bool $mainAlreadyRendered
      * @return string
      */
-    private function getBoletaHtml(array $packagesGroup, int $packagesOffset = 0): string
+    private function getBoletaHtml(Boleta $boleta, array $packagesGroup, int $packagesOffset = 0, bool $mainAlreadyRendered = true): string
     {
         return "
         <!doctype html>
@@ -142,19 +117,19 @@ class BoletaStorer
             <div class='invoice-box'>
                 <table cellpadding='0' cellspacing='0'>
                     <tr class='top'>
-                        <td colspan='2' style='padding-bottom: 0; padding-top: 0;'>" . $this->getBoletaHeaderHtml() . "</td>
+                        <td colspan='2' style='padding-bottom: 0; padding-top: 0;'>" . $this->getBoletaHeaderHtml($boleta) . "</td>
                     </tr>          
                     <tr class='information'>
                         <td colspan='2'>" .
-                            $this->getBoletaCustomerInfoSectionHtml() . "
+                            $this->getBoletaCustomerInfoSectionHtml($boleta) . "
                         </td>
                     </tr>          
                     <tr>
                         <td style='width: 50%; padding-left: 10px; padding-right: 12px'>" .
-                            $this->getBoletaPackagesHtml($packagesGroup, $packagesOffset). "
+                            $this->getBoletaPackagesHtml($boleta->getPaquetes(), $packagesGroup, $packagesOffset). "
                         </td>
                         <td style='width: 50%'>" .
-                            $this->getTotalsAndSignSectionHtml() . "
+                            $this->getTotalsAndSignSectionHtml($boleta, $mainAlreadyRendered) . "
                         </td>
                     </tr>    
                 </table>
@@ -248,11 +223,12 @@ class BoletaStorer
     }
 
     /**
+     * @param Boleta $boleta
      * @return string
      */
-    private function getBoletaHeaderHtml(): string
+    private function getBoletaHeaderHtml(Boleta $boleta): string
     {
-        $correlativeId = self::BOLETA_ID_PREFIX + $this->boleta->getId();
+        $correlativeId = self::BOLETA_ID_PREFIX + $boleta->getId();
         return "
         <table>
             <tr>
@@ -262,42 +238,43 @@ class BoletaStorer
                 <td style='padding-top: 0; padding-bottom: 0; font-weight: bold; vertical-align: top; text-align: center; width: 33%;'>BOLETA DE ENTREGA</td>
                 <td style='padding-top: 0; padding-bottom: 0; text-align: right; width: 33%;'>
                     Boleta #$correlativeId<br>" .
-                    $this->boleta->getFecha() . "
+                    $boleta->getFecha() . "
                 </td>
             </tr>
         </table>";
     }
 
     /**
+     * @param Boleta $boleta
      * @return string
      */
-    private function getBoletaCustomerInfoSectionHtml(): string
+    private function getBoletaCustomerInfoSectionHtml(Boleta $boleta): string
     {
         return "
         <table>
             <tr>
                 <td style='text-align: left; width: 70%;'>
-                    <strong>Cliente:</strong> " . $this->boleta->getCliente() . "<br>
-                    <strong>Nombre:</strong> " . $this->boleta->getReceptor() . "<br>
-                    <strong>Teléfono:</strong> " . $this->boleta->getTelefono() . "<br>
-                    <strong>Dirección:</strong> " . $this->boleta->getDireccion() . "
+                    <strong>Cliente:</strong> " . $boleta->getCliente() . "<br>
+                    <strong>Nombre:</strong> " . $boleta->getReceptor() . "<br>
+                    <strong>Teléfono:</strong> " . $boleta->getTelefono() . "<br>
+                    <strong>Dirección:</strong> " . $boleta->getDireccion() . "
                 </td>
                 <td style='text-align: right;'>
-                    <strong>Tipo:</strong> " . $this->boleta->getTipo() . "<br>
-                    <strong>Forma de pago:</strong> " . $this->boleta->getMetodoPago() . "
+                    <strong>Tipo:</strong> " . $boleta->getTipo() . "<br>
+                    <strong>Forma de pago:</strong> " . $boleta->getMetodoPago() . "
                 </td>
             </tr>
         </table>";
     }
 
     /**
+     * @param array $allPackages
      * @param array $packages
      * @param int $packagesOffset
      * @return string
      */
-    private function getBoletaPackagesHtml(array $packages, int $packagesOffset): string
+    private function getBoletaPackagesHtml(array $allPackages, array $packages, int $packagesOffset): string
     {
-        $allPackages = $this->boleta->getPaquetes();
         $totalPackages = sizeof($allPackages);
         $totalPounds = array_sum(array_column($allPackages, 'peso'));
         $rows = '';
@@ -333,7 +310,7 @@ class BoletaStorer
                     Total de paquetes: $totalPackages
                 </td>
                 <td colspan='2' style='text-align: right; padding-right: 22px;'>
-                    Total peso: {$totalPounds} lb.
+                    Total peso: $totalPounds lb.
                 </td>
             </tr>
         </table>
@@ -341,16 +318,18 @@ class BoletaStorer
     }
 
     /**
+     * @param Boleta $boleta
+     * @param bool $mainAlreadyRendered
      * @return string
      */
-    private function getTotalsAndSignSectionHtml(): string
+    private function getTotalsAndSignSectionHtml(Boleta $boleta, bool $mainAlreadyRendered): string
     {
-        if ($this->mainAlreadyRendered) return "";
+        if ($mainAlreadyRendered) return "";
         $comentario = '';
-        if (!empty($this->boleta->getComentario())){
+        if (!empty($boleta->getComentario())){
             $comentario = "
             <span style='display: inline-block; width: 100%; position: relative; top: 60px; padding-left: 5px; text-align: left'>
-                <strong>Comentario:</strong> " . $this->boleta->getComentario() . "
+                <strong>Comentario:</strong> " . $boleta->getComentario() . "
             </span>";
         }
         return "
@@ -358,12 +337,12 @@ class BoletaStorer
         <table>
             <tr>
                 <td colspan='2'><strong>Costo paquetes:</strong> " .
-                    $this->boleta->getCostoPaquetes() . "</td>
+                    $boleta->getCostoPaquetes() . "</td>
                 <td class='heading'>Total a cancelar</td>
             </tr>
             <tr>
                 <td colspan='2'></td>
-                <td class='cell'>" . $this->boleta->getCostoTotal() . "</td>
+                <td class='cell'>" . $boleta->getCostoTotal() . "</td>
             </tr>
         </table>
         $comentario

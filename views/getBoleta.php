@@ -26,9 +26,9 @@ if (empty($fecha) || empty($cliente) || empty($receptor) || empty($telefono) ||e
 header('Content-Type: application/json;charset=utf-8');
 
 try {
-    $storer = new BoletaStorer(new Boleta($fecha, $cliente, $receptor, $telefono, $direccion, $tipo,
+    $storer = new BoletaStorer();
+    $fileNames = $storer->store(new Boleta($fecha, $cliente, $receptor, $telefono, $direccion, $tipo,
         $metodoPago, $paquetes, $costoPaquetes, $costoTotal, $comentario));
-    $fileNames = $storer->store();
     echo json_encode([
         'success' => true,
         'data' => [

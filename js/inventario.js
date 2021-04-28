@@ -1747,7 +1747,7 @@ async function showEntregaMercaderiaDialog(data, titulo) {
             let fecha = moment().format('LL');
             let tipo = 'Oficina';
             if (plan.includes("/")) {
-              tipo = 'Ruta';
+              tipo = plan.includes('Guatex') ? 'Guatex' : 'Ruta';
               let fechaParts = plan.split(': ')[1].split('/');
               fecha = moment(`${fechaParts[2]}-${fechaParts[1]}-${fechaParts[0]}`).format( 'LL');
             }
