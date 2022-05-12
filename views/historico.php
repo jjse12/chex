@@ -1050,6 +1050,7 @@
             },
             "footerCallback": function ( row, data, start, end, display ) {
                 var api = this.api(), data;
+                if (!isAdmin) return;
                 if (this.fnSettings().fnRecordsDisplay() == 0){
                     api.column(1).footer().style.visibility = "hidden";
                     api.column(2).footer().style.visibility = "hidden";
@@ -1402,7 +1403,7 @@
                             },
                             eliminar: {
                                 label: "Eliminar Boleta",
-                                className: (porLiq ? "btn btn-md btn-extra-danger alinear-izquierda" : "gone"),
+                                className: (porLiq && isAdmin ? "btn btn-md btn-extra-danger alinear-izquierda" : "gone"),
                                 callback: function(){
                                     bootbox.confirm({
                                         closeButton: false,
