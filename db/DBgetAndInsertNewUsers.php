@@ -1,6 +1,8 @@
 <?php
     require_once("db_vars.php");
     require_once("server_db_vars.php");
+    require_once("../classes/CosteadorPaquetes.php");
+
 	$server = new mysqli(SERVER_DB_HOST, SERVER_DB_USER, SERVER_DB_PASS, SERVER_DB_NAME);
 	$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 	$query = "SELECT COUNT(*) FROM users";
@@ -41,7 +43,9 @@
 		        	}
 		        	$cont++;
 		        }
-		        $valor .= '25, 25), ';
+		        $valor .= CosteadorPaquetes::DEFAULT_TARIFA_EXPRESS .
+                    ',' . CosteadorPaquetes::DEFAULT_DESADUANAJE .
+                    ',' . CosteadorPaquetes::DEFAULT_SEGURO . '), ';
 		        $values .= $valor;
 		    }
 		    $values = substr($values, 0, strlen($values)-2);

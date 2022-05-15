@@ -1475,14 +1475,16 @@
                                     if (metodo == "Pendiente"){
 
                                         var nuevoSubtotal = Number(libras)*64*1.065;
-                                        var agregado = nuevoSubtotal - Number(rows[0]["tarifa"].replace(/[Q,\s]/g, ""))*Number(libras);
+                                        let tarifa = rows[0]["tarifa"] || 'Q 60';
+                                        var agregado = nuevoSubtotal - Number(tarifa.replace(/[Q,\s]/g, ""))*Number(libras);
                                         //alert("Agregado: " + agregado);
                                         var extra = nuevoSubtotal;
                                         nuevoSubtotal = "Q " + numberWithCommas(nuevoSubtotal);
                                         var nuevoTotal = "Q " + numberWithCommas(Number(total.replace(/[Q,\s]/g, "")) + agregado);
 
                                         var tarifAumnt = numberWithCommas(4), comision = 64*Number(libras)*0.065;
-                                        if (rows[0]["tarifa"] != "Q 60"){
+                                        if (tarifa != "Q 60"){
+                                            alert('Por favor contactar al desarrollador :)');
                                             var t = Number(rows[0]["tarifa"].replace(/[Q,\s]/g, ""));
                                             tarifAumnt = numberWithCommas(64 - t);
                                             extra -= t*Number(libras);

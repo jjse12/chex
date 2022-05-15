@@ -200,7 +200,9 @@ const renderEntregaMercaderaDialog = (table, plan, trackings, uid) => {
                         onchange="tipoDePagoOnChange(this, ['${trackings.join("','")}'], '${uid}')">
                         <option value="">Selecciona un tipo de pago</option>
                         <option value="Efectivo">Efectivo</option>
-                        <option value="Tarjeta">Tarjeta de Crédito</option>
+                        <option value="T.C. Visa">T. Crédito POS Visa</option>
+                        <option value="T.C. Credomatic">T. Crédito POS Credomatic</option>
+                        <option value="T.C. Hugo Link">T. Crédito Hugo Link</option>
                         <option value="Cheque">Cheque</option>
                         <option value="Transferencia">Transferencia</option>
                         <option value="Pendiente">Pendiente</option>

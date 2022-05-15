@@ -6,11 +6,13 @@ require_once("../db/server_db_vars.php");
 class CosteadorPaquetes {
 
     const DEFAULT_TARIFA_ESTANDAR = 60;
-    const DEFAULT_TARIFA_EXPRESS = 25;
-    const DEFAULT_DESADUANAJE = 25;
+    const DEFAULT_TARIFA_EXPRESS = 28;
+    const DEFAULT_DESADUANAJE = 28;
+    const DEFAULT_SEGURO = 0.02;
 
     private $paquetes;
     private $pagoTarjeta;
+    private $recargoTarjeta;
     private $isTarifacion;
     private $isNotificacion;
 
@@ -22,6 +24,20 @@ class CosteadorPaquetes {
 
     public function setPagoTarjeta(bool $pagoTarjeta) {
         $this->pagoTarjeta = $pagoTarjeta;
+    }
+
+    public function setRecargoTarjeta(string $tipoTarjeta) {
+        switch ($tipoTarjeta){
+            case 'T.C. Visa':
+                $this->recargoTarjeta = 0.05;
+                break;
+            case 'T.C. Credomatic':
+                $this->recargoTarjeta = 0.07;
+                break;
+            case 'T.C. Hugo Link':
+                $this->recargoTarjeta = 0.03;
+                break;
+        }
     }
 
     public function setIsTarifacion(bool $isTarifacion) {
@@ -95,15 +111,16 @@ class CosteadorPaquetes {
                 }
                 else {
                     $coeficientesCotPaquete = $this->getCoeficientesCotizacionPaquete($coeficientes, $paquete['fecha_ingreso']);
-                    $tarifaFetched = floatval($coeficientesCotPaquete['tarifa'] ?? self::DEFAULT_TARIFA_ESTANDAR);
+                    $tarifaFetched = floatval($coeficientesCotPaquete['tarifa'] ?? self::DEFAULT_TARIFA_EXPRESS);
                     $desaduanajeCoeficiente = floatval($coeficientesCotPaquete['desaduanaje'] ?? self::DEFAULT_DESADUANAJE);
                     $iva = floatval($coeficientesCotPaquete['iva']);
-                    $seguro = floatval($coeficientesCotPaquete['seguro']);
+                    $seguroFetched = floatval($coeficientesCotPaquete['seguro'] ?? self::DEFAULT_SEGURO);
                     $cambioDolar = floatval($coeficientesCotPaquete['cambio_dolar']);
 
                     $tarifa = !empty($paquete['tarifa_express_especial']) ? $paquete['tarifa_express_especial'] :
                         (!empty($paquete['tarifa_express']) ? $paquete['tarifa_express'] : $tarifaFetched);
                     $desaduanaje = !empty($paquete['desaduanaje']) ? $paquete['desaduanaje'] : $desaduanajeCoeficiente;
+                    $seguro = !empty($paquete['seguro']) ? $paquete['seguro'] : $seguroFetched;
 
                     $cotizacion = getCotizacionExpress($tarifa, $paquete['libras'], $paquete['precio_fob'],
                         $paquete['arancel'], $desaduanaje, $iva, $seguro, $cambioDolar);
@@ -124,7 +141,7 @@ class CosteadorPaquetes {
                     $totalPaquete += $cotizacion['total'];
 
                     if ($this->pagoTarjeta) {
-                        $cobroTarjeta = $totalPaquete * 0.07;
+                        $cobroTarjeta = $totalPaquete * $this->recargoTarjeta;
                         $paquete['cobro_tarjeta'] = $cobroTarjeta;
                         $totalCobroTarjeta += $cobroTarjeta;
                         $totalPaquete += $cobroTarjeta;

@@ -12,3 +12,5 @@ git
 .idea/codeStyles/codeStyleConfig.xml
 .idea/dictionaries/americavoice.xml
 .idea/php.xml
+.idea/sqldialects.xml
+.idea/inspectionProfiles/Project_Default.xml

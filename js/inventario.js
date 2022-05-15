@@ -1589,7 +1589,7 @@ function entregarSeleccionados(){
 }
 
 var loadingEntregaMercaderiaTable = false;
-const getEntregaMercaderiaTable = async (trackings, uid, pagoTarjeta) => {
+const getEntregaMercaderiaTable = async (trackings, uid, tipoTarjeta = null ) => {
   loadingEntregaMercaderiaTable = true;
   const result = await $.ajax({
     url: "views/getTableCostoMercaderia.php",
@@ -1597,13 +1597,17 @@ const getEntregaMercaderiaTable = async (trackings, uid, pagoTarjeta) => {
     data: {
       trackings,
       uid,
-      pagoTarjeta,
+      tipoTarjeta,
     },
     cache: false,
   });
   loadingEntregaMercaderiaTable = false;
   return result;
 };
+
+const TCVisa = "T.C. Visa";
+const TCCredomatic = "T.C. Credomatic";
+const TCHugoLink = "T.C. Hugo Link";
 
 async function showEntregaMercaderiaDialog(data, titulo) {
   tipoDePagoSeleccionado = '';
@@ -1632,7 +1636,7 @@ async function showEntregaMercaderiaDialog(data, titulo) {
 
   }
 
-  const table = await getEntregaMercaderiaTable(trackings, uid, false);
+  const table = await getEntregaMercaderiaTable(trackings, uid);
 
   let customerInfo = await getCustomerInfo(uid);
   if (customerInfo === false){
@@ -1754,6 +1758,17 @@ async function showEntregaMercaderiaDialog(data, titulo) {
             let costoTotal = document.getElementById("totalEntrega").value;
             const cliente = `${customerInfo.nombre} ${customerInfo.apellido} / CHEX ${customerInfo.cid}`;
 
+            let metodoPago = tipoPago;
+            if (tipoPago === TCVisa) {
+              metodoPago = "T.C. Visa "
+            }
+            if (tipoPago === TCCredomatic) {
+              metodoPago = "T.C. Credomatic "
+            }
+            if (tipoPago === TCHugoLink) {
+              metodoPago = "T.C. Hugo Link"
+            }
+
             const data = {
               fecha,
               cliente,
@@ -1761,7 +1776,7 @@ async function showEntregaMercaderiaDialog(data, titulo) {
               telefono: $('#boletaTelefono').val(),
               direccion: $('#boletaDireccion').val(),
               tipo,
-              metodoPago: tipoPago === 'Tarjeta' ? 'Tarjeta de crédito' : tipoPago,
+              metodoPago,
               paquetes: boletaEntregaPaquetes,
               costoPaquetes,
               costoTotal,
@@ -2023,11 +2038,11 @@ async function tipoDePagoOnChange(selectBox, trackings, uid) {
   const tipoDePagoAnterior = tipoDePagoSeleccionado;
   tipoDePagoSeleccionado = $select.val();
   let table = '';
-  if (tipoDePagoAnterior === 'Tarjeta') {
-    table = await getEntregaMercaderiaTable(trackings, uid, false);
+  if (tipoDePagoSeleccionado.startsWith('T.C.')) {
+    table = await getEntregaMercaderiaTable(trackings, uid, tipoDePagoSeleccionado);
   }
-  else if (tipoDePagoSeleccionado === 'Tarjeta') {
-    table = await getEntregaMercaderiaTable(trackings, uid, true);
+  else if (tipoDePagoAnterior.startsWith('T.C.')) {
+    table = await getEntregaMercaderiaTable(trackings, uid);
   }
 
   if (table !== ''){

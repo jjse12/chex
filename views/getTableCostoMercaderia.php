@@ -8,7 +8,9 @@ $uid = $_POST['uid'] ?? '';
 $wholeInventory = ($_POST['inventory'] ?? '') == 'true';
 $trackings = $_POST['trackings'] ?? [];
 $guideNumbers = $_POST['guideNumbers'] ?? [];
-$pagoTarjeta = ($_POST['pagoTarjeta'] ?? '') == 'true';
+$pagoTarjeta = !empty($_POST['tipoTarjeta']);
+$tipoTarjeta = $_POST['tipoTarjeta'];
+
 $isTarifacion = ($_POST['isTarifacion'] ?? 'false') == 'true';
 
 $selectStatement = "
@@ -57,6 +59,7 @@ if ($conn->multi_query($query)) {
 $costeador = new CosteadorPaquetes($infoPaquetes);
 
 $costeador->setPagoTarjeta($pagoTarjeta);
+$costeador->setRecargoTarjeta($tipoTarjeta);
 $costeador->setIsTarifacion($isTarifacion);
 
 $tableData = $costeador->costear();
