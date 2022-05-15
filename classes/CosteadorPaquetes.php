@@ -74,7 +74,6 @@ class CosteadorPaquetes {
     private function getCoeficientesCotizacionPaquete($coeficientes, $fechaPaquete){
         $coeficientesLength = sizeof($coeficientes);
         for ($i = 1; $i < $coeficientesLength; $i++){
-            $fechaPaquete = strtotime($fechaPaquete);
             $fechaDesactivacion = strtotime($coeficientes[$i]['fecha_desactivacion']);
             $diferencia = $fechaPaquete - $fechaDesactivacion;
             if ($diferencia > 0){
@@ -110,7 +109,8 @@ class CosteadorPaquetes {
                     $invalidPaquetes[] = $paquete['tracking'];
                 }
                 else {
-                    $coeficientesCotPaquete = $this->getCoeficientesCotizacionPaquete($coeficientes, $paquete['fecha_ingreso']);
+                    $fechaPaquete = strtotime($paquete['fecha_ingreso']);
+                    $coeficientesCotPaquete = $this->getCoeficientesCotizacionPaquete($coeficientes, $fechaPaquete);
                     $tarifaFetched = floatval($coeficientesCotPaquete['tarifa'] ?? self::DEFAULT_TARIFA_EXPRESS);
                     $desaduanajeCoeficiente = floatval($coeficientesCotPaquete['desaduanaje'] ?? self::DEFAULT_DESADUANAJE);
                     $iva = floatval($coeficientesCotPaquete['iva']);
@@ -121,6 +121,12 @@ class CosteadorPaquetes {
                         (!empty($paquete['tarifa_express']) ? $paquete['tarifa_express'] : $tarifaFetched);
                     $desaduanaje = !empty($paquete['desaduanaje']) ? $paquete['desaduanaje'] : $desaduanajeCoeficiente;
                     $seguro = !empty($paquete['seguro']) ? $paquete['seguro'] : $seguroFetched;
+
+                    $fechaSubidaTarifa = strtotime('2022-05-15');
+                    if ($fechaPaquete < $fechaSubidaTarifa){
+                        $tarifa -= 3;
+                        $desaduanaje -= 3;
+                    }
 
                     $cotizacion = getCotizacionExpress($tarifa, $paquete['libras'], $paquete['precio_fob'],
                         $paquete['arancel'], $desaduanaje, $iva, $seguro, $cambioDolar);

@@ -43,6 +43,7 @@
             },
         });
 
+        if (!isAdmin) return;
 
         $("#clientes tbody").on("click", "div.tarifa_express", function () {
             var index = table.row($(this).closest('tr')).index();
@@ -53,6 +54,8 @@
                 title: "Nueva tarifa express para " + cliente + " (en Quetzales)",
                 inputType: 'number',
                 callback: function (result) {
+                    if (result === null) return;
+
                     if (result){
                         $.ajax({
                             url: "db/DBsetCliente.php",
@@ -93,6 +96,8 @@
                 title: "Nuevo desaduanaje personalizado para " + cliente + " (en Quetzales)",
                 inputType: 'number',
                 callback: function (result) {
+                    if (result === null) return;
+
                     if (result){
                         $.ajax({
                             url: "db/DBsetCliente.php",
@@ -108,7 +113,7 @@
                                     table.draw(false);
                                 }
                                 else{
-                                    bootbox.alert("No se pudo efectuar el cambio de tarifa, verifique que haya ingresado un valor correcto.");
+                                    bootbox.alert("No se pudo efectuar el cambio de desaduanaje, verifique que haya ingresado un valor correcto.");
                                     return false;
                                 }
                             },
@@ -118,7 +123,53 @@
                         });
                     }
                     else{
-                        bootbox.alert("No se pudo efectuar el cambio de tarifa, verifique que haya ingresado un valor correcto.");
+                        bootbox.alert("No se pudo efectuar el cambio de desaduanaje, verifique que haya ingresado un valor correcto.");
+                    }
+                }
+            });
+        });
+
+        $("#clientes tbody").on("click", "div.seguro", function () {
+            var index = table.row($(this).closest('tr')).index();
+            var arr = table.rows(index).data().toArray();
+            var cliente = arr[0][1] + " " + arr[0][2];
+            var clienteID = arr[0][0];
+            bootbox.prompt({
+                title: "Nuevo seguro personalizado para " + cliente + " (en porcentaje)",
+                inputType: 'number',
+                callback: function (result) {
+                    if (result === null) return;
+                    let nuevoSeguro = Number(result);
+                    if (nuevoSeguro < 0 || nuevoSeguro > 100){
+                        bootbox.alert("ERROR: El seguro debe ser un porcentaje entre 0 - 100, puede contener decimales o ser un número entero.");
+                        return;
+                    }
+                    if (result){
+                        $.ajax({
+                            url: "db/DBsetCliente.php",
+                            type: "POST",
+                            data: {
+                                set: "seguro = " + nuevoSeguro*0.01,
+                                where: "cid = '" + clienteID + "'"
+                            },
+                            cache: false,
+                            success: function(res){
+                                if (res == 1){
+                                    table.cell(index, 5).data("<div style='cursor:pointer;' class='seguro'>" + nuevoSeguro + "%</div>",);
+                                    table.draw(false);
+                                }
+                                else{
+                                    bootbox.alert("No se pudo efectuar el cambio de seguro, verifique que haya ingresado un valor correcto.");
+                                    return false;
+                                }
+                            },
+                            error: function() {
+                                bootbox.alert("Ocurrió un error al conectarse a la base de datos.");
+                            }
+                        });
+                    }
+                    else{
+                        bootbox.alert("No se pudo efectuar el cambio de seguro, verifique que haya ingresado un valor correcto.");
                     }
                 }
             });
@@ -138,7 +189,8 @@
                 <th class="dt-head-center"><h5 style="color:black">Nombre</h5></th>
                 <th class="dt-head-center"><h5 style="color:black">Apellido</h5></th>
                 <th class="dt-head-center"><h5 style="color:black">Tarifa Express</h5></th>
-                <th class="dt-head-center"><h5 style="color:black">Desaduanaje Express</h5></th>
+                <th class="dt-head-center"><h5 style="color:black">Desaduanaje</h5></th>
+                <th class="dt-head-center"><h5 style="color:black">Seguro</h5></th>
                 <th class="dt-head-center"><h5 style="color:black">Email</h5></th>
                 <th class="dt-head-center"><h5 style="color:black">Celular</h5></th>
                 <th class="dt-head-center"><h5 style="color:black">Teléfono</h5></th>
@@ -153,6 +205,7 @@
         </thead>
         <tfoot>
             <tr>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -194,6 +247,7 @@
                     rows[i]["apellido"],
                     "<div style='cursor:pointer;' class='tarifa_express'>Q " + rows[i]["tarifa_express"] + "</div>",
                     "<div style='cursor:pointer;' class='desaduanaje_express'>Q " + rows[i]["desaduanaje_express"] + "</div>",
+                    "<div style='cursor:pointer;' class='seguro'>" + parseFloat(rows[i]["seguro"])*100 + "%</div>",
                     rows[i]["email"],
                     rows[i]["celular"],
                     rows[i]["telefono"],
