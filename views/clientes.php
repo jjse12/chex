@@ -67,7 +67,7 @@
                             cache: false,
                             success: function(res){
                                 if (res == 1){
-                                    table.cell(index, 3).data("<div style='cursor:pointer;' class='tarifa_express'>Q " + result + "</div>",);
+                                    table.cell(index, 3).data("<div style='cursor:pointer;' class='tarifa_express'>Q " + Number(result).toFixed(2) + "</div>",);
                                     table.draw(false);
                                 }
                                 else{
@@ -109,7 +109,7 @@
                             cache: false,
                             success: function(res){
                                 if (res == 1){
-                                    table.cell(index, 4).data("<div style='cursor:pointer;' class='desaduanaje_express'>Q " + result + "</div>",);
+                                    table.cell(index, 4).data("<div style='cursor:pointer;' class='desaduanaje_express'>Q " + Number(result).toFixed(2) + "</div>",);
                                     table.draw(false);
                                 }
                                 else{

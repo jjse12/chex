@@ -21,7 +21,7 @@ $query = "
 $result = $conn->query($query);
 if (isset($result) && $result !== false) {
     $data = mysqli_fetch_assoc($result);
-    $data['service'] = utf8_encode($data['service']);
+    $data['service'] = utf8_encode($data['service'] ?? "");
     echo json_encode([
         'success'   => true,
         'data'      => $data

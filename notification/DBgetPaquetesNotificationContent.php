@@ -26,7 +26,7 @@ if (isset($result) && $result !== false) {
     while($row = mysqli_fetch_assoc($result)) {
         $formattedRow = [];
         foreach ($row as $key => $value) {
-            $formattedRow[$key] = utf8_encode($value);
+            $formattedRow[$key] = utf8_encode($value ?? "");
         }
         $infoPaquetes[] = $formattedRow;
     }
