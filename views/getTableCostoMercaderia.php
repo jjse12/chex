@@ -59,7 +59,9 @@ if ($conn->multi_query($query)) {
 $costeador = new CosteadorPaquetes($infoPaquetes);
 
 $costeador->setPagoTarjeta($pagoTarjeta);
-$costeador->setRecargoTarjeta($tipoTarjeta);
+if ($pagoTarjeta){
+    $costeador->setRecargoTarjeta($tipoTarjeta);
+}
 $costeador->setIsTarifacion($isTarifacion);
 
 $tableData = $costeador->costear();

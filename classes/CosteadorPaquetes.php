@@ -26,7 +26,7 @@ class CosteadorPaquetes {
         $this->pagoTarjeta = $pagoTarjeta;
     }
 
-    public function setRecargoTarjeta(string $tipoTarjeta) {
+    public function setRecargoTarjeta(string $tipoTarjeta = null) {
         switch ($tipoTarjeta){
             case 'T.C. Visa':
                 $this->recargoTarjeta = 0.05;
@@ -37,6 +37,7 @@ class CosteadorPaquetes {
             case 'T.C. Hugo Link':
                 $this->recargoTarjeta = 0.03;
                 break;
+            default: $this->recargoTarjeta = 0.7;
         }
     }
 
