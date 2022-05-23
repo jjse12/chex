@@ -48,7 +48,7 @@ if ($conn->multi_query($query)) {
     while($row = $result->fetch_assoc()) {
         $formattedRow = [];
         foreach ($row as $key => $value) {
-            $formattedRow[$key] = utf8_encode($value);
+            $formattedRow[$key] = utf8_encode($value ?? "");
         }
         $infoPaquetes[] = $formattedRow;
     }
