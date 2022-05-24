@@ -9,14 +9,14 @@ $wholeInventory = ($_POST['inventory'] ?? '') == 'true';
 $trackings = $_POST['trackings'] ?? [];
 $guideNumbers = $_POST['guideNumbers'] ?? [];
 $pagoTarjeta = !empty($_POST['tipoTarjeta']);
-$tipoTarjeta = $_POST['tipoTarjeta'];
+$tipoTarjeta = $_POST['tipoTarjeta'] ?? "";
 
 $isTarifacion = ($_POST['isTarifacion'] ?? 'false') == 'true';
 
 $selectStatement = "
     SELECT (@row_number:=@row_number + 1) AS num, servicio, p.tracking, guide_number, libras, cobro_extra,
-        ca.fecha as fecha_ingreso, t.precio_fob, t.arancel, t.poliza, t.fecha_poliza, cl.desaduanaje_express as desaduanaje,
-        t.tarifa_especial as tarifa_express_especial, cl.tarifa as tarifa_estandar, cl.tarifa_express";
+        ca.fecha as fecha_ingreso, t.precio_fob, t.arancel, t.poliza, t.fecha_poliza, cl.desaduanaje_express as desaduanaje, 
+        cl.seguro, t.tarifa_especial as tarifa_express_especial, cl.tarifa as tarifa_estandar, cl.tarifa_express";
 if ($isTarifacion){
     $selectStatement .= ", cl.cid as clientChexCode, CONCAT(cl.nombre, ' ', cl.apellido) as clientName";
 }

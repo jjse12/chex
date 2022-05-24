@@ -117,7 +117,7 @@ class CosteadorPaquetes {
 
                     $tarifa = !empty($paquete['tarifa_express_especial']) ?
                         $paquete['tarifa_express_especial'] : $paquete['tarifa_express'];
-                    $desaduanaje = !empty($paquete['desaduanaje']);
+                    $desaduanaje = $paquete['desaduanaje'];
 
                     $fechaSubidaTarifa = strtotime('2022-05-15');
                     if ($fechaPaquete < $fechaSubidaTarifa){
