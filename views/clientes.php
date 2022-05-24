@@ -45,6 +45,17 @@
 
         if (!isAdmin) return;
 
+        const showUserUpdatedFeedbackDialog = (fieldDisplay) => {
+            Swal.fire({
+                title: 'Cliente Actualizado',
+                html: `${fieldDisplay} del cliente se actualizó correctamente.`,
+                type: 'success',
+                allowEscapeKey : true,
+                allowOutsideClick: true,
+                confirmButtonText: 'Ok',
+            });
+        }
+
         $("#clientes tbody").on("click", "div.tarifa_express", function () {
             var index = table.row($(this).closest('tr')).index();
             var arr = table.rows(index).data().toArray();
@@ -69,6 +80,7 @@
                                 if (res == 1){
                                     table.cell(index, 3).data("<div style='cursor:pointer;' class='tarifa_express'>Q " + Number(result).toFixed(2) + "</div>",);
                                     table.draw(false);
+                                    showUserUpdatedFeedbackDialog("La tarifa");
                                 }
                                 else{
                                     bootbox.alert("No se pudo efectuar el cambio de tarifa, verifique que haya ingresado un valor correcto.");
@@ -111,6 +123,7 @@
                                 if (res == 1){
                                     table.cell(index, 4).data("<div style='cursor:pointer;' class='desaduanaje_express'>Q " + Number(result).toFixed(2) + "</div>",);
                                     table.draw(false);
+                                    showUserUpdatedFeedbackDialog("El desaduanaje");
                                 }
                                 else{
                                     bootbox.alert("No se pudo efectuar el cambio de desaduanaje, verifique que haya ingresado un valor correcto.");
@@ -157,6 +170,7 @@
                                 if (res == 1){
                                     table.cell(index, 5).data("<div style='cursor:pointer;' class='seguro'>" + nuevoSeguro + "%</div>",);
                                     table.draw(false);
+                                    showUserUpdatedFeedbackDialog("El seguro");
                                 }
                                 else{
                                     bootbox.alert("No se pudo efectuar el cambio de seguro, verifique que haya ingresado un valor correcto.");

@@ -115,9 +115,27 @@ class CosteadorPaquetes {
                     $iva = (float) $coeficientesCotPaquete['iva'];
                     $cambioDolar = (float) $coeficientesCotPaquete['cambio_dolar'];
 
-                    $tarifa = !empty($paquete['tarifa_express_especial']) ?
-                        $paquete['tarifa_express_especial'] : $paquete['tarifa_express'];
-                    $desaduanaje = $paquete['desaduanaje'];
+                    $defaultTarifa = (float)($coeficientesCotPaquete['tarifa'] ?? self::DEFAULT_TARIFA_EXPRESS);
+                    $defaultDesaduanaje = (float)($coeficientesCotPaquete['desaduanaje'] ?? self::DEFAULT_DESADUANAJE);
+                    $defaultSeguro = (float)($coeficientesCotPaquete['seguro'] ?? self::DEFAULT_SEGURO);
+
+                    $tarifa = $defaultTarifa;
+                    if ($paquete['tarifa_express'] !== ''){
+                        $tarifa = (float) $paquete['tarifa_express'];
+                    }
+                    if ($paquete['tarifa_express_especial'] !== ''){
+                        $tarifa = (float) $paquete['tarifa_express_especial'];
+                    }
+
+                    $desaduanaje = $defaultDesaduanaje;
+                    if ($paquete['desaduanaje'] !== ''){
+                        $desaduanaje = (float) $paquete['desaduanaje'];
+                    }
+
+                    $seguro = $defaultSeguro;
+                    if ($paquete['seguro'] !== ''){
+                        $seguro = (float) $paquete['seguro'];
+                    }
 
                     $fechaSubidaTarifa = strtotime('2022-05-15');
                     if ($fechaPaquete < $fechaSubidaTarifa){
@@ -126,7 +144,7 @@ class CosteadorPaquetes {
                     }
 
                     $cotizacion = getCotizacionExpress($tarifa, $paquete['libras'], $paquete['precio_fob'],
-                        $paquete['arancel'], $desaduanaje, $iva, $paquete['seguro'], $cambioDolar);
+                        $paquete['arancel'], $desaduanaje, $iva, $seguro, $cambioDolar);
 
                     $paquete['costos_chex'] = $cotizacion['costos_chex'];
                     $paquete['chex_desglose'] = $cotizacion['chex_desglose'];

@@ -22,7 +22,7 @@ async function createTarifacionesPDF(guideNumbers) {
             if (xhr.status === 200){
                 let fileName = res.fileName;
                 Swal.fire({
-                    title: 'Tabla HTML Guardada',
+                    title: 'Tabla de Tarifaciones Guardada',
                     html: `Se ha creado un archivo con el contenido HTML de la tabla de las tarifaciones ingresadas.<br><br><br><b>${fileName}</b>`,
                     type: 'success',
                     allowEscapeKey : false,
