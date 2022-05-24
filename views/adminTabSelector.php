@@ -68,7 +68,7 @@
 
 <script src="js/nav-options.js?v=1.0.2"></script>
 <script src="js/logout.js?v=1.0.1"></script>
-<script src="js/tarifaciones.js?v=1.0.6"></script>
+<script src="js/tarifaciones.js?v=1.0.7"></script>
 <script src="js/templates/tarifaciones-templates.js?v=1.0.3"></script>
 <script type="text/javascript">
 
