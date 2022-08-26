@@ -13,7 +13,7 @@ if( empty($_GET['factura_id'])) {
 require_once('factura_db_vars.php');
 $conn = new mysqli(FACTURA_DB_HOST, FACTURA_DB_USER, FACTURA_DB_PASS, FACTURA_DB_NAME);
 $query = "
-    SELECT f.id, uid, uname, tracking, description, amount, item_count, guide_number, fob_price, pendiente, date_created, 
+    SELECT f.id, user_chex_code, user_full_name, tracking, description, amount, item_count, guide_number, fob_price, pendiente, date_created, 
         s.nombre AS service
     FROM factura f LEFT JOIN servicio s ON f.service_id = s.id
     WHERE f.id = {$_GET['factura_id']}";

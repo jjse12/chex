@@ -35,11 +35,14 @@ const renderFacturaServiceEditDialog = (value, inputId, field, services) => {
 };
 
 const facturaImage = fm => {
-    return `<hr><img alt="image-${fm.id}" data-id="${fm.id}" class="factura-image" src="data:${fm.image_type};base64, ${fm.image}" />`;
+    if (fm.image_type === 'application/pdf'){
+        return `<hr><div class="factura-image factura-image-pdf" data-id="${fm.id}"><object type="${fm.image_type}" data="data:${fm.image_type};base64, ${fm.image}" width='100%' height='500px'></object></div>`;
+    }
+    return `<hr><img alt="image-${fm.id}" class="factura-image" data-id="${fm.id}" src="data:${fm.image_type};base64, ${fm.image}" />`;
 };
 
 const renderFacturaDetails = (factura) => {
-    const { date_created, id, tracking, amount, description, service, uid,
+    const { date_created, id, tracking, amount, description, service, user_chex_code,
         item_count,fob_price, guide_number, pendiente, images
     } = factura;
     let status = pendiente === '1' ? 'fa fa-times fa-1x fa-lg' : 'fa fa-check fa-1x fa-lg';
@@ -57,7 +60,7 @@ const renderFacturaDetails = (factura) => {
             <div>
                 <b>Enviada: </b><i style="color: ${statusColor}" class='${status}'></i><br>
                 <b>Fecha de Creación: </b><span /*class="factura-editable" data-column="date_created" data-id="${id}" data-field="Fecha de Creación"*/>${date}</span><br>
-                <b>Id Cliente:</b> <span /*class="factura-editable" data-column="uid" data-id="${id}" data-field="Id Cliente"*/>${uid}</span><br>
+                <b>Id Cliente:</b> <span /*class="factura-editable" data-column="user_chex_code" data-id="${id}" data-field="Id Cliente"*/>${user_chex_code}</span><br>
                 <b>Tipo de Servicio:</b> <span class="${isAdmin ? 'factura-editable' : ''}" data-column="service_id" data-id="${id}" data-field="Tipo de Servicio">${service}</span><br>
                 <b>Tracking:</b> <span class="factura-editable" data-column="tracking" data-id="${id}" data-field="Tracking">${tracking}</span><br>
                 <b>Cantidad de Artículos:</b> <span class="factura-editable" data-column="item_count" data-id="${id}" data-field="Artículos">${item_count || 'N/A'}</span><br>
@@ -89,7 +92,7 @@ const renderFacturaDetails = (factura) => {
                     <div class="row">
                       <form id="addImagesForm">
                           <input type="hidden" name="factura_id" value="${id}"/>
-                          <input class="col-sm-offset-3 col-sm-6 mt-3" type="file" id="imgs" name="imgs[]" accept="image/jpeg,image/png" multiple>
+                          <input class="col-sm-offset-3 col-sm-6 mt-3" type="file" id="imgs" name="imgs[]" accept="image/jpeg,image/png,image/bmp,image/tiff,image/tif,application/pdf,image/pdf" multiple>
                       </form>
                     </div>
                 </div>

@@ -473,6 +473,10 @@ h4.header-title {
     text-align: center;
 }
 
+.color-primary-dark {
+    background-color: #494849;
+}
+
 .color-darkgreen {
     background-color: #367a01;
 }

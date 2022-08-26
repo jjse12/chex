@@ -7,8 +7,8 @@ const facturasIndexes = {
     fechaDelivery: 5,
     fechaMiamiDelivery: 6,
     tracking: 7,
-    uid: 8,
-    uname: 9,
+    user_chex_code: 8,
+    user_full_name: 9,
     costo: 10,
     verFactura: 11,
     verLogistica: 12,
@@ -186,7 +186,7 @@ function loadFacturaDetailsAndShowDialog(factura) {
             details.factura = factura;
             let content = facturaDetails(details);
             bootbox.dialog({
-                title: `<div class="text-center">&nbsp;CHEX ${factura.uid}&nbsp-&nbsp;${factura.uname}&nbsp-&nbsp;Tracking: ${factura.tracking}</div>`,
+                title: `<div class="text-center">&nbsp;CHEX ${factura.user_chex_code}&nbsp-&nbsp;${factura.user_full_name}&nbsp-&nbsp;Tracking: ${factura.tracking}</div>`,
                 size: 'large',
                 message: `${content}`
             });
@@ -264,8 +264,8 @@ function loadFacturas(){
                     `<h6 data-sorting-date="${date}">${date}<span style="display: none">${enviado}</span></h6>`,
                     `<h6 data-sorting-date="${dateReceived}">${dateReceived}</h6>`,
                     `<h6>${factura.tracking}</h6>`,
-                    `<h6>${factura.uid}</h6>`,
-                    `<h6>${factura.uname}</h6>`,
+                    `<h6>${factura.user_chex_code}</h6>`,
+                    `<h6>${factura.user_full_name}</h6>`,
                     `<h6>${Number(factura.amount).toUSDMoney()}</h6>`,
                     `<div style='cursor:pointer; text-align: center; color: darkslategray' class='factura-see-image' data-factura='${JSON.stringify(factura)}'><i class='fa fa-eye fa-2x fa-lg'></div>`,
                     `<div style='cursor:pointer; text-align: center; color: greenyellow' class='factura-see-details' data-factura='${JSON.stringify(factura)}'><i class="fas fa-address-card fa-2x fa-lg"></i></div>`
@@ -288,8 +288,8 @@ function generarPDF()
         facturas[factura.id] = {
             date_created: factura.date_created,
             tracking: factura.tracking,
-            clientName: factura.uname,
-            clientId: factura.uid,
+            clientName: factura.user_full_name,
+            clientId: factura.user_chex_code,
             description: factura.description,
             amount: factura.amount,
             itemCount: factura.item_count,
@@ -525,7 +525,7 @@ $(document).ready( function () {
                 }
             }
         },
-        "order": [[facturasIndexes.uid, 'asc']],
+        "order": [[facturasIndexes.user_chex_code, 'asc']],
         "columnDefs": [
             {
                 "targets": [facturasIndexes.selectionCheckBox, facturasIndexes.avisado, facturasIndexes.estado, facturasIndexes.tracking, facturasIndexes.verFactura, facturasIndexes.verLogistica],
@@ -707,7 +707,7 @@ $(document).ready( function () {
 
     let showFacturaDialog = factura => {
         bootbox.dialog({
-            title: `Detalles de factura de ${factura.uname}`,
+            title: `Detalles de factura de ${factura.user_full_name}`,
             message: `${renderFacturaDetails(factura)}`
         });
     };
@@ -903,7 +903,7 @@ $(document).ready( function () {
 
         if (!creator.length) {
             bootbox.prompt({
-                title: "Ingrese su nombre:",
+                title: "Ingresa tu nombre:",
                 size: "small",
                 inputType: 'text',
                 required: true,
@@ -1016,7 +1016,7 @@ $(document).ready( function () {
             factura.images = images;
             showFacturaDialog(factura);
         } catch (e) {
-            console.log(e);
+            console.error(e);
             bootbox.alert("Ocurrió un error al conectarse a la base de datos.");
         }
     });
@@ -1113,7 +1113,6 @@ $(document).ready( function () {
             });
 
         } catch (e) {
-            console.log(e);
             Swal.fire({
                 title: '¡Error de Solicitud!',
                 text: 'Ocurrió un error al intentar hacer la solicitud',
@@ -1138,7 +1137,7 @@ async function getFacturaFromDB(id) {
 
     return response.data;
     } catch (e) {
-        console.log(e);
+        console.error(e);
         return null;
     }
 }
@@ -1159,7 +1158,7 @@ async function getFacturaImagesFromDB(facturaId) {
         }
         return [];
     } catch (e) {
-        console.log(e);
+        console.error(e);
         return null;
     }
 }

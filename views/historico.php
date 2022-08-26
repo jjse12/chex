@@ -1529,7 +1529,6 @@
                                                             },
                                                             cache: false,
                                                             success: function(res){
-                                                                //console.log(table.rows($(this).closest('tr')).data().tracking);
                                                                 if (res == 1){
                                                                     bootbox.hideAll();
                                                                     var table = $('#tablaBoletas').DataTable();
@@ -1580,7 +1579,6 @@
                                         },
                                         cache: false,
                                         success: function(res){
-                                            //console.log(table.rows($(this).closest('tr')).data().tracking);
                                             if (res == 1){
                                                 bootbox.hideAll();
                                                 var table = $('#tablaBoletas').DataTable();
