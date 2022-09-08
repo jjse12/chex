@@ -708,6 +708,7 @@ $(document).ready( function () {
     let showFacturaDialog = factura => {
         bootbox.dialog({
             title: `Detalles de factura de ${factura.user_full_name}`,
+            size: 'large',
             message: `${renderFacturaDetails(factura)}`
         });
     };

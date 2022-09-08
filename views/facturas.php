@@ -1,4 +1,4 @@
-<script src="js/facturas.js?v=1.1.1"></script>
+<script src="js/facturas.js?v=1.1.2"></script>
 <script src="js/templates/facturas-templates.js?v=1.1.1"></script>
 <link href="css/facturaStyles.css?v=1.1.1" rel="stylesheet">
 
