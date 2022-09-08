@@ -657,7 +657,7 @@ const initClientFormInputsTriggers = (client) => {
     $('#clienteBtnDescartarCambios, #clienteBtnGuardarCambios').attr('disabled', !valuesUpdated);
   };
 
-  $('#clienteNombre, #clienteApellido, #clienteTelefono, #clienteTelefonoAlt, #clienteEmail, #clienteDepartamento' +
+  $('#clienteNombre, #clienteApellido, #clienteTelefono, #clienteTelefonoAlt, #clienteEmail, #clienteDireccion, #clienteDepartamento' +
     ', #clienteMunicipio, #clienteZona, #clienteNitNombre, #clienteNitNumero, #clienteReferencia, #clienteTipo' +
     ', #clienteComentario, #clienteCostoLibre, #clienteCostoDesaduanaje, #clienteCostoSeguro, #clienteNombreVendedor' +
     ', #clienteComisionPaqueteVendedor, #clienteComisionLibraVendedor').on('input', () => refreshButtonsStated(client));
@@ -672,10 +672,8 @@ const initClientFormInputsTriggers = (client) => {
     const newDepartamento = e.target.value;
 
     if (newDepartamento === '') {
+      $municipio.val("").change();
       $municipio.attr('disabled', true);
-      $municipio.val("");
-      $zona.attr('disabled', true);
-      $zona.val("");
       return;
     }
 
@@ -691,23 +689,23 @@ const initClientFormInputsTriggers = (client) => {
       return
     }
 
+    $zona.val("").change();
     $zona.attr('disabled', true);
-    $zona.val("");
   })
 
   $municipio.change(e => {
     const newMunicipio = e.target.value;
     if (newMunicipio === '') {
+      $zona.val("").change();
       $zona.attr('disabled', true);
-      $zona.val("");
       return;
     }
 
     $zona.attr('disabled', false);
     if (newMunicipio === client.municipio) {
-      $zona.val(client.zona);
+      $zona.val(client.zona).change();
     } else {
-      $zona.val("");
+      $zona.val("").change();
     }
   })
 
@@ -753,23 +751,32 @@ const discardChanges = (client) => {
 const saveChanges = async (client, clientTableIndex) => {
   const updatedFields = getUpdatedClientFields(client);
 
-  const vendedorDetails = {
+  let vendedorDetails = {
     vendedor_id: updatedFields.vendedor_id ?? client.vendedor_id,
     comision_libra: updatedFields.vendedor_comision_libra ?? client.vendedor_comision_libra,
     comision_paquete: updatedFields.vendedor_comision_paquete ?? client.vendedor_comision_paquete
   }
 
+
   const {vendedor_comision_libra, vendedor_comision_paquete, vendedor_id, ...allButVendedorDetails} = updatedFields;
+
+  const data = {
+    clientId: client.ccid,
+    clientDetails: allButVendedorDetails
+  };
+
+  if (vendedorDetails.vendedor_id !== client.vendedor_id ||
+      vendedorDetails.comision_libra !== client.vendedor_comision_libra ||
+      vendedorDetails.comision_paquete !== client.vendedor_comision_paquete) {
+
+    data.clientVendedorDetails = vendedorDetails;
+  }
 
   try {
     await $.ajax({
       url: 'db/DBsetCliente.php',
       type: 'post',
-      data: {
-        clientId: client.ccid,
-        clientDetails: allButVendedorDetails,
-        clientVendedorDetails: vendedorDetails,
-      },
+      data,
       cache: false,
     });
 
