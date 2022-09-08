@@ -10,8 +10,8 @@
 <script type="text/javascript" src="js/dataTables.colVis.js"></script>
 <script type="text/javascript" src="js/dataTables.responsive.js"></script>
 <script type="text/javascript" src="js/dataTables.select.min.js"></script>
-<script type="text/javascript" src="js/clientes.js?v=1.1.1"></script>
-<script src="js/templates/clientes-templates.js?v=1.1.1"></script>
+<script type="text/javascript" src="js/clientes.js?v=1.2.0"></script>
+<script src="js/templates/clientes-templates.js?v=1.2.0"></script>
 
 <br><br>
 <br><br>

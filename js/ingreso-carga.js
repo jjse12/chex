@@ -703,6 +703,21 @@ function agregarRegistro(){
                 }
               });
             }
+          },
+          error: (errorResponse) => {
+            Swal.fire({
+              title: 'Error',
+              html: `
+                <div>Ocurrió un error al intentar ingresar la carga.
+                  <br>
+                  El servidor retornó el siguiente mensaje de error:
+                  <br><br>
+                  <b>${errorResponse.responseText}</b>
+                </div>`,
+              type: 'error',
+              focusConfirm: true,
+              confirmButtonText: 'Cerrar',
+            });
           }
         });
       }

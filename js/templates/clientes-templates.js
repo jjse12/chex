@@ -29,22 +29,26 @@ const renderClientDataModal = (client, resourcesOptionsLists, clientTableIndex) 
             </div>
             <div class="col-sm-6">
               <div class="form-group col-sm-12">
+                <label class="text-color-gray" for="clienteDireccionEntrega">Dirección de Entrega</label>
+                <input id="clienteDireccionEntrega" name="direccion_entrega" type="text" class="form-control" placeholder="Dirección de Entrega" value="${client.direccion_entrega ?? ''}">
+              </div>
+              <div class="form-group col-sm-12">
                 <label class="text-color-gray" for="clienteDireccion">Dirección</label>
                 <input id="clienteDireccion" name="direccion" type="text" class="form-control" placeholder="Dirección" value="${client.direccion}">
               </div>
-              <div class="form-group col-sm-6">
+              <div class="form-group col-sm-5">
                 <label class="text-color-gray" for="clienteDepartamento">Departamento</label>
                 <select class="form-control" id="clienteDepartamento" name="departamento">
                   ${resourcesOptionsLists.departamento}
                 </select>
               </div>
-              <div class="form-group col-sm-6">
+              <div class="form-group col-sm-4">
                 <label class="text-color-gray" for="clienteMunicipio">Municipio</label>
                 <select class="form-control" id="clienteMunicipio" name="municipio" ${client.departamento === '' ? 'disabled' : ''}>
                   ${resourcesOptionsLists.municipio}
                 </select>
               </div>
-              <div class="form-group col-sm-6">
+              <div class="form-group col-sm-3">
                 <label class="text-color-gray" for="clienteZona">Zona</label>
                 <select class="form-control" id="clienteZona" name="zona" ${client.departamento === '' || client.municipio === '' ? 'disabled' : ''}>
                   ${resourcesOptionsLists.zona}

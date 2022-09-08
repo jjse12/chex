@@ -244,8 +244,8 @@ const renderEntregaMercaderaDialog = (table, plan, trackings, uid) => {
         </div>`;
 };
 
-const renderGenerateBoletaDialog = ({nombre, apellido, celular, telefono, direccion}, isOficinaPlan, comentario) => {
-    let dir = isOficinaPlan ? 'Oficina Chispudito Express' : direccion;
+const renderGenerateBoletaDialog = ({nombre, apellido, celular, telefono_secundario, direccion_entrega, direccion,}, isOficinaPlan, comentario) => {
+    let dir = isOficinaPlan ? 'Oficina Chispudito Express' : (direccion_entrega ?? direccion);
     return `
         <div class="mt-3 mb-3 container-flex">
             <div class="row text-center">
@@ -255,7 +255,7 @@ const renderGenerateBoletaDialog = ({nombre, apellido, celular, telefono, direcc
                 </div>
                 <div class="form-group mt-2 col-sm-5">
                     <label style="color: #337ab7; text-align:center; width:100%">Teléfono</label>
-                    <input id="boletaTelefono" type="text" value="${celular}${celular !== '' && telefono !== '' ? ' / ' : ''}${telefono}" class="text-center form-control"/>
+                    <input id="boletaTelefono" type="text" value="${celular}${celular !== '' && telefono_secundario !== '' ? ' / ' : ''}${telefono_secundario}" class="text-center form-control"/>
                 </div>
                 <div class="form-group mt-2 col-sm-offset-1 col-sm-10">
                     <label style="color: #337ab7; text-align:center; width:100%">Dirección</label>

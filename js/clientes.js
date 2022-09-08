@@ -397,8 +397,8 @@ const tiposUsuario = ['Constante', 'Emprendedor', 'Empresa', 'Eventual', 'Vip']
 
 const referencias = ['Recomendado', 'Publicidad', 'Redes Sociales', 'Google', 'Otros'];
 
-const mapResourceListToOptions = (resourceList, client, resourceName) => {
-  return [`<option value=''>Seleccionar ${toPascalCase(resourceName)}</option>`,
+const mapResourceListToOptions = (resourceList, client, resourceName, defaultWithSelectText = true) => {
+  return [`<option value=''>${defaultWithSelectText ? 'Seleccionar ' : ''}${toPascalCase(resourceName)}</option>`,
     ...resourceList.map(r => {
       return `<option value="${r}"${r.toString() === client[resourceName] ? ' selected' : ''}>${r}</option>`
     })]
@@ -447,11 +447,11 @@ $(document).ready(function () {
       const index = table.row($(this).closest('tr')).index();
 
       const resourcesOptionsLists = {
-        departamento: mapResourceListToOptions(departamentos, client, 'departamento'),
+        departamento: mapResourceListToOptions(departamentos, client, 'departamento', false),
         municipio: client.departamento !== '' ?
-          mapResourceListToOptions(DepartamentosYMunicipios[client.departamento] ?? [], client, 'municipio') :
-          [`<option value=''>Seleccionar Municipio</option>`],
-        zona: mapResourceListToOptions(zonas, client, 'zona'),
+          mapResourceListToOptions(DepartamentosYMunicipios[client.departamento] ?? [], client, 'municipio', false) :
+          [`<option value=''>Municipio</option>`],
+        zona: mapResourceListToOptions(zonas, client, 'zona', false),
         referencia: mapResourceListToOptions(referencias, client, 'referencia'),
         tipo: mapResourceListToOptions(tiposUsuario, client, 'tipo'),
         vendedor: [`<option value=''>Seleccionar Vendedor</option>`,
@@ -478,155 +478,6 @@ $(document).ready(function () {
       });
     }
   });
-
-  /* Uncomment this to allow quick update of tarifa_express, desaduanaje and seguro fields (they must be part of the table)
-
-  if (!isAdmin) return;
-
-  const showUserUpdatedFeedbackDialog = (fieldDisplay) => {
-    Swal.fire({
-      title: 'Cliente Actualizado',
-      html: `${fieldDisplay} del cliente se actualizó correctamente.`,
-      type: 'success',
-      allowEscapeKey: true,
-      allowOutsideClick: true,
-      confirmButtonText: 'Ok',
-    });
-  }
-
-  $("#clientes tbody").on("click", "div.tarifa_express", function () {
-      var index = table.row($(this).closest('tr')).index();
-      var arr = table.rows(index).data().toArray();
-      var cliente = arr[0][1] + " " + arr[0][2];
-      var clienteID = arr[0][0];
-      bootbox.prompt({
-          title: "Nueva tarifa express para " + cliente + " (en Quetzales)",
-          inputType: 'number',
-          callback: function (result) {
-              if (result === null) return;
-
-              if (result){
-                  $.ajax({
-                      url: "db/DBsetCliente.php",
-                      type: "POST",
-                      data: {
-                          set: "tarifa_express = " + result,
-                          where: "cid = '" + clienteID + "'"
-                      },
-                      cache: false,
-                      success: function(res){
-                          if (res == 1){
-                              table.cell(index, 3).data("<div style='cursor:pointer;' class='tarifa_express'>Q " + Number(result).toFixed(2) + "</div>",);
-                              table.draw(false);
-                              showUserUpdatedFeedbackDialog("La tarifa");
-                          }
-                          else{
-                              bootbox.alert("No se pudo efectuar el cambio de tarifa, verifique que haya ingresado un valor correcto.");
-                              return false;
-                          }
-                      },
-                      error: function() {
-                          bootbox.alert("Ocurrió un error al conectarse a la base de datos.");
-                      }
-                  });
-              }
-              else{
-                  bootbox.alert("No se pudo efectuar el cambio de tarifa, verifique que haya ingresado un valor correcto.");
-              }
-          }
-      });
-  });
-
-  $("#clientes tbody").on("click", "div.desaduanaje_express", function () {
-      var index = table.row($(this).closest('tr')).index();
-      var arr = table.rows(index).data().toArray();
-      var cliente = arr[0][1] + " " + arr[0][2];
-      var clienteID = arr[0][0];
-      bootbox.prompt({
-          title: "Nuevo desaduanaje personalizado para " + cliente + " (en Quetzales)",
-          inputType: 'number',
-          callback: function (result) {
-              if (result === null) return;
-
-              if (result){
-                  $.ajax({
-                      url: "db/DBsetCliente.php",
-                      type: "POST",
-                      data: {
-                          set: "desaduanaje_express = " + result,
-                          where: "cid = '" + clienteID + "'"
-                      },
-                      cache: false,
-                      success: function(res){
-                          if (res == 1){
-                              table.cell(index, 4).data("<div style='cursor:pointer;' class='desaduanaje_express'>Q " + Number(result).toFixed(2) + "</div>",);
-                              table.draw(false);
-                              showUserUpdatedFeedbackDialog("El desaduanaje");
-                          }
-                          else{
-                              bootbox.alert("No se pudo efectuar el cambio de desaduanaje, verifique que haya ingresado un valor correcto.");
-                              return false;
-                          }
-                      },
-                      error: function() {
-                          bootbox.alert("Ocurrió un error al conectarse a la base de datos.");
-                      }
-                  });
-              }
-              else{
-                  bootbox.alert("No se pudo efectuar el cambio de desaduanaje, verifique que haya ingresado un valor correcto.");
-              }
-          }
-      });
-  });
-
-  $("#clientes tbody").on("click", "div.seguro", function () {
-      var index = table.row($(this).closest('tr')).index();
-      var arr = table.rows(index).data().toArray();
-      var cliente = arr[0][1] + " " + arr[0][2];
-      var clienteID = arr[0][0];
-      bootbox.prompt({
-          title: "Nuevo seguro personalizado para " + cliente + " (en porcentaje)",
-          inputType: 'number',
-          callback: function (result) {
-              if (result === null) return;
-              let nuevoSeguro = Number(result);
-              if (nuevoSeguro < 0 || nuevoSeguro > 100){
-                  bootbox.alert("ERROR: El seguro debe ser un porcentaje entre 0 - 100, puede contener decimales o ser un número entero.");
-                  return;
-              }
-              if (result){
-                  $.ajax({
-                      url: "db/DBsetCliente.php",
-                      type: "POST",
-                      data: {
-                          set: "seguro = " + nuevoSeguro*0.01,
-                          where: "cid = '" + clienteID + "'"
-                      },
-                      cache: false,
-                      success: function(res){
-                          if (res == 1){
-                              table.cell(index, 5).data("<div style='cursor:pointer;' class='seguro'>" + nuevoSeguro + "%</div>",);
-                              table.draw(false);
-                              showUserUpdatedFeedbackDialog("El seguro");
-                          }
-                          else{
-                              bootbox.alert("No se pudo efectuar el cambio de seguro, verifique que haya ingresado un valor correcto.");
-                              return false;
-                          }
-                      },
-                      error: function() {
-                          bootbox.alert("Ocurrió un error al conectarse a la base de datos.");
-                      }
-                  });
-              }
-              else{
-                  bootbox.alert("No se pudo efectuar el cambio de seguro, verifique que haya ingresado un valor correcto.");
-              }
-          }
-      });
-  });
-*/
 });
 
 const getUpdatedClientFields = (client) => {
@@ -657,7 +508,7 @@ const initClientFormInputsTriggers = (client) => {
     $('#clienteBtnDescartarCambios, #clienteBtnGuardarCambios').attr('disabled', !valuesUpdated);
   };
 
-  $('#clienteNombre, #clienteApellido, #clienteTelefono, #clienteTelefonoAlt, #clienteEmail, #clienteDireccion, #clienteDepartamento' +
+  $('#clienteNombre, #clienteApellido, #clienteTelefono, #clienteTelefonoAlt, #clienteEmail, #clienteDireccionEntrega, #clienteDireccion, #clienteDepartamento' +
     ', #clienteMunicipio, #clienteZona, #clienteNitNombre, #clienteNitNumero, #clienteReferencia, #clienteTipo' +
     ', #clienteComentario, #clienteCostoLibre, #clienteCostoDesaduanaje, #clienteCostoSeguro, #clienteNombreVendedor' +
     ', #clienteComisionPaqueteVendedor, #clienteComisionLibraVendedor').on('input', () => refreshButtonsStated(client));
@@ -682,7 +533,7 @@ const initClientFormInputsTriggers = (client) => {
       .find('option')
       .remove()
       .end()
-      .append(mapResourceListToOptions(DepartamentosYMunicipios[newDepartamento], client, 'municipio'));
+      .append(mapResourceListToOptions(DepartamentosYMunicipios[newDepartamento], client, 'municipio', false));
 
     if (newDepartamento === client.departamento) {
       $municipio.val(client.municipio).change();
@@ -735,7 +586,7 @@ const discardChanges = (client) => {
     .find('option')
     .remove()
     .end()
-    .append(mapResourceListToOptions(DepartamentosYMunicipios[client.departamento] ?? [], client, 'municipio'));
+    .append(mapResourceListToOptions(DepartamentosYMunicipios[client.departamento] ?? [], client, 'municipio', false));
 
   if (client.municipio === '')
     $zona.attr('disabled', true);
