@@ -26,7 +26,7 @@
         <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
         <!-- jQuery -->
 
-        <link href="css/custom.css?v=1.0.5" rel="stylesheet">
+        <link href="css/custom.css?v=1.1.0" rel="stylesheet">
         <link href="css/tableStyles.css?v=1.0.1" rel="stylesheet">
         <link href="css/general.css?v=1.0.1" rel="stylesheet">
         <link href="css/loader.css?v=1.0.1" rel="stylesheet">
