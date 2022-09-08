@@ -25,7 +25,7 @@ const renderFacturaServiceEditDialog = (value, inputId, field, services) => {
                 <p style='color: black'>Ingresa el nuevo valor para el campo <b>${field}</b>.</p>
                 <div class='control-group form-group col-sm-offset-3 col-md-offset-3 col-lg-offset-3 col-sm-6 col-md-6 col-lg-6 col-xs-12'>
                     <div class='controls'>
-                        <select id='${inputId}' style='text-align:center; width: 100%;'>
+                        <select class="form-control" id='${inputId}' style='text-align:center; width: 100%;'>
                             ${options}
                         </select>
                     </div>

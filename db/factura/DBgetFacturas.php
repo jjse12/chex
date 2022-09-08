@@ -15,7 +15,6 @@ $result = $conn->query($query);
 if (isset($result) && $result !== false) {
     $data = array();
     while($row = mysqli_fetch_assoc($result)){
-        $row['service'] = utf8_encode($row['service'] ?? "");
         $data[] = $row;
     }
     echo json_encode(['data' => $data]);
