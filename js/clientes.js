@@ -456,7 +456,7 @@ $(document).ready(function () {
         tipo: mapResourceListToOptions(tiposUsuario, client, 'tipo'),
         vendedor: [`<option value=''>Seleccionar Vendedor</option>`,
           ...vendedores.map(v => {
-            return `<option value="${v.id}"${v.id.toString() === client['vendedor_id'].toString() ? ' selected' : ''}>${v.nombre}</option>`
+            return `<option value="${v.id}"${v.id === (client['vendedor_id'] ?? 0) ? ' selected' : ''}>${v.nombre}</option>`
           })]
       }
 
@@ -642,7 +642,7 @@ const getUpdatedClientFields = (client) => {
       continue;
     }
 
-    if (client[formValue.name] !== formValue.value) {
+    if ((client[formValue.name] ?? '') !== formValue.value) {
       updatedValues[formValue.name] = formValue.value;
     }
   }

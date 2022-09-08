@@ -20,7 +20,7 @@ const renderClientDataModal = (client, resourcesOptionsLists, clientTableIndex) 
               </div>
               <div class="form-group col-sm-6">
                 <label class="text-color-gray" for="clienteTelefonoAlt">Teléfono Alternativo</label>
-                <input id="clienteTelefonoAlt" name="telefono_secundario" type="text" class="form-control" placeholder="Teléfono Alternativo" value="${client.telefono_secundario}">
+                <input id="clienteTelefonoAlt" name="telefono_secundario" type="text" class="form-control" placeholder="Teléfono Alternativo" value="${client.telefono_secundario ?? ''}">
               </div>
               <div class="form-group col-sm-12">
                 <label class="text-color-gray" for="clienteEmail">Email</label>
@@ -55,11 +55,11 @@ const renderClientDataModal = (client, resourcesOptionsLists, clientTableIndex) 
               <span class="col-sm-12 h6 text-left mt-1">Datos de Facturación</span>
               <div class="form-group col-sm-6">
                   <label class="text-color-gray" for="clienteNitNombre">Nombre</label>
-                  <input id="clienteNitNombre" name="nit_nombre" type="text" class="form-control" placeholder="Nombre de Facturación" value="${client.nit_nombre}">
+                  <input id="clienteNitNombre" name="nit_nombre" type="text" class="form-control" placeholder="Nombre de Facturación" value="${client.nit_nombre ?? ''}">
                 </div>
                 <div class="form-group col-sm-6">
                   <label class="text-color-gray" for="clienteNitNumero">Nit</label>
-                  <input id="clienteNitNumero" name="nit_numero" type="text" class="form-control" placeholder="Nit de Facturación" value="${client.nit_numero}" maxlength="10">
+                  <input id="clienteNitNumero" name="nit_numero" type="text" class="form-control" placeholder="Nit de Facturación" value="${client.nit_numero ?? ''}" maxlength="10">
                 </div>
             </div>
           </div>
@@ -82,7 +82,7 @@ const renderClientDataModal = (client, resourcesOptionsLists, clientTableIndex) 
             <div class="col-sm-6">
               <div class="col-sm-12">
                 <label class="text-color-gray" for="clienteComentario">Notas Adicionales</label>
-                <textarea id="clienteComentario" name="comentario" class="form-control">${client.comentario}</textarea>
+                <textarea id="clienteComentario" name="comentario" class="form-control">${client.comentario ?? ''}</textarea>
               </div>
             </div>
           </div>
@@ -126,14 +126,14 @@ const renderClientDataModal = (client, resourcesOptionsLists, clientTableIndex) 
               <div class="form-group col-sm-6">
                 <label class="text-color-gray" for="clienteComisionLibraVendedor">Comisión Libra</label>
                 <div class="input-group">
-                  <input id="clienteComisionLibraVendedor" name="vendedor_comision_libra" type="text" class="form-control" value="${client.vendedor_comision_libra}">
+                  <input id="clienteComisionLibraVendedor" name="vendedor_comision_libra" type="text" class="form-control" value="${client.vendedor_comision_libra ?? ''}">
                   <span class="input-group-addon">%</span>
                 </div>
               </div>
               <div class="form-group col-sm-6">
                 <label class="text-color-gray" for="clienteComisionPaqueteVendedor">Comisión Paquete</label>
                 <div class="input-group">
-                  <input id="clienteComisionPaqueteVendedor" name="vendedor_comision_paquete" type="text" class="form-control" value="${client.vendedor_comision_paquete}">
+                  <input id="clienteComisionPaqueteVendedor" name="vendedor_comision_paquete" type="text" class="form-control" value="${client.vendedor_comision_paquete ?? ''}">
                   <span class="input-group-addon">%</span>
                 </div>
               </div>
