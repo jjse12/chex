@@ -11,6 +11,8 @@ create table vendedor
 create unique index vendedor_nombre_uindex
     on vendedor (nombre);
 
+insert into vendedor (nombre) values  ('Denise Durand'), ('Jean Paul Durand'), ('Ludin Sánchez'), ('Wendy Sánchez');
+
 create table comisiones_vendedor_cliente
 (
     id               int auto_increment,
@@ -94,5 +96,5 @@ create table sincronizacion_clientes
         primary key (fecha)
 );
 
-insert into sincronizacion_clientes(cantidad_clientes_ingresados, cantidad_clientes_fallidos) value (0);
+insert into sincronizacion_clientes(cantidad_clientes_ingresados) value (0);
 
