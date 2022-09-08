@@ -32,15 +32,15 @@
     cursor: pointer;
     text-align: center;
 }
-.sin-plan:hover{ 
+.sin-plan:hover{
     -webkit-transform: scale(1) !important;
 }
 
-.plan:hover{ 
+.plan:hover{
     -webkit-transform: scale(1.25);
 }
-.icon-update:hover{ 
-    -webkit-transform: scale(2); 
+.icon-update:hover{
+    -webkit-transform: scale(2);
 }
 
 .popup, .popup-notif{
@@ -94,7 +94,7 @@
 
 /* Add animation (fade in the popup) */
 @-webkit-keyframes fadeIn {
-    from {opacity: 0;} 
+    from {opacity: 0;}
     to {opacity: 1;}
 }
 
@@ -160,7 +160,7 @@
                 </li>
             </ul>
         </div>
-        
+
     </div>
     <br>
     <hr>
@@ -203,7 +203,7 @@
         }
     }
 
-    function switchContent(num, opcion = 0){
+    async function switchContent(num, opcion = 0){
         var ingreso = document.getElementById("btnIngresar");
         var invent = document.getElementById("btnInventario");
         var hist = document.getElementById("btnHistorico");
@@ -219,7 +219,7 @@
         var divIngreso = document.getElementById("divRegistrarCarga");
         var divInventario =document.getElementById("divInventario");
         var divHistorico = document.getElementById("divHistoricoRegistros");
-        
+
         divIngreso.style.display = "none";
         divInventario.style.display = "none";
         divHistorico.style.display = "none";
@@ -263,7 +263,7 @@
             ingreso.style.background = "#5cb85c";
             ingreso.style.color = "white";
             document.getElementById("servicio").focus();
-            initTablaIngresoCarga();
+            await initTablaIngresoCarga();
         }
         else {
             divHistorico.style.display = "block";

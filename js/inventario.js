@@ -1983,7 +1983,7 @@ async function getCustomerInfo(cid) {
       return false;
     }
     const data = rows[0];
-    if (data.telefono === '0') data.telefono = '';
+    if (data.telefono_secundario === null) data.telefono_secundario = '';
     return data;
   } catch (e) {
     bootbox.alert("Ocurrió un problema al intentar conectarse al servidor y no se pudo obtener la información del cliente. Intentalo nuevamente luego.");
