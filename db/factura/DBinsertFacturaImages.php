@@ -1,6 +1,18 @@
 <?php
 
 header('Content-Type: application/json;charset=utf-8');
+require_once('factura_db_vars.php');
+
+$allowedImageTypes = [
+    'image/png',
+    'image/jpg',
+    'image/jpeg',
+    'image/bmp',
+    'image/tiff',
+    'image/tif',
+    'application/pdf',
+    'image/pdf'
+];
 
 if( empty($_POST['factura_id'])          ||
     empty($_FILES['imgs'])
@@ -12,7 +24,7 @@ if( empty($_POST['factura_id'])          ||
     exit;
 }
 
-$conn = new mysqli("198.71.225.53", "chispuditoex", "Chispudito2015", "usercreator");
+$conn = new mysqli(FACTURA_DB_HOST, FACTURA_DB_USER, FACTURA_DB_PASS, FACTURA_DB_NAME);
 
 if ($conn->connect_error) {
     echo json_encode([
@@ -32,13 +44,13 @@ for ($i = 0; $i < $imagesCount; $i++){
     $size = $imgs['size'][$i];
     $type = $imgs['type'][$i];
 
-    if ($type !== 'image/png' && $type !== 'image/jpg' && $type !== 'image/jpeg') {
+    if (!in_array($type, $allowedImageTypes, true)) {
         $conn->rollback();
         $conn->autocommit(true);
         $conn->close();
         echo json_encode([
             'success' => false,
-            'message' => 'El formato del archivo adjunto no es válido. Por favor ingrese archivos en formato png o jpg'
+            'message' => 'El formato del archivo adjunto no es válido. Los formatos permitidos son estos: .png, .jpg, .pdf, .bmp y .tif'
         ]);
         exit;
     }

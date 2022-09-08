@@ -187,6 +187,10 @@
                 var res = Number(myfield.value).toFixed(2);
                 myfield.value=res;
             }
+
+            function toPascalCase(str) {
+              return (str.match(/[[a-zA-ZàáèéìíòóùúüñÀÁÈÉÌÍÒÓÙÚÜÑ0-9]+/g) || []).map(w => `${w.charAt(0).toUpperCase()}${w.slice(1)}`).join(' ');
+            }
         </script>
     </body>
 </html>

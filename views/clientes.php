@@ -10,223 +10,33 @@
 <script type="text/javascript" src="js/dataTables.colVis.js"></script>
 <script type="text/javascript" src="js/dataTables.responsive.js"></script>
 <script type="text/javascript" src="js/dataTables.select.min.js"></script>
-
-<script>
-    $(document).ready( function () {
-
-        var table = $('#clientes').DataTable({
-            "bSort" : false,
-            "retrieve": true,
-            "dom": 'CT<"clear">lfrtip',
-            "tableTools": {
-                "sSwfPath": "./swf/copy_csv_xls_pdf.swf"
-            },
-            "responsive": true,
-            "scrollY": "500px",
-            "scrollCollapse": true,
-            "paging": true,
-            "language": {
-                "lengthMenu": "Mostrando _MENU_ clientes por página",
-                "search": "Buscar:",
-                "zeroRecords": "No hay clientes que coincidan con la búsqueda",
-                "info": "Mostrando clientes del _START_ al _END_ de _TOTAL_ clientes totales.",
-                "infoEmpty": "No se encontraron clientes.",
-                "infoFiltered": "(Filtrando sobre _MAX_ clientes)",
-                "paginate": {
-                    "first":      "Primera",
-                    "last":       "Última",
-                    "next":       "Siguiente",
-                    "previous":   "Anterior"
-                },
-                "loadingRecords": "Cargando clientes...",
-                "processing":     "Procesando...",
-            },
-        });
-
-        if (!isAdmin) return;
-
-        const showUserUpdatedFeedbackDialog = (fieldDisplay) => {
-            Swal.fire({
-                title: 'Cliente Actualizado',
-                html: `${fieldDisplay} del cliente se actualizó correctamente.`,
-                type: 'success',
-                allowEscapeKey : true,
-                allowOutsideClick: true,
-                confirmButtonText: 'Ok',
-            });
-        }
-
-        $("#clientes tbody").on("click", "div.tarifa_express", function () {
-            var index = table.row($(this).closest('tr')).index();
-            var arr = table.rows(index).data().toArray();
-            var cliente = arr[0][1] + " " + arr[0][2];
-            var clienteID = arr[0][0];
-            bootbox.prompt({
-                title: "Nueva tarifa express para " + cliente + " (en Quetzales)",
-                inputType: 'number',
-                callback: function (result) {
-                    if (result === null) return;
-
-                    if (result){
-                        $.ajax({
-                            url: "db/DBsetCliente.php",
-                            type: "POST",
-                            data: {
-                                set: "tarifa_express = " + result,
-                                where: "cid = '" + clienteID + "'"
-                            },
-                            cache: false,
-                            success: function(res){
-                                if (res == 1){
-                                    table.cell(index, 3).data("<div style='cursor:pointer;' class='tarifa_express'>Q " + Number(result).toFixed(2) + "</div>",);
-                                    table.draw(false);
-                                    showUserUpdatedFeedbackDialog("La tarifa");
-                                }
-                                else{
-                                    bootbox.alert("No se pudo efectuar el cambio de tarifa, verifique que haya ingresado un valor correcto.");
-                                    return false;
-                                }
-                            },
-                            error: function() {
-                                bootbox.alert("Ocurrió un error al conectarse a la base de datos.");
-                            }
-                        });
-                    }
-                    else{
-                        bootbox.alert("No se pudo efectuar el cambio de tarifa, verifique que haya ingresado un valor correcto.");
-                    }
-                }
-            });
-        });
-
-        $("#clientes tbody").on("click", "div.desaduanaje_express", function () {
-            var index = table.row($(this).closest('tr')).index();
-            var arr = table.rows(index).data().toArray();
-            var cliente = arr[0][1] + " " + arr[0][2];
-            var clienteID = arr[0][0];
-            bootbox.prompt({
-                title: "Nuevo desaduanaje personalizado para " + cliente + " (en Quetzales)",
-                inputType: 'number',
-                callback: function (result) {
-                    if (result === null) return;
-
-                    if (result){
-                        $.ajax({
-                            url: "db/DBsetCliente.php",
-                            type: "POST",
-                            data: {
-                                set: "desaduanaje_express = " + result,
-                                where: "cid = '" + clienteID + "'"
-                            },
-                            cache: false,
-                            success: function(res){
-                                if (res == 1){
-                                    table.cell(index, 4).data("<div style='cursor:pointer;' class='desaduanaje_express'>Q " + Number(result).toFixed(2) + "</div>",);
-                                    table.draw(false);
-                                    showUserUpdatedFeedbackDialog("El desaduanaje");
-                                }
-                                else{
-                                    bootbox.alert("No se pudo efectuar el cambio de desaduanaje, verifique que haya ingresado un valor correcto.");
-                                    return false;
-                                }
-                            },
-                            error: function() {
-                                bootbox.alert("Ocurrió un error al conectarse a la base de datos.");
-                            }
-                        });
-                    }
-                    else{
-                        bootbox.alert("No se pudo efectuar el cambio de desaduanaje, verifique que haya ingresado un valor correcto.");
-                    }
-                }
-            });
-        });
-
-        $("#clientes tbody").on("click", "div.seguro", function () {
-            var index = table.row($(this).closest('tr')).index();
-            var arr = table.rows(index).data().toArray();
-            var cliente = arr[0][1] + " " + arr[0][2];
-            var clienteID = arr[0][0];
-            bootbox.prompt({
-                title: "Nuevo seguro personalizado para " + cliente + " (en porcentaje)",
-                inputType: 'number',
-                callback: function (result) {
-                    if (result === null) return;
-                    let nuevoSeguro = Number(result);
-                    if (nuevoSeguro < 0 || nuevoSeguro > 100){
-                        bootbox.alert("ERROR: El seguro debe ser un porcentaje entre 0 - 100, puede contener decimales o ser un número entero.");
-                        return;
-                    }
-                    if (result){
-                        $.ajax({
-                            url: "db/DBsetCliente.php",
-                            type: "POST",
-                            data: {
-                                set: "seguro = " + nuevoSeguro*0.01,
-                                where: "cid = '" + clienteID + "'"
-                            },
-                            cache: false,
-                            success: function(res){
-                                if (res == 1){
-                                    table.cell(index, 5).data("<div style='cursor:pointer;' class='seguro'>" + nuevoSeguro + "%</div>",);
-                                    table.draw(false);
-                                    showUserUpdatedFeedbackDialog("El seguro");
-                                }
-                                else{
-                                    bootbox.alert("No se pudo efectuar el cambio de seguro, verifique que haya ingresado un valor correcto.");
-                                    return false;
-                                }
-                            },
-                            error: function() {
-                                bootbox.alert("Ocurrió un error al conectarse a la base de datos.");
-                            }
-                        });
-                    }
-                    else{
-                        bootbox.alert("No se pudo efectuar el cambio de seguro, verifique que haya ingresado un valor correcto.");
-                    }
-                }
-            });
-        });
-
-    } );
-</script>
+<script type="text/javascript" src="js/clientes.js"></script>
+<script src="js/templates/clientes-templates.js"></script>
 
 <br><br>
 <br><br>
+
+
+<div class="col-sm-12 text-center">
+  <span id="clientLastSyncDatetime" class="h5">Última Actualización...</span>
+</div>
 
 <div class="row" id="divTablaClientes">
-    <table id="clientes" class="display" width="100%" cellspacing="0" style="width: 100%;">
+    <table id="clientes" class="display text-center" width="100%" cellspacing="0" style="width: 100%;">
         <thead>
             <tr>
-                <th class="dt-head-center"><h5 style="color:black">ID</h5></th>
+                <th class="dt-head-center"><h5 style="color:black">No.</h5></th>
+                <th class="dt-head-center"><h5 style="color:black">Código Chex</h5></th>
                 <th class="dt-head-center"><h5 style="color:black">Nombre</h5></th>
                 <th class="dt-head-center"><h5 style="color:black">Apellido</h5></th>
-                <th class="dt-head-center"><h5 style="color:black">Tarifa Express</h5></th>
-                <th class="dt-head-center"><h5 style="color:black">Desaduanaje</h5></th>
-                <th class="dt-head-center"><h5 style="color:black">Seguro</h5></th>
-                <th class="dt-head-center"><h5 style="color:black">Email</h5></th>
-                <th class="dt-head-center"><h5 style="color:black">Celular</h5></th>
                 <th class="dt-head-center"><h5 style="color:black">Teléfono</h5></th>
+                <th class="dt-head-center"><h5 style="color:black">Email</h5></th>
                 <th class="dt-head-center"><h5 style="color:black">Dirección</h5></th>
-                <th class="dt-head-center"><h5 style="color:black">Género</h5></th>
-                <th class="dt-head-center"><h5 style="color:black">Cumpleaños</h5></th>
-                <th class="dt-head-center"><h5 style="color:black">Notas</h5></th>
-                <th class="dt-head-center"><h5 style="color:black">Fecha Registro</h5></th>
-                <th class="dt-head-center"><h5 style="color:black"></h5></th>
                 <th class="dt-head-center"><h5 style="color:black"></h5></th>
             </tr>
         </thead>
         <tfoot>
             <tr>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -241,90 +51,3 @@
         </tbody>
     </table>
 </div>
-
-<script>
-
-    function initClientesChex(){
-        $.ajax({
-            url: "db/DBgetAllClientes.php",
-            cache: false,
-        })
-        .then(res => {
-            var table = $('#clientes').DataTable();
-            table.clear();
-            var rows = res.data;
-
-            for (var i = 0; i < rows.length; i++){
-                table.row.add([
-                    rows[i]["cid"],
-                    rows[i]["nombre"],
-                    rows[i]["apellido"],
-                    "<div style='cursor:pointer;' class='tarifa_express'>Q " + rows[i]["tarifa_express"] + "</div>",
-                    "<div style='cursor:pointer;' class='desaduanaje_express'>Q " + rows[i]["desaduanaje_express"] + "</div>",
-                    "<div style='cursor:pointer;' class='seguro'>" + parseFloat(rows[i]["seguro"])*100 + "%</div>",
-                    rows[i]["email"],
-                    rows[i]["celular"],
-                    rows[i]["telefono"],
-                    rows[i]["direccion"],
-                    rows[i]["genero"],
-                    rows[i]["cumple"],
-                    rows[i]["comentario"],
-                    rows[i]["fecha_registro"],
-                    "<img src='images/edit.png' onclick=\"modifyUserData('" + rows[i]["cid"]+ "')\" />",
-                    "<img src='images/mail.png' onclick=\"messageUser('" + rows[i]["cid"]+ "')\" />"
-                ]);
-            }
-            table.draw(false);
-            table.columns.adjust().responsive.recalc();
-        },
-        () => {
-            bootbox.alert("Ocurrió un problema al intentar conectarse al servidor.")
-        });
-    }
-
-    function modifyUserData(myUserData) {
-        $.ajax({
-            url: "db/getDBData.php",
-            type: "POST",
-            data: {
-                cid: myUserData
-            },
-            cache: false,
-            success: function(myData) {
-                bootbox.dialog({
-                title: "Modificar Información Usuario: " + myUserData,
-                message:myData
-                });
-            },
-            error: function() {
-                bootbox.dialog({
-                title: "Modificar Información Usuario: " + myUserData,
-                message:"Error, por favor volver a intentar!"
-                });
-            }
-        });
-    };
-
-    function messageUser(myUserData) {
-        $.ajax({
-            url: "views/messageUser.php",
-            type: "POST",
-            data: {
-                cid: myUserData
-            },
-            cache: false,
-            success: function(myData) {
-                bootbox.dialog({
-                title: "Enviar Mensaje de Recepción de Paquete al usuario: " + myUserData,
-                message:myData
-                });
-            },
-            error: function() {
-                bootbox.dialog({
-                title: "Enviar Mensaje de Recepción de Paquete al usuario: " + myUserData,
-                message:"Error, por favor volver a intentar!"
-                });
-            }
-        });
-    };
-</script>

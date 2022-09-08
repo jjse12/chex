@@ -7,10 +7,4 @@ reportesFacturas/*
 boletas/*
 tarifaciones-ingresadas/*
 git
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/codeStyles/codeStyleConfig.xml
-.idea/dictionaries/americavoice.xml
-.idea/php.xml
-.idea/sqldialects.xml
-.idea/inspectionProfiles/Project_Default.xml
+.idea

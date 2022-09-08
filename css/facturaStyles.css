@@ -10,6 +10,12 @@ div.factura-content{
     margin-right: auto;
 }
 
+.factura-image-pdf {
+    padding: 8px;
+    background-color: rgba(47, 34, 34, 0.84);
+    border-radius: 1rem;
+}
+
 .selected-factura-image {
     border: 4px solid #e50000 !important;
     border-radius: 1rem;
