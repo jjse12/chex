@@ -395,7 +395,7 @@ zonas.shift();
 
 const tiposUsuario = ['Constante', 'Emprendedor', 'Empresa', 'Eventual', 'Vip']
 
-const referencias = ['Recomendado', 'Publicidad', 'Redes Sociales', 'Google', 'Otros'];
+const referencias = ['Recomendado', 'Publicidad', 'Redes Sociales', 'Google', 'Otro'];
 
 const mapResourceListToOptions = (resourceList, client, resourceName, defaultWithSelectText = true) => {
   return [`<option value=''>${defaultWithSelectText ? 'Seleccionar ' : ''}${toPascalCase(resourceName)}</option>`,
