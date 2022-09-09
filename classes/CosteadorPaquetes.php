@@ -120,20 +120,20 @@ class CosteadorPaquetes {
                     $defaultSeguro = (float)($coeficientesCotPaquete['seguro'] ?? self::DEFAULT_SEGURO);
 
                     $tarifa = $defaultTarifa;
-                    if ($paquete['tarifa_express'] !== ''){
+                    if (!empty($paquete['tarifa_express'])){
                         $tarifa = (float) $paquete['tarifa_express'];
                     }
-                    if ($paquete['tarifa_express_especial'] !== ''){
+                    if (!empty($paquete['tarifa_express_especial'])){
                         $tarifa = (float) $paquete['tarifa_express_especial'];
                     }
 
                     $desaduanaje = $defaultDesaduanaje;
-                    if ($paquete['desaduanaje'] !== ''){
+                    if (!empty($paquete['desaduanaje'])){
                         $desaduanaje = (float) $paquete['desaduanaje'];
                     }
 
                     $seguro = $defaultSeguro;
-                    if ($paquete['seguro'] !== ''){
+                    if (!empty($paquete['seguro'])){
                         $seguro = (float) $paquete['seguro'];
                     }
 
