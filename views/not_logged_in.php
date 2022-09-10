@@ -3,7 +3,7 @@
     <br>
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 col-lg-offset-3 col-md-offset-3 col-sm-offset-3">
         <div class="panel panel-default">
-            <div class="text-center"><img src="/images/logo-courier-y-carga.png"></div>
+            <div class="text-center"><img src="images/logo-courier-y-carga.png"></div>
             <div class="panel-fill-head color-primary-dark mt-3">
                 <h2 class="header-title">Ingresar al Sistema</h2>
             </div>

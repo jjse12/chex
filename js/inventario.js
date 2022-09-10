@@ -1791,9 +1791,10 @@ async function showEntregaMercaderiaDialog(data, titulo) {
                 if (xhr.status === 200){
                   if (res.success){
                     let boletas = res.data.boletas;
-                    let html = boletas.length > 1 ? 'La boleta se ha almacenado en los siguientes archivos HTML: <br><br>' :
-                        'La boleta se ha almacenado en el siguiente archivo HTML: <br><br>';
-                    html += `<b>${boletas.join('.html</b><br><b>')}.html</b>`;
+                    const boletasLinkTags = boletas.map(boleta => `<a href="boletas/${boleta}.html" target="_blank">${boleta}.html</a>`);
+                    let html = boletas.length > 1 ? 'La boleta se ha almacenado en los siguientes archivos HTML:' :
+                        'La boleta se ha almacenado en el siguiente archivo HTML:';
+                    html += '<br><br>' + boletasLinkTags.join('<br>');
                     bootbox.hideAll();
                     document.getElementById("divBotones").style.visibility = "none";
                     let t = $("#inventario").DataTable();
@@ -1808,9 +1809,7 @@ async function showEntregaMercaderiaDialog(data, titulo) {
                       confirmButtonText: 'Ok',
                     });
 
-                    for (let i = boletas.length -1; i >= 0; i--){
-                      window.open(`boletas/${boletas[i]}.html`);
-                    }
+                    boletas.forEach(boleta => window.open(`boletas/${boleta}.html`));
 
                     if (finalCallback !== null){
                       finalCallback();
@@ -1920,7 +1919,7 @@ async function showEntregaMercaderiaDialog(data, titulo) {
             closeButton: false,
             title: 'Crear boleta de entrega',
             size: 'small',
-            message: 'Deseas generar la boleta de entrega imprimible',
+            message: '¿Deseas generar la boleta de entrega imprimible?',
             buttons: {
               confirm: {
                 label: "Si",
