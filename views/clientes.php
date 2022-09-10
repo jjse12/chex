@@ -10,8 +10,8 @@
 <script type="text/javascript" src="js/dataTables.colVis.js"></script>
 <script type="text/javascript" src="js/dataTables.responsive.js"></script>
 <script type="text/javascript" src="js/dataTables.select.min.js"></script>
-<script type="text/javascript" src="js/clientes.js?v=1.2.1"></script>
-<script src="js/templates/clientes-templates.js?v=1.2.1"></script>
+<script type="text/javascript" src="js/clientes.js?v=1.2.2"></script>
+<script src="js/templates/clientes-templates.js?v=1.2.2"></script>
 
 <br><br>
 <br><br>
@@ -26,7 +26,8 @@
         <thead>
             <tr>
                 <th class="dt-head-center"><h5 style="color:black">No.</h5></th>
-                <th class="dt-head-center"><h5 style="color:black">Código Chex</h5></th>
+                <th class="dt-head-center"><h5 style="color:black">Fecha Registro</h5></th>
+                <th class="dt-head-center"><h5 style="color:black">CHEX ID</h5></th>
                 <th class="dt-head-center"><h5 style="color:black">Nombre</h5></th>
                 <th class="dt-head-center"><h5 style="color:black">Apellido</h5></th>
                 <th class="dt-head-center"><h5 style="color:black">Teléfono</h5></th>
@@ -37,6 +38,7 @@
         </thead>
         <tfoot>
             <tr>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>

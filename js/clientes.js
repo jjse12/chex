@@ -398,7 +398,7 @@ const tiposUsuario = ['Constante', 'Emprendedor', 'Empresa', 'Eventual', 'Vip']
 const referencias = ['Recomendado', 'Publicidad', 'Redes Sociales', 'Google', 'Otro'];
 
 const mapResourceListToOptions = (resourceList, client, resourceName, defaultWithSelectText = true) => {
-  return [`<option value=''>${defaultWithSelectText ? 'Seleccionar ' : ''}${toPascalCase(resourceName)}</option>`,
+  return [`<option value=''>${defaultWithSelectText ? 'Seleccionar ' : ''}${resourceName.toPascalCase()}</option>`,
     ...resourceList.map(r => {
       return `<option value="${r}"${r.toString() === client[resourceName] ? ' selected' : ''}>${r}</option>`
     })]
@@ -689,7 +689,7 @@ async function getClientsAndPopulateTable() {
     });
 
     const lastSyncDatetime = moment(response.data.lastSyncDatetime)
-      .format('DD/MM/YYYY [a las] HH:mm')
+      .format('dddd DD [de] MMMM [de] YYYY, [a las] HH:mm').firstCharToUpperCase();
     $('#clientLastSyncDatetime').text('Última Actualización: ' + lastSyncDatetime);
     var table = $('#clientes').DataTable();
     table.clear();
@@ -698,6 +698,7 @@ async function getClientsAndPopulateTable() {
     for (var i = 0; i < rows.length; i++) {
       table.row.add([
         rows[i]["ccid"],
+        moment(rows[i]["fecha_registro"]).format('DD/MM/YYYY'),
         rows[i]["cid"],
         rows[i]["nombre"],
         rows[i]["apellido"],

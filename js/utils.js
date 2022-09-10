@@ -6,6 +6,15 @@ Number.prototype.toGTQMoney = function toGTQMoney() {
     return "Q " + this.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 };
 
+String.prototype.toPascalCase = function() {
+  return (this.match(/[[a-zA-ZàáèéìíòóùúüñÀÁÈÉÌÍÒÓÙÚÜÑ0-9]+/g) || []).map(w => `${w.charAt(0).toUpperCase()}${w.slice(1)}`).join(' ');
+};
+
+String.prototype.firstCharToUpperCase = function () {
+  return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
+
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, 'g'), replacement);

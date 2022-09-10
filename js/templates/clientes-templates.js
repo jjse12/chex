@@ -6,6 +6,11 @@ const renderClientDataModal = (client, resourcesOptionsLists, clientTableIndex) 
           <div class="row background-whitesmoke">
             <span class="col-sm-12 h4 text-left mt-0">Datos Generales</span>
             <div class="col-sm-6">
+              <div class="form-group col-sm-12">
+                <label class="text-color-gray" for="clienteFechaRegistro">Fecha Registro</label>
+                <input id="clienteFechaRegistro" name="fecha_registro" type="text" class="form-control"
+                value="${moment(client.fecha_registro).format('dddd DD [de] MMMM [de] YYYY').firstCharToUpperCase()}" disabled>
+              </div>
               <div class="form-group col-sm-6">
                 <label class="text-color-gray" for="clienteNombre">Nombre</label>
                 <input id="clienteNombre" name="nombre" type="text" class="form-control" placeholder="Nombre" value="${client.nombre}">
@@ -36,19 +41,19 @@ const renderClientDataModal = (client, resourcesOptionsLists, clientTableIndex) 
                 <label class="text-color-gray" for="clienteDireccion">Dirección</label>
                 <input id="clienteDireccion" name="direccion" type="text" class="form-control" placeholder="Dirección" value="${client.direccion}">
               </div>
-              <div class="form-group col-sm-5">
+              <div class="form-group col-sm-6">
                 <label class="text-color-gray" for="clienteDepartamento">Departamento</label>
                 <select class="form-control" id="clienteDepartamento" name="departamento">
                   ${resourcesOptionsLists.departamento}
                 </select>
               </div>
-              <div class="form-group col-sm-4">
+              <div class="form-group col-sm-6">
                 <label class="text-color-gray" for="clienteMunicipio">Municipio</label>
                 <select class="form-control" id="clienteMunicipio" name="municipio" ${client.departamento === '' ? 'disabled' : ''}>
                   ${resourcesOptionsLists.municipio}
                 </select>
               </div>
-              <div class="form-group col-sm-3">
+              <div class="form-group col-sm-12">
                 <label class="text-color-gray" for="clienteZona">Zona</label>
                 <select class="form-control" id="clienteZona" name="zona" ${client.departamento === '' || client.municipio === '' ? 'disabled' : ''}>
                   ${resourcesOptionsLists.zona}
