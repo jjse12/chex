@@ -52,7 +52,7 @@ class CosteadorPaquetes {
     private function getAllCoeficientesCotizaciones(){
         $query = "SELECT tarifa, desaduanaje, iva, seguro, cambio_dolar, fecha_desactivacion
             FROM cotizador_express_coeficientes
-            ORDER BY fecha_desactivacion";
+            ORDER BY fecha_desactivacion DESC";
         $serverConn = new mysqli(SERVER_DB_HOST, SERVER_DB_USER, SERVER_DB_PASS, SERVER_DB_NAME);
         $res = $serverConn->query($query);
         if (!empty($res) && $res->num_rows > 0) {
@@ -74,11 +74,11 @@ class CosteadorPaquetes {
 
     private function getCoeficientesCotizacionPaquete($coeficientes, $fechaPaquete){
         $coeficientesLength = sizeof($coeficientes);
-        for ($i = 1; $i < $coeficientesLength; $i++){
+        for ($i = 0; $i < $coeficientesLength - 2; $i++){
             $fechaDesactivacion = strtotime($coeficientes[$i]['fecha_desactivacion']);
             $diferencia = $fechaPaquete - $fechaDesactivacion;
-            if ($diferencia > 0){
-                return $coeficientes[$i-1];
+            if ($diferencia < 0){
+                return $coeficientes[$i];
             }
         }
         return $coeficientes[$coeficientesLength-1];
@@ -135,12 +135,6 @@ class CosteadorPaquetes {
                     $seguro = $defaultSeguro;
                     if (!empty($paquete['seguro'])){
                         $seguro = (float) $paquete['seguro'];
-                    }
-
-                    $fechaSubidaTarifa = strtotime('2022-05-15');
-                    if ($fechaPaquete < $fechaSubidaTarifa){
-                        $tarifa -= 3;
-                        $desaduanaje -= 3;
                     }
 
                     $cotizacion = getCotizacionExpress($tarifa, $paquete['libras'], $paquete['precio_fob'],
