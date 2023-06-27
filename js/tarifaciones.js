@@ -63,14 +63,16 @@ async function createTarifacionesPDF(guideNumbers) {
 }
 
 function importTarifaciones() {
-    let input = $('#inputImportTarifaciones');
-    let data = input.val();
-    if (data.length > 0) {
+    let inputTarifaciones = $('#inputImportTarifaciones');
+    let inputCambioDolar = $('#inputCambioDolar')[0]
+    let data = inputTarifaciones.val();
+    if (data.length > 0 && (inputCambioDolar.disabled || inputCambioDolar.value.length > 0)) {
         $.ajax({
             url: 'db/tarifaciones/DBinsertTarifacionesExpress.php',
             type: 'post',
             data: {
-                data
+                data,
+                cambioDolar: inputCambioDolar.value
             },
             cache: false,
             success: function (response) {
@@ -87,15 +89,27 @@ function importTarifaciones() {
                         createTarifacionesPDF(insertedTarifacionesGuideNumbers);
                     }
                 } else if (message) {
-                    const { failedQueriesData, insertedTarifacionesGuideNumbers } = data;
-                    bootbox.dialog({
-                        backdrop: true,
-                        closeButton: true,
-                        title: 'Error al Importar Tarifaciones de Paquetes Express',
-                        message: getFailedImportedTarifacionesDialogContent(message, failedQueriesData),
-                    });
-                    if (insertedTarifacionesGuideNumbers.length > 0){
-                        createTarifacionesPDF(insertedTarifacionesGuideNumbers);
+                    if (data){
+                        const { failedQueriesData, insertedTarifacionesGuideNumbers } = data;
+                        bootbox.dialog({
+                            backdrop: true,
+                            closeButton: true,
+                            title: 'Error al Importar Tarifaciones de Paquetes Express',
+                            message: getFailedImportedTarifacionesDialogContent(message, failedQueriesData),
+                        });
+                        if (insertedTarifacionesGuideNumbers.length > 0){
+                            createTarifacionesPDF(insertedTarifacionesGuideNumbers);
+                        }
+                    }
+                    else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: message,
+                            type: 'error',
+                            focusConfirm: true,
+                            confirmButtonText: 'Ok',
+                            confirmButtonClass: 'btn-success'
+                        });
                     }
                 } else {
                     Swal.fire({
@@ -108,21 +122,45 @@ function importTarifaciones() {
                     });
                 }
             },
-            error: () => bootbox.alert("Ocurrió un error al conectarse a la base de datos.")
+            error: (xhr,b,c) => {
+                console.log("xhr: ", xhr);
+                console.log("b: ", b);
+                console.log("c: ", c);
+                Swal.fire({
+                    title: 'Error',
+                    html: "El servidor indica lo siguiente: <br><br><b>" + xhr.responseText + "</b>",
+                    type: 'error',
+                    allowEscapeKey : false,
+                    allowOutsideClick: false,
+                    confirmButtonText: 'Ok',
+                });
+            }
         });
         return;
     }
-    input.focus();
+
+    inputTarifaciones.focus();
     alert('¡Debes ingresar la información solicitada!');
     return false;
 }
 
-function showImportTarifacionesDialog () {
+function onTipoCambioCheckboxChange(checked) {
+    document.getElementById("inputCambioDolar").setAttribute("disabled", !checked);
+    document.getElementById("inputCambioDolar").disabled = !checked;
+}
+
+async function showImportTarifacionesDialog () {
+    const res = await $.ajax({
+        url: 'db/tarifaciones/DBgetCurrentCoeficientes.php',
+        type: 'get',
+        cache: false,
+    });
+
     bootbox.dialog({
         backdrop: true,
         closeButton: true,
         title: 'Importar Tarifaciones de Paquetes Express',
-        message: getImportTarifacionesDialogContent(),
+        message: getImportTarifacionesDialogContent(res.data.cambio_dolar),
         buttons: {
             regresar: {
                 label: 'Cancelar',

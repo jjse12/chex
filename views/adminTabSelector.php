@@ -80,8 +80,8 @@
 
 <script src="js/nav-options.js?v=1.1.0"></script>
 <script src="js/logout.js?v=1.1.0"></script>
-<script src="js/tarifaciones.js?v=1.1.0"></script>
-<script src="js/templates/tarifaciones-templates.js?v=1.1.0"></script>
+<script src="js/tarifaciones.js?v=1.2.0"></script>
+<script src="js/templates/tarifaciones-templates.js?v=1.2.0"></script>
 <script type="text/javascript">
 
   $.datepicker.regional['es'] = {

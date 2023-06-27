@@ -113,7 +113,7 @@ class CosteadorPaquetes {
                     $fechaPaquete = strtotime($paquete['fecha_ingreso']);
                     $coeficientesCotPaquete = $this->getCoeficientesCotizacionPaquete($coeficientes, $fechaPaquete);
                     $iva = (float) $coeficientesCotPaquete['iva'];
-                    $cambioDolar = (float) $coeficientesCotPaquete['cambio_dolar'];
+                    $cambioDolarChex = (float) $coeficientesCotPaquete['cambio_dolar'];
 
                     $defaultTarifa = (float)($coeficientesCotPaquete['tarifa'] ?? self::DEFAULT_TARIFA_EXPRESS);
                     $defaultDesaduanaje = (float)($coeficientesCotPaquete['desaduanaje'] ?? self::DEFAULT_DESADUANAJE);
@@ -137,8 +137,13 @@ class CosteadorPaquetes {
                         $seguro = (float) $paquete['seguro'];
                     }
 
+                    $cambioDolarImpuestos = $cambioDolarChex;
+                    if (!empty($paquete['cambio_dolar'])){
+                        $cambioDolarImpuestos = (float) $paquete['cambio_dolar'];
+                    }
+
                     $cotizacion = getCotizacionExpress($tarifa, $paquete['libras'], $paquete['precio_fob'],
-                        $paquete['arancel'], $desaduanaje, $iva, $seguro, $cambioDolar);
+                        $paquete['arancel'], $desaduanaje, $iva, $seguro, $cambioDolarChex, $cambioDolarImpuestos);
 
                     $paquete['costos_chex'] = $cotizacion['costos_chex'];
                     $paquete['chex_desglose'] = $cotizacion['chex_desglose'];

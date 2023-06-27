@@ -2,7 +2,17 @@
 header('Content-Type: application/json;charset=utf-8');
 require_once("../db_vars.php");
 
+try {
 $data = $_POST['data'] ?? $_GET['data'];
+$cambioDolar = $_POST['cambioDolar'] ?? $_GET['cambioDolar'];
+
+if (!is_numeric($cambioDolar)){
+    echo json_encode([
+        'success' => false,
+        'message' => "El tipo de cambio de dolar es incorrecto!",
+    ]);
+    return;
+}
 
 $strRows = explode("\n", $data);
 foreach ($strRows as $strRow){
@@ -13,7 +23,7 @@ foreach ($strRows as $strRow){
         $arancel = str_replace("%", "/100", $row[2]);
         $poliza = $row[3];
         $fechaPoliza = $row[4];
-        $insertQueries[] = "INSERT INTO tarifacion_paquete_express(tracking, precio_fob, arancel, poliza, fecha_poliza) VALUES ((SELECT tracking FROM paquete WHERE guide_number = $guideNumber), $precioFob, $arancel, '$poliza', '$fechaPoliza');";
+        $insertQueries[] = "INSERT INTO tarifacion_paquete_express(tracking, precio_fob, arancel, poliza, cambio_dolar, fecha_poliza) VALUES ((SELECT tracking FROM paquete WHERE guide_number = $guideNumber), $precioFob, $arancel, '$poliza', $cambioDolar, '$fechaPoliza');";
     }
 }
 
@@ -63,3 +73,7 @@ echo json_encode([
         'insertedTarifacionesGuideNumbers' => $insertedTarifacionesGuideNumbers
     ]
 ]);
+} catch (Exception $e){
+    header("HTTP/1.1 500 Internal Server Error");
+    echo $e;
+}

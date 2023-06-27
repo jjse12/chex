@@ -15,7 +15,7 @@ $isTarifacion = ($_POST['isTarifacion'] ?? 'false') == 'true';
 
 $selectStatement = "
     SELECT (@row_number:=@row_number + 1) AS num, servicio, p.tracking, guide_number, libras, cobro_extra,
-        ca.fecha as fecha_ingreso, t.precio_fob, t.arancel, t.poliza, t.fecha_poliza, cl.desaduanaje_express as desaduanaje, 
+        ca.fecha as fecha_ingreso, t.precio_fob, t.arancel, t.poliza, t.cambio_dolar, t.fecha_poliza, cl.desaduanaje_express as desaduanaje, 
         cl.seguro, t.tarifa_especial as tarifa_express_especial, cl.tarifa as tarifa_estandar, cl.tarifa_express";
 if ($isTarifacion){
     $selectStatement .= ", cl.cid as clientChexCode, CONCAT(cl.nombre, ' ', cl.apellido) as clientName";
@@ -131,7 +131,6 @@ function renderTableEntrega($pagoTarjeta){
             </tr>
             <tr>
                 <th class="text-center"><span style="color:black">No.</span></th>
-                <th class="text-center"><span style="color:black">Servicio</span></th>
                 <th class="text-center"><span style="color:black">Tracking</span></th>
                 <th class="text-center"><span style="color:black">No. Guía</span></th>
                 <th class="text-center"><span style="color:black">Peso</span></th>
@@ -140,6 +139,7 @@ function renderTableEntrega($pagoTarjeta){
                 <th class="text-center"><span style="color:black">Póliza</span></th>
                 <th class="text-center"><span style="color:black">Fecha de Póliza</span></th>
                 <th class="text-center"><span style="color:black">Valor BI</span></th>
+                <th class="text-center"><span style="color:black">Cambio Dolar</span></th>
                 <th class="text-center" style="border-left: 1px solid #222;"><span style="color:black">Extras</span></th>
                 <?php if ($pagoTarjeta) :?>
                     <th class="text-center"><span style="color:black">Tarjeta de C.</span></th>
@@ -164,7 +164,6 @@ function renderTableEntrega($pagoTarjeta){
             <?php foreach ($tableData['paquetes'] as $paquete): ?>
                 <tr class="<?= array_search($paquete['tracking'], $invalidPaquetes) !== false ? 'invalid-paquete-express' : ''?>">
                     <th class="text-center"><?= $paquete['num'] ?></th>
-                    <th class="text-center"><?= $paquete['servicio'] ?></th>
                     <th class="text-center"><?= $paquete['tracking'] ?></th>
                     <th class="text-center"><?= $paquete['guide_number'] ?></th>
                     <th class="text-center"><?= $paquete['libras'] ?> lb</th>
@@ -199,6 +198,10 @@ function renderTableEntrega($pagoTarjeta){
                                 'Q ' . number_format($paquete['costos_impuestos']['valor_bi'], 2)
                             ?>
                         </th>
+                        <th class="text-center" title="Cambio Costos Chex: Q <?=$paquete['costos_chex']['cambio_dolar'] ?>">
+                            Q <?=  number_format($paquete['costos_impuestos']['cambio_dolar'], 2) ?>
+                        </th>
+
                     <?php else :?>
                         <th class="text-center">N/A</th>
                         <th class="text-center">N/A</th>
@@ -273,9 +276,10 @@ function renderTableEntrega($pagoTarjeta){
             </tr>
             <tr>
                 <th class="text-left" style="padding-left: 12px" colspan="2"><?= $totales['paquetes'] ?> paquetes</th>
-                <th class="text-right" style="padding-right: 12px" colspan="3"><?= $totales['libras'] ?> lb</th>
+                <th class="text-right" style="padding-right: 12px" colspan="2"><?= $totales['libras'] ?> lb</th>
                 <th colspan="4"></th>
                 <th class="text-center">Q <?= number_format($totales['impuestos_valor_bi'], 2) ?></th>
+                <th></th>
                 <th class="text-center" style="border-left: 1px solid #222;">Q <?= number_format($totales['cobros_extras'], 2) ?></th>
                 <?php if ($pagoTarjeta) :?>
                     <th class="text-center">Q <?= number_format($totales['cobro_tarjeta'], 2) ?></th>
@@ -308,7 +312,6 @@ function renderTableEntrega($pagoTarjeta){
             </tr>
             <tr style="font-size: 9.6px;">
                 <th style="text-align: left;"><span style="color:black">No.</span></th>
-                <th style="text-align: center;"><span style="color:black">Servicio</span></th>
                 <th class="text-center"><span style="color:black">Póliza</span></th>
                 <th class="text-center"><span style="color:black">Cliente</span></th>
                 <th class="text-center"><span style="color:black">Código</span></th>
@@ -317,6 +320,7 @@ function renderTableEntrega($pagoTarjeta){
                 <th style="text-align: center;"><span style="color:black">Peso lb</span></th>
                 <th style="text-align: center;"><span style="color:black">Fob</span></th>
                 <th style="text-align: center;"><span style="color:black">Arancel</span></th>
+                <th style="text-align: center;"><span style="color:black">Cambio Dolar</span></th>
                 <th style="text-align: center;"><span style="color:black">CIF</span></th>
                 <th style="text-align: center;"><span style="color:black">Servicios</span></th>
                 <th style="text-align: center;"><span style="color:black">Impuestos</span></th>
@@ -328,7 +332,6 @@ function renderTableEntrega($pagoTarjeta){
         <?php foreach ($tableData['paquetes'] as $paquete): ?>
             <tr style="margin-top: 2px; margin-bottom: 2px;">
                 <th style="text-align: left;"><?= $paquete['num'] ?></th>
-                <th style="text-align: center;"><?= $paquete['servicio'] ?></th>
                 <th style="text-align: center;"><?= empty($paquete['poliza']) ?
                         '<i class="fa fa-asterisk"></i>' : $paquete['poliza'] ?>
                 </th>
@@ -342,6 +345,9 @@ function renderTableEntrega($pagoTarjeta){
                 </th>
                 <th style="text-align: center;"><?= empty($paquete['arancel']) ?
                         '<i class="fa fa-asterisk"></i>' : ((100*floatval($paquete['arancel'])) . '%') ?>
+                </th>
+                <th style="text-align: center;"><?= empty($paquete['cambio_dolar']) ?
+                        '<i class="fa fa-asterisk"></i>' : ('Q ' . number_format($paquete['cambio_dolar'], 2)) ?>
                 </th>
                 <th class="text-center"><?=
                     $paquete['servicio'] === 'Express' ? (
@@ -367,10 +373,10 @@ function renderTableEntrega($pagoTarjeta){
             <tr><th style="text-align: left;" colspan="14">&nbsp;</th></tr>
             <tr><th style="text-align: left;" colspan="14">Resumen:</th></tr>
             <tr>
-                <th style="text-align: left;" colspan="2"><?= $totales['paquetes'] ?> paquetes</th>
+                <th style="text-align: left;"><?= $totales['paquetes'] ?> paquetes</th>
                 <th colspan="5"></th>
                 <th style="text-align: center;"><?= $totales['libras'] ?></th>
-                <th colspan="3"></th>
+                <th colspan="4"></th>
                 <th style="text-align: center;">Q <?= number_format($totales['chex'], 2) ?></th>
                 <th style="text-align: center;">Q <?= number_format($totales['impuestos'], 2) ?></th>
                 <th id="th-total" data-total="<?= $totales['total'] ?>"
