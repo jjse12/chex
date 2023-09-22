@@ -55,7 +55,7 @@ try {
 
     $insertNewClientsResult = $localDB->query($insertNewClientsQuery);
     if (!$insertNewClientsResult) {
-        throw new RuntimeException($serverDB->error);
+        throw new RuntimeException($localDB->error);
     }
 
     $insertedClientsCount = $localDB->affected_rows;
