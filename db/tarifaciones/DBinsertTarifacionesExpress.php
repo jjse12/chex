@@ -19,11 +19,12 @@ foreach ($strRows as $strRow){
     if (!empty($strRow)){
         $row = explode("\t", $strRow);
         $guideNumber = $row[0];
-        $precioFob = str_replace("$", "", $row[1]);
-        $arancel = str_replace("%", "/100", $row[2]);
-        $poliza = $row[3];
-        $fechaPoliza = $row[4];
-        $insertQueries[] = "INSERT INTO tarifacion_paquete_express(tracking, precio_fob, arancel, poliza, cambio_dolar, fecha_poliza) VALUES ((SELECT tracking FROM paquete WHERE guide_number = $guideNumber), $precioFob, $arancel, '$poliza', $cambioDolar, '$fechaPoliza');";
+        $pesoRealKg = $row[1];
+        $precioFob = str_replace("$", "", $row[2]);
+        $arancel = str_replace("%", "/100", $row[3]);
+        $poliza = $row[4];
+        $fechaPoliza = $row[5];
+        $insertQueries[] = "INSERT INTO tarifacion_paquete_express(tracking, peso_real_kg, precio_fob, arancel, poliza, cambio_dolar, fecha_poliza) VALUES ((SELECT tracking FROM paquete WHERE guide_number = $guideNumber), $pesoRealKg, $precioFob, $arancel, '$poliza', $cambioDolar, '$fechaPoliza');";
     }
 }
 
