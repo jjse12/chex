@@ -142,7 +142,12 @@ class CosteadorPaquetes {
                         $cambioDolarImpuestos = (float) $paquete['cambio_dolar'];
                     }
 
-                    $cotizacion = getCotizacionExpress($tarifa, $paquete['libras'], $paquete['precio_fob'],
+                    $pesoImpuestos = $paquete['libras'];
+                    if (!empty($paquete['peso_real_kg'])){
+                        $pesoImpuestos = (float) $paquete['peso_real_kg'];
+                    }
+
+                    $cotizacion = getCotizacionExpress($tarifa, $paquete['libras'], $pesoImpuestos, $paquete['precio_fob'],
                         $paquete['arancel'], $desaduanaje, $iva, $seguro, $cambioDolarChex, $cambioDolarImpuestos);
 
                     $paquete['costos_chex'] = $cotizacion['costos_chex'];

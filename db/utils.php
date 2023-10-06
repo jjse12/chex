@@ -1,12 +1,12 @@
 <?php
 
-function getCotizacionExpress($tarifa, $peso, $fob, $arancel, $desaduanaje, $iva, $seguro, $cambioDolarChex, $cambioDolarImpuestos) {
+function getCotizacionExpress($tarifa, $peso, $pesoRealKg, $fob, $arancel, $desaduanaje, $iva, $seguro, $cambioDolarChex, $cambioDolarImpuestos) {
 
     $costoLibras = round($peso*$tarifa, 2);
     $costoSeguro = round($fob*$seguro*$cambioDolarChex, 2);
     $totalChex = round($costoLibras + $desaduanaje + $costoSeguro, 2);
 
-    $cif = $fob*$cambioDolarImpuestos + ($fob*0.022*$cambioDolarImpuestos) + ($peso*25/2.2 /* $tarifa  // Simpre usar Q25 como tarifa en esta ecuación */ );
+    $cif = $cambioDolarImpuestos * (($fob * 1.022) + $pesoRealKg);
     $dai = $arancel * $cif;
     $valorBi = $cif + $dai;
     $iva = $valorBi * $iva;
