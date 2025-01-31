@@ -51,9 +51,11 @@ try {
                     referencia, genero, fecha_registro, tarifa_express, desaduanaje_express, seguro)
                 VALUES $values";
 
+    $Error = $localDB->error;
+
     $insertNewClientsResult = $localDB->query($insertNewClientsQuery);
     if (!$insertNewClientsResult) {
-        throw new RuntimeException($localDB->error);
+        throw new RuntimeException($Error);
     }
 
     $insertedClientsCount = $localDB->affected_rows;
@@ -61,6 +63,7 @@ try {
     echo json_encode(['numberOfClientsInserted' => $insertedClientsCount]);
 
     $localDB->query($insertNewClientSynchronizationQuery);
+    return 0;
 } catch (Exception $exception) {
     header("HTTP/1.1 500 Internal Server Error");
     echo json_encode(['errorMessage' => $exception->getMessage()]);
