@@ -5,8 +5,8 @@ require_once("server_db_vars.php");
 require_once("../classes/CosteadorPaquetes.php");
 
 try {
-	$localDB = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-	$serverDB = new mysqli(SERVER_DB_HOST, SERVER_DB_USER, SERVER_DB_PASS, SERVER_DB_NAME);
+    $localDB = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    $serverDB = new mysqli(SERVER_DB_HOST, SERVER_DB_USER, SERVER_DB_PASS, SERVER_DB_NAME);
 
     $getLastClientSyncQuery = "SELECT fecha FROM sincronizacion_clientes ORDER BY fecha DESC LIMIT 1";
     $lastClientSyncResult = $localDB->query($getLastClientSyncQuery);
@@ -51,9 +51,11 @@ try {
     Change 4
     Change 4
 
+    Helloo tthis is a test
+
     $insertNewClientsResult = $localDB->query($insertNewClientsQuery);
     if (!$insertNewClientsResult) {
-        throw new RuntimeException($localDB->error);
+        throw new RuntimeException($Error);
     }
 
     LAST CHANGE
@@ -63,6 +65,7 @@ try {
     echo json_encode(['numberOfClientsInserted' => $insertedClientsCount]);
 
     $localDB->query($insertNewClientSynchronizationQuery);
+    return 0;
 } catch (Exception $exception) {
     header("HTTP/1.1 500 Internal Server Error");
     echo json_encode(['errorMessage' => $exception->getMessage()]);
