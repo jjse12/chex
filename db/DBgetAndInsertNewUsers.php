@@ -72,4 +72,5 @@ try {
 } finally {
     $localDB->close();
     $serverDB->close();
+    END change
 }
