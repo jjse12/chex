@@ -78,7 +78,7 @@ function getEmailNotification($nombreCliente, $idCliente, $costeoData): string
     $totales = $costeoData['totales'];
     $totalPaquetes = $totales['paquetes'];
     $totalChex = $totales['chex'];
-    $totalImpuestos = $totales['impuestos'];
+    $totalImpuestos = $totales['impuestos'];TESTSSSSSS
     $totalPeso = $totales['libras'];
     $total = $totales['total'];
     $message = "

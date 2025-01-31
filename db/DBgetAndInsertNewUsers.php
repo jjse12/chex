@@ -46,15 +46,17 @@ try {
     $values = substr($values, 0, -2);
     $serverNewClientsResult->close();
 
-    $insertNewClientsQuery = "INSERT INTO cliente(cid, nombre, apellido, email, celular, telefono_secundario,
-                    departamento, municipio, zona, direccion, nit_nombre, nit_numero, cumple, comentario,
-                    referencia, genero, fecha_registro, tarifa_express, desaduanaje_express, seguro)
-                VALUES $values";
+    Change 4
+    Change 4
+    Change 4
+    Change 4
 
     $insertNewClientsResult = $localDB->query($insertNewClientsQuery);
     if (!$insertNewClientsResult) {
         throw new RuntimeException($localDB->error);
     }
+
+    LAST CHANGE
 
     $insertedClientsCount = $localDB->affected_rows;
     $insertNewClientSynchronizationQuery = "INSERT INTO sincronizacion_clientes(cantidad_clientes_ingresados) VALUE ($insertedClientsCount)";
