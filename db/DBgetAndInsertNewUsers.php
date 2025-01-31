@@ -30,21 +30,19 @@ try {
     $tarifaExpress = CosteadorPaquetes::DEFAULT_TARIFA_EXPRESS;
     $desaduanaje = CosteadorPaquetes::DEFAULT_DESADUANAJE;
     $seguro = CosteadorPaquetes::DEFAULT_SEGURO;
-
-    if (!empty($coeficientesResult) && $coeficientesResult->num_rows > 0) {
-        $row = $coeficientesResult->fetch_assoc();
-
-        $tarifaExpress = (float)$row['tarifa'];
-        $desaduanaje = (float)$row['desaduanaje'];
-        $seguro = (float)$row['seguro'];
-    }
-
+    Change 5
+    Change 5
+    Change 5
+    Change 5
+    Change 5
     $values = "";
     while($client = mysqli_fetch_assoc($serverNewClientsResult)){
         $values .= "('{$client['chex_code']}', '{$client['first_name']}', '{$client['last_name']}', '{$client['email']}', '{$client['phone']}', '{$client['secondary_phone']}',
                  '{$client['department']}', '{$client['municipality']}', '{$client['zone']}', '{$client['address']}', '{$client['nit_name']}', '{$client['nit_number']}', '{$client['birthday']}',
                  '{$client['note']}', '{$client['meet_reason']}', '{$client['gender']}', '{$client['creation_date']}', $tarifaExpress, $desaduanaje, $seguro), ";
     }
+    Change 2
+    Change 2
     $values = substr($values, 0, -2);
     $serverNewClientsResult->close();
 

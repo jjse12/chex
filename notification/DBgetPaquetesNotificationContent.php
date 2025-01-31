@@ -1,4 +1,4 @@
-<?php
+<?phpMoreChanges
 header('Content-Type: application/json;charset=utf-8');
 require_once("../db/utils.php");
 require_once("../db/db_vars.php");
