@@ -41,28 +41,7 @@ try {
                  '{$client['department']}', '{$client['municipality']}', '{$client['zone']}', '{$client['address']}', '{$client['nit_name']}', '{$client['nit_number']}', '{$client['birthday']}',
                  '{$client['note']}', '{$client['meet_reason']}', '{$client['gender']}', '{$client['creation_date']}', $tarifaExpress, $desaduanaje, $seguro), ";
     }
-    Change 2
-    Change 2
-    $values = substr($values, 0, -2);
-    $serverNewClientsResult->close();
 
-    $insertNewClientsQuery = "INSERT INTO cliente(cid, nombre, apellido, email, celular, telefono_secundario,
-                    departamento, municipio, zona, direccion, nit_nombre, nit_numero, cumple, comentario,
-                    referencia, genero, fecha_registro, tarifa_express, desaduanaje_express, seguro)
-                VALUES $values";
-
-    $Error = $localDB->error;
-
-    $insertNewClientsResult = $localDB->query($insertNewClientsQuery);
-    if (!$insertNewClientsResult) {
-        throw new RuntimeException($Error);
-    }
-
-    $insertedClientsCount = $localDB->affected_rows;
-    $insertNewClientSynchronizationQuery = "INSERT INTO sincronizacion_clientes(cantidad_clientes_ingresados) VALUE ($insertedClientsCount)";
-    echo json_encode(['numberOfClientsInserted' => $insertedClientsCount]);
-
-    $localDB->query($insertNewClientSynchronizationQuery);
     return 0;
 } catch (Exception $exception) {
     header("HTTP/1.1 500 Internal Server Error");
