@@ -46,12 +46,7 @@ try {
     $values = substr($values, 0, -2);
     $serverNewClientsResult->close();
 
-    $insertNewClientsQuery = "INSERT INTO cliente(cid, nombre, apellido, email, celular, telefono_secundario,
-                    departamento, municipio, zona, direccion, nit_nombre, nit_numero, cumple, comentario,
-                    referencia, genero, fecha_registro, tarifa_express, desaduanaje_express, seguro)
-                VALUES $values";
-
-    $Error = $localDB->error;
+    Helloo tthis is a test
 
     $insertNewClientsResult = $localDB->query($insertNewClientsQuery);
     if (!$insertNewClientsResult) {
